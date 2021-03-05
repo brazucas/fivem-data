@@ -4,5 +4,5 @@ AddEventHandler('onClientMapStart',function()
 end)
 
 Citizen.CreateThread(function()
-	StartAudioScene(“CHARACTER_CHANGE_IN_SKY_SCENE”)
+	StartAudioScene("CHARACTER_CHANGE_IN_SKY_SCENE")
 end)
