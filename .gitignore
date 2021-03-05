@@ -1,0 +1,10 @@
+cache/*
+config/keys.cfg
+
+.idea
+.vscode
+/resources/\[map\]
+/citizen-scripting
+/config/config.cfg
+/config/keys.cfg
+/resources/GHMattiMySQL/settings.xml
