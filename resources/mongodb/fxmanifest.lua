@@ -9,6 +9,6 @@ version '1.0.0'
 server_only 'yes'
 
 server_scripts {
-    "index.js",
-    --"example.lua"
+    "database.lua",
+    "index.js"
 }
