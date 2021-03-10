@@ -210,7 +210,7 @@ exports("findOne", (params, callback) => {
   return dbFind(params, callback);
 });
 
-exports("findOnePromise", async (params, callback) => {
+exports("findOnePromise", async (params) => {
   if (checkParams(params)) params.limit = 1;
   return new Promise((resolve, reject) => {
     dbFind(params, function (success, result) {
@@ -222,6 +222,8 @@ exports("findOnePromise", async (params, callback) => {
     })
   });
 });
+
+exports("testmongo", 123);
 
 exports("update", dbUpdate);
 exports("updateOne", (params, callback) => {
