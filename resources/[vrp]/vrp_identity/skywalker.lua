@@ -74,7 +74,7 @@ function vRPN.modifyIdentidade()
 	local source = source
 	local user_id = vRP.getUserId(source)
 	local identity = vRP.getUserIdentity(user_id)
-	
+
 	if user_id then
 		if vRP.getInventoryItemAmount(user_id,"passaporte") >= 1 then
 			local nome = vRP.prompt(source,"Qual é o nome? ( Preencha com atençao! )", "")
@@ -86,14 +86,27 @@ function vRPN.modifyIdentidade()
 						local checkIdade = idade
 						if idade >= "18" and idade <= "90" then
 
-							vRP.execute("vRP/update_user_identity",{
-								user_id = user_id,
-								firstname = sobrenome,
-								name = nome,
-								age = idade,
-								registration = identity.registration,
-								phone = identity.phone
-							})
+							local p = promise.new()
+							exports.mongodb:updateOne({
+								collection = "vrp_user_identities",
+								query = { user_id = user_id },
+								update = {
+									["$set"] = {
+										firstname = sobrenome,
+										name = nome,
+										age = idade,
+										registration = identity.registration,
+										phone = identity.phone
+									}
+								}
+							}, function(success, result, insertedIds)
+								if success then
+									p:resolve(insertedIds[1])
+								else
+									p:reject("[MongoDB][renomear] Error in updateOne: " .. tostring(result))
+								end
+							end)
+							Citizen.Await(p)
 
 							vRP.tryGetInventoryItem(user_id,"passaporte",1)
 							TriggerClientEvent("Notify",source,"sucesso","Você foi cadastrado no sistema do governo com sucesso!.",8000)

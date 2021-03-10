@@ -209,7 +209,7 @@ local homes = {
 	["LX67"] = { 7000000,2,1000 },
 	["LX68"] = { 7000000,2,1000 },
 	["LX69"] = { 7000000,2,1000 },
-	["LX70"] = { 7000000,2,1000 },	
+	["LX70"] = { 7000000,2,1000 },
 
 --[ SAMIR ]------------------------------------------------------------------------------------------------------------------------------
 
@@ -770,7 +770,7 @@ function src.checkPermissions(homeName)
 							local cows = vRP.getSData("chest:"..tostring(homeName))
 							local rows = json.decode(cows) or {}
 							if rows then
-								vRP.execute("losanjos/rem_srv_data",{ dkey = "chest:"..tostring(homeName) })
+								exports.mongodb:deleteOne({ collection = "vrp_srv_data", query = { dkey = "chest:"..tostring(homeName) } })
 							end
 
 							vRP.execute("homes/rem_allpermissions",{ home = tostring(homeName) })
@@ -788,7 +788,7 @@ function src.checkPermissions(homeName)
 							local cows = vRP.getSData("chest:"..tostring(homeName))
 							local rows = json.decode(cows) or {}
 							if rows then
-								vRP.execute("losanjos/rem_srv_data",{ dkey = "chest:"..tostring(homeName) })
+								exports.mongodb:deleteOne({ collection = "vrp_srv_data", query = { dkey = "chest:"..tostring(homeName) } })
 							end
 
 							vRP.execute("homes/rem_allpermissions",{ home = tostring(homeName) })
@@ -838,12 +838,12 @@ function src.checkPermissions(homeName)
 								pagamento = math.floor(preco)
 							end
 						end
-			
+
 						if vRP.tryPayment(user_id,parseInt(pagamento)) then
 							vRP.execute("homes/buy_permissions",{ home = tostring(homeName), user_id = parseInt(user_id), tax = parseInt(os.time()) })
 							TriggerClientEvent("Notify",source,"sucesso","A residência <b>"..tostring(homeName).."</b> foi comprada com sucesso.",10000)
 						else
-							TriggerClientEvent("Notify",source,"negado","Dinheiro insuficiente.",10000)		
+							TriggerClientEvent("Notify",source,"negado","Dinheiro insuficiente.",10000)
 						end
 					end
 					return false

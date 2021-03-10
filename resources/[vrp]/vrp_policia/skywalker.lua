@@ -3,7 +3,7 @@ local Proxy = module("vrp","lib/Proxy")
 local Tools = module("vrp","lib/Tools")
 vRP = Proxy.getInterface("vRP")
 vRPclient = Tunnel.getInterface("vRP")
- 
+
 --[ CONEXÕES ]-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 local idgens = Tools.newIDGenerator()
@@ -11,11 +11,11 @@ src = {}
 Tunnel.bindInterface("vrp_policia",src)
 
 --[ WEBHOOK ]------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
 
- 
+
+
 --[ PLACA ]--------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterCommand('placa',function(source,args,rawCommand)
 	local user_id = vRP.getUserId(source)
 	if vRP.hasPermission(user_id,"administrador.permissao") or vRP.hasPermission(user_id,"policia.permissao") then
@@ -48,9 +48,9 @@ RegisterCommand('placa',function(source,args,rawCommand)
 		end
 	end
 end)
- 
+
 --[ P ]------------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 local policia = {}
 RegisterCommand('p',function(source,args,rawCommand)
 	local user_id = vRP.getUserId(source)
@@ -77,9 +77,9 @@ RegisterCommand('p',function(source,args,rawCommand)
 		end
 	end
 end)
- 
+
 --[ PAYTOW ]-------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterCommand('paytow',function(source,args,rawCommand)
 	local user_id = vRP.getUserId(source)
 	if vRP.hasPermission(user_id,"policia.permissao") then
@@ -96,9 +96,9 @@ RegisterCommand('paytow',function(source,args,rawCommand)
 		end
 	end
 end)
- 
+
 --[ MULTAR ]-------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterCommand('multar',function(source,args,rawCommand)
 	local user_id = vRP.getUserId(source)
 	if vRP.hasPermission(user_id,"policia.permissao") then
@@ -123,9 +123,9 @@ RegisterCommand('multar',function(source,args,rawCommand)
 		vRPclient.playSound(source,"Hack_Success","DLC_HEIST_BIOLAB_PREP_HACKING_SOUNDS")
 	end
 end)
- 
+
 --[ OCORRENCIA ]---------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterCommand('ocorrencia',function(source,args,rawCommand)
 	local user_id = vRP.getUserId(source)
 	if vRP.hasPermission(user_id,"policia.permissao") then
@@ -143,9 +143,9 @@ RegisterCommand('ocorrencia',function(source,args,rawCommand)
 		vRPclient.playSound(source,"Hack_Success","DLC_HEIST_BIOLAB_PREP_HACKING_SOUNDS")
 	end
 end)
- 
+
 --[ DETIDO ]-------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterCommand('detido',function(source,args,rawCommand)
     local user_id = vRP.getUserId(source)
     if vRP.hasPermission(user_id,"policia.permissao") then
@@ -164,8 +164,12 @@ RegisterCommand('detido',function(source,args,rawCommand)
                 else
                 	local identity = vRP.getUserIdentity(puser_id)
 					local nplayer = vRP.getUserSource(parseInt(puser_id))
-					
-					vRP.execute("creative/set_detido",{ user_id = parseInt(puser_id), vehicle = vname, detido = 1, time = parseInt(os.time()) })
+
+					exports.mongodb:updateOne({
+						collection = "vrp_user_vehicles",
+						query = { user_id = parseInt(puser_id), vehicle = name },
+						update = { ["$set"] = { detido = 1, time = parseInt(os.time()) } }
+					})
 
 					randmoney = math.random(90,150)
 					vRP.giveMoney(user_id,parseInt(randmoney))
@@ -178,9 +182,9 @@ RegisterCommand('detido',function(source,args,rawCommand)
         end
     end
 end)
- 
+
 --[ PRENDER ]------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterCommand('prender',function(source,args,rawCommand)
 	local user_id = vRP.getUserId(source)
 	if vRP.hasPermission(user_id,"administrador.permissao") or vRP.hasPermission(user_id,"policia.permissao") then
@@ -200,23 +204,23 @@ RegisterCommand('prender',function(source,args,rawCommand)
 			TriggerClientEvent("vrp_sound:source",player,'jaildoor',0.7)
 			TriggerClientEvent("vrp_sound:source",source,'jaildoor',0.7)
 
-			
+
 			local oficialid = vRP.getUserIdentity(user_id)
 			local identity = vRP.getUserIdentity(parseInt(args[1]))
 			local nplayer = vRP.getUserSource(parseInt(args[1]))
-			
+
 			randmoney = math.random(90,150)
 			vRP.giveMoney(user_id,parseInt(randmoney))
 			TriggerClientEvent("Notify",source,"sucesso","Prisão efetuada com sucesso.")
 			TriggerClientEvent("Notify",source,"importante","Você recebeu <b>$"..vRP.format(parseInt(randmoney)).." dólares</b> de bonificação.")
 			TriggerClientEvent("Notify",nplayer,"importante","Você foi preso por <b>"..vRP.format(parseInt(args[2])).." meses</b>.<br><b>Motivo:</b> "..crimes..".")
 			vRPclient.playSound(source,"Hack_Success","DLC_HEIST_BIOLAB_PREP_HACKING_SOUNDS")
-		end 
+		end
 	end
 end)
- 
+
 --[ ALGEMAR ]------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterServerEvent("vrp_policia:algemar")
 AddEventHandler("vrp_policia:algemar",function()
 	local source = source
@@ -286,9 +290,9 @@ AddEventHandler("vrp_policia:algemar",function()
 		end
 	end
 end)
- 
+
 --[ CARREGAR ]-----------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterServerEvent("vrp_policia:carregar")
 AddEventHandler("vrp_policia:carregar",function()
 	local source = source
@@ -302,9 +306,9 @@ AddEventHandler("vrp_policia:carregar",function()
 		end
 	end
 end)
- 
+
 --[ RMASCARA ]-----------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterCommand('rmascara',function(source,args,rawCommand)
 	local user_id = vRP.getUserId(source)
 	if vRP.hasPermission(user_id,"policia.permissao") then
@@ -314,9 +318,9 @@ RegisterCommand('rmascara',function(source,args,rawCommand)
 		end
 	end
 end)
- 
+
 --[ RCHAPEU ]------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterCommand('rchapeu',function(source,args,rawCommand)
 	local user_id = vRP.getUserId(source)
 	if vRP.hasPermission(user_id,"policia.permissao") then
@@ -326,9 +330,9 @@ RegisterCommand('rchapeu',function(source,args,rawCommand)
 		end
 	end
 end)
- 
+
 --[ RCAPUZ ]-------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterCommand('rcapuz',function(source,args,rawCommand)
 	local user_id = vRP.getUserId(source)
 	if vRP.hasPermission(user_id,"policia.permissao") then
@@ -343,9 +347,9 @@ RegisterCommand('rcapuz',function(source,args,rawCommand)
 		end
 	end
 end)
- 
+
 --[ CV ]-----------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterCommand('cv',function(source,args,rawCommand)
 	local user_id = vRP.getUserId(source)
 	if vRP.hasPermission(user_id,"administrador.permissao") or vRP.hasPermission(user_id,"policia.permissao") then
@@ -355,9 +359,9 @@ RegisterCommand('cv',function(source,args,rawCommand)
 		end
 	end
 end)
- 
+
 --[ RV ]-----------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterCommand('rv',function(source,args,rawCommand)
 	local user_id = vRP.getUserId(source)
 	if vRP.hasPermission(user_id,"administrador.permissao") or vRP.hasPermission(user_id,"policia.permissao") then
@@ -367,9 +371,9 @@ RegisterCommand('rv',function(source,args,rawCommand)
 		end
 	end
 end)
- 
+
 --[ EXTRAS ]-------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterCommand('extras',function(source,args,rawCommand)
     local user_id = vRP.getUserId(source)
     if vRP.hasPermission(user_id,"policia.permissao") then
@@ -378,43 +382,43 @@ RegisterCommand('extras',function(source,args,rawCommand)
         end
     end
 end)
- 
+
 --[ TRYEXTRAS ]----------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterServerEvent("tryextras")
 AddEventHandler("tryextras",function(index,extra)
     TriggerClientEvent("syncextras",-1,index,parseInt(extra))
 end)
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --[ CONE ]---------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterCommand('cone',function(source,args,rawCommand)
 	local user_id = vRP.getUserId(source)
 	if vRP.hasPermission(user_id,"policia.permissao") then
 		TriggerClientEvent('cone',source,args[1])
 	end
 end)
- 
+
 --[ BARREIRA ]-----------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterCommand('barreira',function(source,args,rawCommand)
 	local user_id = vRP.getUserId(source)
 	if vRP.hasPermission(user_id,"policia.permissao") then
 		TriggerClientEvent('barreira',source,args[1])
 	end
 end)
- 
+
 --[ SPIKE ]--------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterCommand('spike',function(source,args,rawCommand)
 	local user_id = vRP.getUserId(source)
 	if vRP.hasPermission(user_id,"policia.permissao") then
 		TriggerClientEvent('spike',source,args[1])
 	end
 end)
- 
+
 --[ DISPAROS ]-----------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterServerEvent('atirando')
 AddEventHandler('atirando',function(x,y,z)
 	local user_id = vRP.getUserId(source)
@@ -430,9 +434,9 @@ AddEventHandler('atirando',function(x,y,z)
 		end
 	end
 end)
- 
+
 --[ PRISÃO ]-------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 AddEventHandler("vRP:playerSpawn",function(user_id,source,first_spawn)
 	local player = vRP.getUserSource(parseInt(user_id))
 	if player then
@@ -473,9 +477,9 @@ function prison_lock(target_id)
 		end)
 	end
 end
- 
+
 --[ DIMINUIR PENA ]------------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 RegisterServerEvent("diminuirpena")
 AddEventHandler("diminuirpena",function()
 	local source = source
@@ -509,7 +513,7 @@ function src.periciaDinheiro()
 			vRPclient._stopAnim(source,false)
 			local totalDinheiro = parseInt(vRP.getInventoryItemAmount(user_id,"dinheiro-sujo"))
 			TriggerClientEvent("Notify",source,"sucesso","Foram identificados <b>$"..totalDinheiro.." dólares</b> em dinheiro sujo.")
-		end)	
+		end)
 	elseif vRP.getInventoryItemAmount(user_id,"dinheiro-sujo") == 1 then
 		TriggerClientEvent("progress",source,10000,"Analisando")
         vRPclient._playAnim(source,false,{{"amb@prop_human_parking_meter@female@idle_a","idle_a_female"}},true)
