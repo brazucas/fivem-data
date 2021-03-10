@@ -132,12 +132,9 @@ function vRP.getUserIdByIdentifiers(ids)
         for i = 1, #ids do
             if (string.find(ids[i], "ip:") == nil) then
                 local p = promise.new()
-                print("[vRP.getUserIdByIdentifiers] Searching by identifier " .. tostring(ids[i]))
-                print("[vRP.getUserIdByIdentifiers] Promise " .. tostring(p))
                 exports.mongodb:findOne({ collection = "vrp_user_ids", query = { identifier = ids[i] } }, function(success, result)
                     if success then
                         if #result > 0 then
-                            print("[vRP.getUserIdByIdentifiers] User found! " .. tostring(result) .. tostring(result[1]))
                             p:resolve(result[1].user_id)
                         else
                             p:resolve()
@@ -148,25 +145,20 @@ function vRP.getUserIdByIdentifiers(ids)
                     end
                 end)
 
-                local find_existing = Citizen.Await(p);
+                local existing_user_id = Citizen.Await(p);
 
-                print("[vRP.getUserIdByIdentifiers] find_existing " .. tostring(find_existing))
-
-                if (find_existing) then
-                    return find_existing
+                if (existing_user_id) then
+                    return existing_user_id
                 end
             end
         end
 
         local user_id = Citizen.Await(vRP.createUser())
 
-        print("user id " .. tostring(user_id))
-
         if (user_id ~= nil) then
             for l, w in pairs(ids) do
                 if (string.find(w, "ip:") == nil) then
                     local test = vRP.addIdentifier(w, user_id)
-                    print("[addIdentifier] New user registered: " .. tostring(test))
                 end
             end
             return user_id
