@@ -129,7 +129,7 @@ function vRP.getUserIdByIdentifiers(ids)
                         printUser(insertedIds[1])
                     end)
 
-                    exports.mongodb:insertOne({ collection = "vrp_user_ids", document = { identifier = identifier, user_id = user_id } }, function(success, result, insertedIds)
+                    exports.mongodb:insertOne({ collection = "vrp_user_ids", document = { identifier = w, user_id = user_id } }, function(success, result, insertedIds)
                         if success then
                             print("[MongoDB] New user registered: " .. tostring(result) .. tostring(insertedIds))
                         else
