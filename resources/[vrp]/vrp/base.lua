@@ -104,15 +104,27 @@ vRP.prepare("vRP/update_ip", "UPDATE vrp_users SET ip = @ip WHERE id = @uid")
 vRP.prepare("vRP/update_login", "UPDATE vrp_users SET last_login = @ll WHERE id = @uid")
 
 function vRP.addIdentifier(identifier, user_id)
-    return exports.mongodb:insertOne({ collection = "vrp_user_ids", document = { identifier = identifier, user_id = user_id } }, function(success, result, insertedIds)
+    local p = promise.new()
+    exports.mongodb:insertOne({ collection = "vrp_user_ids", document = { identifier = identifier, user_id = user_id } }, function(success, result, insertedIds)
         if success then
-            return insertedIds
+            p:resolve(insertedIds[1])
         else
-            print("[MongoDB][Example] Error in insertOne: " .. tostring(result))
-            error("test")
-            return
+            p:reject("[MongoDB][Example] Error in insertOne: " .. tostring(result))
         end
     end)
+    return p
+end
+
+function vRP.createUser()
+    local p = promise.new()
+    exports.mongodb:insertOne({ collection = "vrp_users", document = { whitelisted = false, banned = false } }, function(success, result, insertedIds)
+        if success then
+            p:resolve(insertedIds[1])
+        else
+            p:reject("[MongoDB][vRP.createUser] Error in insertOne: " .. tostring(result))
+        end
+    end)
+    return p
 end
 
 function vRP.getUserIdByIdentifiers(ids)
@@ -146,16 +158,15 @@ function vRP.getUserIdByIdentifiers(ids)
             end
         end
 
-        local rows, affected = vRP.query("vRP/create_user", {})
+        local user_id = Citizen.Await(vRP.createUser())
 
-        if #rows > 0 then
-            local user_id = rows[1].id
+        print("user id " .. tostring(user_id))
+
+        if (user_id ~= nil) then
             for l, w in pairs(ids) do
                 if (string.find(w, "ip:") == nil) then
                     local test = vRP.addIdentifier(w, user_id)
                     print("[addIdentifier] New user registered: " .. tostring(test))
-
-                    vRP.execute("vRP/add_identifier", { user_id = user_id, identifier = w })
                 end
             end
             return user_id
