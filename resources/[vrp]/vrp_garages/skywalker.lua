@@ -13,11 +13,6 @@ local idgens = Tools.newIDGenerator()
 
 --[ PREPARE ]----------------------------------------------------------------------------------------------------------------------------
 
-vRP._prepare("losanjos/get_vehicle", "SELECT * FROM vrp_user_vehicles WHERE user_id = @user_id")
-vRP._prepare("losanjos/get_vehicles", "SELECT * FROM vrp_user_vehicles WHERE user_id = @user_id AND vehicle = @vehicle")
-vRP._prepare("losanjos/set_update_vehicles", "UPDATE vrp_user_vehicles SET engine = @engine, body = @body, fuel = @fuel WHERE user_id = @user_id AND vehicle = @vehicle")
-vRP._prepare("losanjos/set_ipva", "UPDATE vrp_user_vehicles SET ipva = @ipva WHERE user_id = @user_id AND vehicle = @vehicle")
-vRP._prepare("losanjos/move_vehicle", "UPDATE vrp_user_vehicles SET user_id = @nuser_id WHERE user_id = @user_id AND vehicle = @vehicle")
 vRP._prepare("losanjos/con_maxvehs", "SELECT COUNT(vehicle) as qtd FROM vrp_user_vehicles WHERE user_id = @user_id")
 vRP._prepare("losanjos/rem_srv_data", "DELETE FROM vrp_srv_data WHERE dkey = @dkey")
 vRP._prepare("losanjos/get_estoque", "SELECT * FROM vrp_estoque WHERE vehicle = @vehicle")
@@ -414,6 +409,38 @@ local workgarage = {
 
 --[ MYVEHICLES ]-------------------------------------------------------------------------------------------------------------------------
 
+function vRP.getUserVehicle(user_id)
+    local p = promise.new()
+    exports.mongodb:findOne({ collection = "vrp_user_vehicles", query = { user_id = user_id } }, function(success, results)
+        if success then
+            p:resolve(results)
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
+            return
+        end
+    end)
+
+    local vehicles = Citizen.Await(p)
+
+    return vehicles
+end
+
+function vRP.getUserVehicles(user_id, vehicle)
+    local p = promise.new()
+    exports.mongodb:findOne({ collection = "vrp_user_vehicles", query = { user_id = user_id, vehicle = vehicle } }, function(success, results)
+        if success then
+            p:resolve(results)
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
+            return
+        end
+    end)
+
+    local vehicles = Citizen.Await(p)
+
+    return vehicles
+end
+
 function src.myVehicles(work)
     local source = source
     local user_id = vRP.getUserId(source)
@@ -439,7 +466,7 @@ function src.myVehicles(work)
             end
             return myvehicles
         else
-            local vehicle = vRP.query("losanjos/get_vehicle", { user_id = parseInt(user_id) })
+            local vehicle = vRP.getUserVehicle(user_id)
             local address = vRP.query("homes/get_homeuserid", { user_id = parseInt(user_id) })
             if #address > 0 then
                 for k, v in pairs(address) do
@@ -519,7 +546,7 @@ function src.spawnVehicles(name, use)
                 return true
             end
             if not vCLIENT.returnVehicle(source, name) then
-                local vehicle = vRP.query("losanjos/get_vehicles", { user_id = parseInt(user_id), vehicle = name })
+                local vehicle = vRP.getUserVehicles(parseInt(user_id), name)
                 local tuning = vRP.getSData("custom:u" .. user_id .. "veh_" .. name) or {}
                 local custom = json.decode(tuning) or {}
                 if vehicle[1] ~= nil then
@@ -582,7 +609,11 @@ function src.spawnVehicles(name, use)
                                 local ok = vRP.request(source, "Deseja pagar o <b>Vehicle Tax</b> do veículo <b>" .. vRP.vehicleName(name) .. "</b> por <b>$" .. vRP.format(parseInt(vRP.vehiclePrice(name) * 0.00)) .. "</b> dólares?", 60)
                                 if ok then
                                     if vRP.tryFullPayment(user_id, parseInt(vRP.vehiclePrice(name) * 0.00)) then
-                                        vRP.execute("losanjos/set_ipva", { user_id = parseInt(user_id), vehicle = name, ipva = parseInt(os.time()) })
+                                        exports.mongodb:updateOne({
+                                            collection = "vrp_user_vehicles",
+                                            query = { user_id = parseInt(user_id), vehicle = name },
+                                            update = { ["$set"] = { ipva = parseInt(os.time()) } }
+                                        })
                                         TriggerClientEvent("Notify", source, "sucesso", "Pagamento do <b>Vehicle Tax</b> conclúido com sucesso.", 10000)
                                     else
                                         TriggerClientEvent("Notify", source, "negado", "Dinheiro insuficiente.", 10000)
@@ -596,7 +627,12 @@ function src.spawnVehicles(name, use)
                                 local ok = vRP.request(source, "Deseja pagar o <b>Vehicle Tax</b> do veículo <b>" .. vRP.vehicleName(name) .. "</b> por <b>$" .. vRP.format(price_tax) .. "</b> dólares?", 60)
                                 if ok then
                                     if vRP.tryFullPayment(user_id, price_tax) then
-                                        vRP.execute("losanjos/set_ipva", { user_id = parseInt(user_id), vehicle = name, ipva = parseInt(os.time()) })
+                                        exports.mongodb:updateOne({
+                                            collection = "vrp_user_vehicles",
+                                            query = { user_id = parseInt(user_id), vehicle = name },
+                                            update = { ["$set"] = { ipva = parseInt(os.time()) } }
+                                        })
+
                                         TriggerClientEvent("Notify", source, "sucesso", "Pagamento do <b>Vehicle Tax</b> conclúido com sucesso.", 10000)
                                     else
                                         TriggerClientEvent("Notify", source, "negado", "Dinheiro insuficiente.", 10000)
@@ -755,9 +791,13 @@ function src.tryDelete(vehid, vehengine, vehbody, vehfuel)
             vehfuel = 100
         end
 
-        local vehicle = vRP.query("losanjos/get_vehicles", { user_id = parseInt(user_id), vehicle = vehname })
+        local vehicle = vRP.getUserVehicles(parseInt(user_id), vehname)
         if vehicle[1] ~= nil then
-            vRP.execute("losanjos/set_update_vehicles", { user_id = parseInt(user_id), vehicle = vehname, engine = parseInt(vehengine), body = parseInt(vehbody), fuel = parseInt(vehfuel) })
+            exports.mongodb:updateOne({
+                collection = "vrp_user_vehicles",
+                query = { user_id = parseInt(user_id), vehicle = name },
+                update = { ["$set"] = { engine = parseInt(vehengine), body = parseInt(vehbody), fuel = parseInt(vehfuel) } }
+            })
         end
     end
     vCLIENT.syncVehicle(-1, vehid)
@@ -921,7 +961,7 @@ RegisterCommand('vehs', function(source, args, rawCommand)
     if user_id then
         if args[1] and parseInt(args[2]) > 0 then
             local nplayer = vRP.getUserSource(parseInt(args[2]))
-            local myvehicles = vRP.query("losanjos/get_vehicles", { user_id = parseInt(user_id), vehicle = tostring(args[1]) })
+            local myvehicles = vRP.getUserVehicles(parseInt(user_id), tostring(args[1]))
             if myvehicles[1] then
                 if vRP.vehicleType(tostring(args[1])) == "exclusive" or vRP.vehicleType(tostring(args[1])) == "rental" and not vRP.hasPermission(user_id, "administrador.permissao") then
                     TriggerClientEvent("Notify", source, "negado", "<b>" .. vRP.vehicleName(tostring(args[1])) .. "</b> não pode ser transferido por ser um veículo <b>Exclusivo ou Alugado</b>.", 10000)
@@ -931,13 +971,17 @@ RegisterCommand('vehs', function(source, args, rawCommand)
                     local price = tonumber(sanitizeString(vRP.prompt(source, "Valor:", ""), "\"[]{}+=?!_()#@%/\\|,.", false))
                     if vRP.request(source, "Deseja vender um <b>" .. vRP.vehicleName(tostring(args[1])) .. "</b> para <b>" .. identity.name .. " " .. identity.firstname .. "</b> por <b>$" .. vRP.format(parseInt(price)) .. "</b> dólares ?", 30) then
                         if vRP.request(nplayer, "Aceita comprar um <b>" .. vRP.vehicleName(tostring(args[1])) .. "</b> de <b>" .. identity2.name .. " " .. identity2.firstname .. "</b> por <b>$" .. vRP.format(parseInt(price)) .. "</b> dólares ?", 30) then
-                            local vehicle = vRP.query("losanjos/get_vehicles", { user_id = parseInt(args[2]), vehicle = tostring(args[1]) })
+                            local vehicle = vRP.getUserVehicles(parseInt(args[2]), tostring(args[1]))
                             if parseInt(price) > 0 then
                                 if vRP.tryFullPayment(parseInt(args[2]), parseInt(price)) then
                                     if vehicle[1] then
                                         TriggerClientEvent("Notify", source, "negado", "<b>" .. identity.name .. " " .. identity.firstname .. "</b> já possui este modelo de veículo.", 10000)
                                     else
-                                        vRP.execute("losanjos/move_vehicle", { user_id = parseInt(user_id), nuser_id = parseInt(args[2]), vehicle = tostring(args[1]) })
+                                        exports.mongodb:updateOne({
+                                            collection = "vrp_user_vehicles",
+                                            query = { user_id = parseInt(user_id), vehicle = tostring(args[1]) },
+                                            update = { ["$set"] = { user_id = parseInt(args[2]) } }
+                                        })
 
                                         local custom = vRP.getSData("custom:u" .. parseInt(user_id) .. "veh_" .. tostring(args[1]))
                                         local custom2 = json.decode(custom)
@@ -972,7 +1016,7 @@ RegisterCommand('vehs', function(source, args, rawCommand)
                 end
             end
         else
-            local vehicle = vRP.query("losanjos/get_vehicle", { user_id = parseInt(user_id) })
+            local vehicle = vRP.getUserVehicle(parseInt(user_id))
             if #vehicle > 0 then
                 local car_names = {}
                 for k, v in pairs(vehicle) do

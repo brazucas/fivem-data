@@ -114,7 +114,7 @@ function src.buyDealer(name)
     if user_id then
         local maxvehs = vRP.query("losanjos/con_maxvehs", { user_id = parseInt(user_id) })
         local maxgars = vRP.query("losanjos/get_users", { user_id = parseInt(user_id) })
-        local vehicle = vRP.query("losanjos/get_vehicles", { user_id = parseInt(user_id), vehicle = name })
+        local vehicle = vRP.getUserVehicles(parseInt(user_id), name)
 
         if vRP.hasPermission(user_id, "ultimate.permissao") then
             if parseInt(maxvehs[1].qtd) >= parseInt(maxgars[1].garagem) + 15 then
@@ -227,7 +227,7 @@ function src.sellDealer(name)
     local source = source
     local user_id = vRP.getUserId(source)
     if user_id then
-        local vehicle = vRP.query("losanjos/get_vehicles", { user_id = parseInt(user_id), vehicle = name })
+        local vehicle = vRP.getUserVehicles(parseInt(user_id), name)
         local rows2 = vRP.query("losanjos/get_estoque", { vehicle = name })
         if vehicle[1] then
             exports.mongodb:deleteOne({ collection = "vrp_user_vehicles", query = { user_id = parseInt(user_id), vehicle = name } })

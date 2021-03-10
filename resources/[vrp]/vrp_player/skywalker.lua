@@ -23,9 +23,9 @@ function src.checkMascara()
 	if user_id then
 		if not vRPclient.checkAcao(source) then
 			if vRP.getInventoryItemAmount(user_id,"mascara") >= 1 then
-				return true 
+				return true
 			else
-				TriggerClientEvent("Notify",source,"negado","Você não possui uma <b>mascara</b> em sua mochila.") 
+				TriggerClientEvent("Notify",source,"negado","Você não possui uma <b>mascara</b> em sua mochila.")
 				return false
 			end
 		end
@@ -38,9 +38,9 @@ function src.checkOculos()
 	if user_id then
 		if not vRPclient.checkAcao(source) then
 			if vRP.getInventoryItemAmount(user_id,"oculos") >= 1 then
-				return true 
+				return true
 			else
-				TriggerClientEvent("Notify",source,"negado","Você não possui uma <b>óculos</b> em sua mochila.") 
+				TriggerClientEvent("Notify",source,"negado","Você não possui uma <b>óculos</b> em sua mochila.")
 				return false
 			end
 		end
@@ -52,7 +52,7 @@ end
 RegisterCommand('item',function(source,args,rawCommand)
 	local user_id = vRP.getUserId(source)
 	local identity = vRP.getUserIdentity(user_id)
-	
+
 	if vRP.hasPermission(user_id,"administrador.permissao") or vRP.hasPermission(user_id,"manager.permissao") then
 		if args[1] and args[2] then
 			local itemIndex = vRP.itemIndexList(args[1])
@@ -66,22 +66,22 @@ RegisterCommand('item',function(source,args,rawCommand)
 							title = "REGISTRO DE ITEM GERADO:⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀",
 							thumbnail = {
 							url = "https://i.imgur.com/5ydYKZg.png"
-							}, 
+							},
 							fields = {
-								{ 
-									name = "**COLABORADOR DA EQUIPE:**", 
+								{
+									name = "**COLABORADOR DA EQUIPE:**",
 									value = "**"..identity.name.." "..identity.firstname.."** [**"..user_id.."**]"
 								},
 								{
 									name = "**ITEM GERADO**",
 									value = "[ **Item: "..nomeItem.."** ][ **Quantidade: "..quantItem.."** ]\n⠀⠀"
 								}
-							}, 
-							footer = { 
-								text = "BRZ - "..os.date("%d/%m/%Y |: %H:%M:%S"), 
-								icon_url = "https://i.imgur.com/5ydYKZg.png" 
 							},
-							color = 16431885 
+							footer = {
+								text = "BRZ - "..os.date("%d/%m/%Y |: %H:%M:%S"),
+								icon_url = "https://i.imgur.com/5ydYKZg.png"
+							},
+							color = 16431885
 						}
 					}
 				}), { ['Content-Type'] = 'application/json' })
@@ -101,8 +101,8 @@ RegisterCommand('uservehs',function(source,args,rawCommand)
     if user_id then
         if vRP.hasPermission(user_id,"manager.permissao") or vRP.hasPermission(user_id,"administrador.permissao") then
         	local nuser_id = parseInt(args[1])
-            if nuser_id > 0 then 
-                local vehicle = vRP.query("losanjos/get_vehicle",{ user_id = parseInt(nuser_id) })
+            if nuser_id > 0 then
+                local vehicle = vRP.getUserVehicle(parseInt(nuser_id))
                 local car_names = {}
                 for k,v in pairs(vehicle) do
                 	table.insert(car_names, "<b>" .. vRP.vehicleName(v.vehicle) .. "</b>")
@@ -118,13 +118,13 @@ end)
 --[ RESKIN ]-----------------------------------------------------------------------------------------------------------------------------
 
 RegisterCommand('reskin',function(source,rawCommand)
-	local user_id = vRP.getUserId(source)		
-	vRPclient._setCustomization(vRPclient.getCustomization(source))		
+	local user_id = vRP.getUserId(source)
+	vRPclient._setCustomization(vRPclient.getCustomization(source))
 end)
 
 --[ ID ]---------------------------------------------------------------------------------------------------------------------------------
 
-RegisterCommand('id',function(source,rawCommand)	
+RegisterCommand('id',function(source,rawCommand)
 	local nplayer = vRPclient.getNearestPlayer(source,2)
 	local nuser_id = vRP.getUserId(nplayer)
 	if nuser_id then
@@ -203,18 +203,18 @@ AddEventHandler('salario:pagamento',function()
 					title = "REGISTRO DE BANIMENTO POR CHEAT:⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀",
 					thumbnail = {
 						url = "https://i.imgur.com/5ydYKZg.png"
-					}, 
+					},
 					fields = {
 						{
 							name = "**ID BANIDO: **"..user_id,
 							value = "Banido ao tentar usar o evento de salário."
 						}
-					}, 
-					footer = { 
+					},
+					footer = {
 						text = "Los Anjos RP - "..os.date("%d/%m/%Y | %H:%M:%S"),
 						icon_url = "https://i.imgur.com/5ydYKZg.png"
 					},
-					color = 15906321 
+					color = 15906321
 				}
 			}
 		}), { ['Content-Type'] = 'application/json' })
@@ -349,9 +349,9 @@ RegisterCommand('chamar',function(source,args,rawCommand)
 		if especialidade == "Staff" then
 			adm = "[STAFF] "
 		end
-		
+
 		vRPclient.playSound(source,"Event_Message_Purple","GTAO_FM_Events_Soundset")
-		
+
 		local identitys = vRP.getUserIdentity(user_id)
 		TriggerClientEvent("Notify",source,"sucesso","Chamado enviado com sucesso.")
 
