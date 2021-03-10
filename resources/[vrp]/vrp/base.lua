@@ -89,9 +89,6 @@ function vRP.execute(name, params)
     return vRP.query(name, params, "execute")
 end
 
-vRP.prepare("vRP/update_ip", "UPDATE vrp_users SET ip = @ip WHERE id = @uid")
-vRP.prepare("vRP/update_login", "UPDATE vrp_users SET last_login = @ll WHERE id = @uid")
-
 function vRP.addIdentifier(identifier, user_id)
     local p = promise.new()
     exports.mongodb:insertOne({ collection = "vrp_user_ids", document = { identifier = identifier, user_id = user_id } }, function(success, result, insertedIds)
