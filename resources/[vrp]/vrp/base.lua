@@ -89,17 +89,6 @@ function vRP.execute(name, params)
     return vRP.query(name, params, "execute")
 end
 
-vRP.prepare("vRP/create_user", "INSERT INTO vrp_users(whitelisted,banned) VALUES(false,false); SELECT LAST_INSERT_ID() AS id")
-vRP.prepare("vRP/add_identifier", "INSERT INTO vrp_user_ids(identifier,user_id) VALUES(@identifier,@user_id)")
-vRP.prepare("vRP/userid_byidentifier", "SELECT user_id FROM vrp_user_ids WHERE identifier = @identifier")
-vRP.prepare("vRP/set_userdata", "REPLACE INTO vrp_user_data(user_id,dkey,dvalue) VALUES(@user_id,@key,@value)")
-vRP.prepare("vRP/get_userdata", "SELECT dvalue FROM vrp_user_data WHERE user_id = @user_id AND dkey = @key")
-vRP.prepare("vRP/set_srvdata", "REPLACE INTO vrp_srv_data(dkey,dvalue) VALUES(@key,@value)")
-vRP.prepare("vRP/get_srvdata", "SELECT dvalue FROM vrp_srv_data WHERE dkey = @key")
-vRP.prepare("vRP/get_banned", "SELECT banned FROM vrp_users WHERE id = @user_id")
-vRP.prepare("vRP/set_banned", "UPDATE vrp_users SET banned = @banned WHERE id = @user_id")
-vRP.prepare("vRP/get_whitelisted", "SELECT whitelisted FROM vrp_users WHERE id = @user_id")
-vRP.prepare("vRP/set_whitelisted", "UPDATE vrp_users SET whitelisted = @whitelisted WHERE id = @user_id")
 vRP.prepare("vRP/update_ip", "UPDATE vrp_users SET ip = @ip WHERE id = @uid")
 vRP.prepare("vRP/update_login", "UPDATE vrp_users SET last_login = @ll WHERE id = @uid")
 
@@ -170,53 +159,147 @@ function vRP.getPlayerEndpoint(player)
     return GetPlayerEP(player) or "0.0.0.0"
 end
 
+function vRP.getPlayerById(user_id)
+    local p = promise.new()
+    exports.mongodb:findOne({ collection = "vrp_users", query = { user_id = user_id } }, function(success, result)
+        if success then
+            if #result > 0 then
+                p:resolve(result[1])
+            else
+                p:resolve()
+            end
+        else
+            p:reject("[vRP.getUserIdByIdentifiers] ERROR " .. tostring(result))
+            return
+        end
+    end)
+
+    return Citizen.Await(p);
+end
+
 function vRP.isBanned(user_id, cbr)
-    local rows = vRP.query("vRP/get_banned", { user_id = user_id })
-    if #rows > 0 then
-        return rows[1].banned
+    local user = vRP.getPlayerById(user_id);
+
+    if user ~= nil and #user > 0 then
+        return user[1].banned
     else
-        return false
+       return false
     end
 end
 
 function vRP.setBanned(user_id, banned)
-    vRP.execute("vRP/set_banned", { user_id = user_id, banned = banned })
+    local p = promise.new()
+    exports.mongodb:updateOne({ collection = "vrp_users", query = { _id = user_id }, update = { ["$set"] = { banned = true } }}, function(success, result)
+        p:resolve(success)
+    end)
+
+    return Citizen.Await(p)
 end
 
 function vRP.isWhitelisted(user_id, cbr)
-    local rows = vRP.query("vRP/get_whitelisted", { user_id = user_id })
-    if #rows > 0 then
-        return rows[1].whitelisted
+    local user = vRP.getPlayerById(user_id);
+
+    if user ~= nil and #user > 0 then
+        return user[1].whitelisted
     else
         return false
     end
 end
 
 function vRP.setWhitelisted(user_id, whitelisted)
-    vRP.execute("vRP/set_whitelisted", { user_id = user_id, whitelisted = whitelisted })
+    local p = promise.new()
+    exports.mongodb:updateOne({ collection = "vrp_users", query = { _id = user_id }, update = { ["$set"] = { whitelisted = true } }}, function(success, result)
+        p:resolve(success)
+    end)
+
+    return Citizen.Await(p)
 end
 
 function vRP.setUData(user_id, key, value)
-    vRP.execute("vRP/set_userdata", { user_id = user_id, key = key, value = value })
+    local p = promise.new()
+    local uData = vRP.getUData(user_id, key)
+
+    if string.len(uData) > 0 then
+        exports.mongodb:updateOne({ collection = "vrp_user_data", query = { _id = user_id }, update = { ["$set"] = { dvalue = value } }}, function(success, result)
+            p:resolve(success)
+        end)
+    else
+        exports.mongodb:insertOne({ collection = "vrp_user_data", document = { user_id = user_id, dkey = key, dvalue = value } }, function(success, result, insertedIds)
+            if success then
+                p:resolve(insertedIds[1])
+            else
+                p:reject("[MongoDB][Example] Error in insertOne: " .. tostring(result))
+            end
+        end)
+    end
+
+    return Citizen.Await(p)
 end
 
 function vRP.getUData(user_id, key, cbr)
-    local rows = vRP.query("vRP/get_userdata", { user_id = user_id, key = key })
-    if #rows > 0 then
-        return rows[1].dvalue
+    local p = promise.new()
+    exports.mongodb:findOne({ collection = "vrp_user_data", query = { user_id = user_id, dkey = key } }, function(success, result)
+        if success then
+            if #result > 0 then
+                p:resolve(result[1])
+            else
+                p:resolve()
+            end
+        else
+            p:reject("[vRP.getUserIdByIdentifiers] ERROR " .. tostring(result))
+            return
+        end
+    end)
+
+    local uData =  Citizen.Await(p);
+
+    if uData ~= nil and #uData > 0 then
+        return uData[1].dvalue
     else
         return ""
     end
 end
 
 function vRP.setSData(key, value)
-    vRP.execute("vRP/set_srvdata", { key = key, value = value })
+    local p = promise.new()
+    local uData = vRP.getUData(user_id, key)
+
+    if string.len(uData) > 0 then
+        exports.mongodb:updateOne({ collection = "vrp_srv_data", query = { dkey = key }, update = { ["$set"] = { dvalue = value } }}, function(success, result)
+            p:resolve(success)
+        end)
+    else
+        exports.mongodb:insertOne({ collection = "vrp_srv_data", document = { dkey = key, dvalue = value } }, function(success, result, insertedIds)
+            if success then
+                p:resolve(insertedIds[1])
+            else
+                p:reject("[MongoDB][vRP.setSData] Error in insertOne: " .. tostring(result))
+            end
+        end)
+    end
+
+    return Citizen.Await(p)
 end
 
 function vRP.getSData(key, cbr)
-    local rows = vRP.query("vRP/get_srvdata", { key = key })
-    if #rows > 0 then
-        return rows[1].dvalue
+    local p = promise.new()
+    exports.mongodb:findOne({ collection = "vrp_srv_data", query = { dkey = key } }, function(success, result)
+        if success then
+            if #result > 0 then
+                p:resolve(result[1])
+            else
+                p:resolve()
+            end
+        else
+            p:reject("[vRP.getSData] ERROR " .. tostring(result))
+            return
+        end
+    end)
+
+    local uData =  Citizen.Await(p);
+
+    if uData ~= nil and #uData > 0 then
+        return uData[1].dvalue
     else
         return ""
     end
@@ -527,8 +610,9 @@ AddEventHandler("queue:playerConnecting", function(source, ids, name, setKickRea
             if not vRP.isBanned(user_id) then
                 deferrals.update("Carregando whitelist.")
                 if vRP.isWhitelisted(user_id) then
-                    vRP.execute("vRP/update_login", { ll = os.date("%H:%M:%S %d/%m/%Y"), uid = user_id })
-                    vRP.execute("vRP/update_ip", { ip = vRP.getPlayerEndpoint(source), uid = user_id })
+                    exports.mongodb:updateOne({ collection = "vrp_users", query = { _id = user_id }, update = { ["$set"] = { ip = vRP.getPlayerEndpoint(source) } }})
+                    exports.mongodb:updateOne({ collection = "vrp_users", query = { _id = user_id }, update = { ["$set"] = { ll = os.date("%H:%M:%S %d/%m/%Y") } }})
+
                     if vRP.rusers[user_id] == nil then
                         deferrals.update("Carregando banco de dados.")
                         local sdata = vRP.getUData(user_id, "vRP:datatable")
