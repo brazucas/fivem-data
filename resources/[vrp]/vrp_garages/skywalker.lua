@@ -11,12 +11,36 @@ Tunnel.bindInterface("vrp_garages", src)
 vCLIENT = Tunnel.getInterface("vrp_garages")
 local idgens = Tools.newIDGenerator()
 
---[ PREPARE ]----------------------------------------------------------------------------------------------------------------------------
+--[ FUNÇÕES ]---------------------------------------
 
-vRP._prepare("losanjos/con_maxvehs", "SELECT COUNT(vehicle) as qtd FROM vrp_user_vehicles WHERE user_id = @user_id")
-vRP._prepare("losanjos/rem_srv_data", "DELETE FROM vrp_srv_data WHERE dkey = @dkey")
-vRP._prepare("losanjos/get_estoque", "SELECT * FROM vrp_estoque WHERE vehicle = @vehicle")
-vRP._prepare("losanjos/get_users", "SELECT * FROM vrp_users WHERE id = @user_id")
+function vRP.getUsers(user_id)
+    local p = promise.new()
+    exports.mongodb:find({ collection = "vrp_users", query = { _id = user_id } }, function(success, results)
+        if success then
+            p:resolve(results)
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(result))
+            return
+        end
+    end)
+    return Citizen.Await(p)
+end
+
+function vRP.getEstoque(vehicle)
+    local p = promise.new()
+    exports.mongodb:findOne({ collection = "vrp_estoque", query = { vehicle = vehicle } }, function(success, results)
+        if success then
+            p:resolve(results)
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
+            return
+        end
+    end)
+
+    local estoque = Citizen.Await(p)
+
+    return estoque
+end
 
 --[ WEBHOOK ]----------------------------------------------------------------------------------------------------------------------------
 
@@ -467,7 +491,7 @@ function src.myVehicles(work)
             return myvehicles
         else
             local vehicle = vRP.getUserVehicle(user_id)
-            local address = vRP.query("homes/get_homeuserid", { user_id = parseInt(user_id) })
+            local address = vRP.getHomeUserId(parseInt(user_id))
             if #address > 0 then
                 for k, v in pairs(address) do
                     if v.home == work then
@@ -817,12 +841,12 @@ function src.returnHouses(nome, garage)
     local user_id = vRP.getUserId(source)
     if user_id then
         if not vRP.searchReturn(source, user_id) then
-            local address = vRP.query("homes/get_homeuserid", { user_id = parseInt(user_id) })
+            local address = vRP.getHomeUserId(parseInt(user_id))
             if #address > 0 then
                 for k, v in pairs(address) do
                     if v.home == garages[garage].name then
                         if parseInt(v.garage) == 1 then
-                            local resultOwner = vRP.query("homes/get_homeuseridowner", { home = tostring(nome) })
+                            local resultOwner = vRP.getHomeUserIdOwner(tostring(nome))
                             if resultOwner[1] then
                                 if parseInt(os.time()) >= parseInt(resultOwner[1].tax + 24 * 15 * 60 * 60) then
                                     TriggerClientEvent("Notify", source, "aviso", "A <b>Property Tax</b> da residência está atrasada.", 10000)

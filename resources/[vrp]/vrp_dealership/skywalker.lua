@@ -20,19 +20,19 @@ local import = {}
 Citizen.CreateThread(function()
     for k, v in pairs(vRP.vehicleGlobal()) do
         if v.tipo == "carros" then
-            local vehicle = vRP.query("losanjos/get_estoque", { vehicle = k })
+            local vehicle = vRP.getEstoque(k)
             if vehicle[1] ~= nil then
                 table.insert(carros, { k = k, nome = v.name, price = v.price, chest = v.mala, stock = parseInt(vehicle[1].quantidade) })
             end
         end
         if v.tipo == "motos" then
-            local vehicle = vRP.query("losanjos/get_estoque", { vehicle = k })
+            local vehicle = vRP.getEstoque(k)
             if vehicle[1] ~= nil then
                 table.insert(motos, { k = k, nome = v.name, price = v.price, chest = v.mala, stock = parseInt(vehicle[1].quantidade) })
             end
         end
         if v.tipo == "import" then
-            local vehicle = vRP.query("losanjos/get_estoque", { vehicle = k })
+            local vehicle = vRP.getEstoque(k)
             if vehicle[1] ~= nil then
                 table.insert(import, { k = k, nome = v.name, price = v.price, chest = v.mala, stock = parseInt(vehicle[1].quantidade) })
             end
@@ -47,7 +47,7 @@ function src.updateVehicles(vname, vehtype)
         for k, v in pairs(carros) do
             if v.k == vname then
                 table.remove(carros, k)
-                local vehicle = vRP.query("losanjos/get_estoque", { vehicle = vname })
+                local vehicle = vRP.getEstoque(vname)
                 if vehicle[1] ~= nil then
                     table.insert(carros, { k = vname, nome = vRP.vehicleName(vname), price = (vRP.vehiclePrice(vname)), chest = (vRP.vehicleChest(vname)), stock = parseInt(vehicle[1].quantidade) })
                 end
@@ -57,7 +57,7 @@ function src.updateVehicles(vname, vehtype)
         for k, v in pairs(motos) do
             if v.k == vname then
                 table.remove(motos, k)
-                local vehicle = vRP.query("losanjos/get_estoque", { vehicle = vname })
+                local vehicle = vRP.getEstoque(vname)
                 if vehicle[1] ~= nil then
                     table.insert(motos, { k = vname, nome = vRP.vehicleName(vname), price = (vRP.vehiclePrice(vname)), chest = (vRP.vehicleChest(vname)), stock = parseInt(vehicle[1].quantidade) })
                 end
@@ -67,7 +67,7 @@ function src.updateVehicles(vname, vehtype)
         for k, v in pairs(import) do
             if v.k == vname then
                 table.remove(import, k)
-                local vehicle = vRP.query("losanjos/get_estoque", { vehicle = vname })
+                local vehicle = vRP.getEstoque(vname)
                 if vehicle[1] ~= nil then
                     table.insert(import, { k = vname, nome = vRP.vehicleName(vname), price = vRP.vehiclePrice(vname), chest = (vRP.vehicleChest(vname)), stock = parseInt(vehicle[1].quantidade) })
                 end
@@ -106,38 +106,56 @@ function src.Import()
     end
 end
 
+--[ FUNÇÕES ]---------------------------------------
+
+function vRP.getConMaxVehs(user_id)
+    local p = promise.new()
+    exports.mongodb:count({ collection = "vrp_user_vehicles", query = { user_id = user_id } }, function(success, count)
+        if success then
+            p:resolve(count)
+        else
+            p:reject("[vRP.getUserAddress] ERROR ")
+            return
+        end
+    end)
+
+    local count = Citizen.Await(p)
+
+    return count
+end
+
 --[ BUYDEALER ]--------------------------------------------------------------------------------------------------------------------------
 
 function src.buyDealer(name)
     local source = source
     local user_id = vRP.getUserId(source)
     if user_id then
-        local maxvehs = vRP.query("losanjos/con_maxvehs", { user_id = parseInt(user_id) })
-        local maxgars = vRP.query("losanjos/get_users", { user_id = parseInt(user_id) })
+        local maxvehs = vRP.getConMaxVehs(parseInt(user_id))
+        local maxgars = vRP.getUsers(parseInt(user_id))
         local vehicle = vRP.getUserVehicles(parseInt(user_id), name)
 
         if vRP.hasPermission(user_id, "ultimate.permissao") then
-            if parseInt(maxvehs[1].qtd) >= parseInt(maxgars[1].garagem) + 15 then
+            if parseInt(maxvehs) >= parseInt(maxgars[1].garagem) + 15 then
                 TriggerClientEvent("Notify", source, "importante", "Atingiu o número máximo de veículos em sua garagem.", 8000)
                 return
             end
         elseif vRP.hasPermission(user_id, "platinum.permissao") then
-            if parseInt(maxvehs[1].qtd) >= parseInt(maxgars[1].garagem) + 10 then
+            if parseInt(maxvehs) >= parseInt(maxgars[1].garagem) + 10 then
                 TriggerClientEvent("Notify", source, "importante", "Atingiu o número máximo de veículos em sua garagem.", 8000)
                 return
             end
         elseif vRP.hasPermission(user_id, "gold.permissao") then
-            if parseInt(maxvehs[1].qtd) >= parseInt(maxgars[1].garagem) + 5 then
+            if parseInt(maxvehs) >= parseInt(maxgars[1].garagem) + 5 then
                 TriggerClientEvent("Notify", source, "importante", "Atingiu o número máximo de veículos em sua garagem.", 8000)
                 return
             end
         elseif vRP.hasPermission(user_id, "standard.permissao") then
-            if parseInt(maxvehs[1].qtd) >= parseInt(maxgars[1].garagem) + 3 then
+            if parseInt(maxvehs) >= parseInt(maxgars[1].garagem) + 3 then
                 TriggerClientEvent("Notify", source, "importante", "Atingiu o número máximo de veículos em sua garagem.", 8000)
                 return
             end
         else
-            if parseInt(maxvehs[1].qtd) >= parseInt(maxgars[1].garagem) + 1 then
+            if parseInt(maxvehs) >= parseInt(maxgars[1].garagem) + 1 then
                 TriggerClientEvent("Notify", source, "importante", "Atingiu o número máximo de veículos em sua garagem.", 8000)
                 return
             end
@@ -147,7 +165,7 @@ function src.buyDealer(name)
             TriggerClientEvent("Notify", source, "importante", "Você já possui um <b>" .. vRP.vehicleName(name) .. "</b> em sua garagem.", 10000)
             return
         else
-            local rows2 = vRP.query("losanjos/get_estoque", { vehicle = name })
+            local rows2 = vRP.getEstoque(name)
             if parseInt(rows2[1].quantidade) <= 0 then
                 TriggerClientEvent("Notify", source, "aviso", "Estoque de <b>" .. vRP.vehicleName(name) .. "</b> indisponível.", 8000)
                 return
@@ -228,7 +246,7 @@ function src.sellDealer(name)
     local user_id = vRP.getUserId(source)
     if user_id then
         local vehicle = vRP.getUserVehicles(parseInt(user_id), name)
-        local rows2 = vRP.query("losanjos/get_estoque", { vehicle = name })
+        local rows2 = vRP.getEstoque(name)
         if vehicle[1] then
             exports.mongodb:deleteOne({ collection = "vrp_user_vehicles", query = { user_id = parseInt(user_id), vehicle = name } })
             exports.mongodb:deleteOne({ collection = "vrp_srv_data", query = { dkey = "custom:u" .. parseInt(user_id) .. "veh_" .. name } })

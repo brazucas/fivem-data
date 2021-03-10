@@ -14,17 +14,91 @@ vCLIENT = Tunnel.getInterface("vrp_homes")
 
 local webhookbaucasas = ""
 
---[ PREPARES ]---------------------------------------------------------------------------------------------------------------------------
+--[ FUNÇÕES ]---------------------------------------
 
-vRP._prepare("homes/get_homeuser", "SELECT * FROM vrp_homes_permissions WHERE user_id = @user_id AND home = @home")
-vRP._prepare("homes/get_homeuserid", "SELECT * FROM vrp_homes_permissions WHERE user_id = @user_id")
-vRP._prepare("homes/get_homeuserowner", "SELECT * FROM vrp_homes_permissions WHERE user_id = @user_id AND home = @home AND owner = 1")
-vRP._prepare("homes/get_homeuseridowner", "SELECT * FROM vrp_homes_permissions WHERE home = @home AND owner = 1")
-vRP._prepare("homes/get_homepermissions", "SELECT * FROM vrp_homes_permissions WHERE home = @home")
-vRP._prepare("homes/count_homepermissions", "SELECT COUNT(*) as qtd FROM vrp_homes_permissions WHERE home = @home")
-vRP._prepare("homes/upd_taxhomes", "UPDATE vrp_homes_permissions SET tax = @tax WHERE user_id = @user_id, home = @home AND owner = 1")
-vRP._prepare("homes/get_allhomes", "SELECT * FROM vrp_homes_permissions WHERE owner = @owner")
-vRP._prepare("homes/get_allvehs", "SELECT * FROM vrp_vehicles")
+function vRP.countHomePermissions(home)
+    local p = promise.new()
+    exports.mongodb:count({ collection = "vrp_homes_permissions", query = { home = home } }, function(success, count)
+        if success then
+            p:resolve(count)
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(count))
+            return
+        end
+    end)
+
+    return Citizen.Await(p)
+end
+
+function vRP.getHomePermissions(home)
+    local p = promise.new()
+    exports.mongodb:find({ collection = "vrp_homes_permissions", query = { home = home } }, function(success, results)
+        if success then
+            p:resolve(results)
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
+            return
+        end
+    end)
+
+    return Citizen.Await(p)
+end
+
+function vRP.getHomeUserOwner(user_id, home)
+    local p = promise.new()
+    exports.mongodb:findOne({ collection = "vrp_homes_permissions", query = { home = home, user_id = user_id, owner = true } }, function(success, results)
+        if success then
+            p:resolve(results)
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
+            return
+        end
+    end)
+
+    return Citizen.Await(p)
+end
+
+function vRP.getHomeUser(user_id, home)
+    local p = promise.new()
+    exports.mongodb:findOne({ collection = "vrp_homes_permissions", query = { home = home, user_id = user_id } }, function(success, results)
+        if success then
+            p:resolve(results)
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
+            return
+        end
+    end)
+
+    return Citizen.Await(p)
+end
+
+function vRP.getHomeUserIdOwner(home)
+    local p = promise.new()
+    exports.mongodb:findOne({ collection = "vrp_homes_permissions", query = { home = home, owner = true } }, function(success, results)
+        if success then
+            p:resolve(results)
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
+            return
+        end
+    end)
+
+    return Citizen.Await(p)
+end
+
+function vRP.getHomeUserId(user_id)
+    local p = promise.new()
+    exports.mongodb:find({ collection = "vrp_homes_permissions", query = { user_id = user_id } }, function(success, results)
+        if success then
+            p:resolve(results)
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
+            return
+        end
+    end)
+
+    return Citizen.Await(p)
+end
 
 --[ HOMESINFO ]--------------------------------------------------------------------------------------------------------------------------
 
@@ -569,7 +643,7 @@ Citizen.CreateThread(function()
     while true do
         blipHomes = {}
         for k, v in pairs(homes) do
-            local checkHomes = vRP.query("homes/get_homeuseridowner", { home = tostring(k) })
+            local checkHomes = vRP.getHomeUserIdOwner(tostring(k))
             if checkHomes[1] == nil then
                 table.insert(blipHomes, { name = tostring(k) })
                 Citizen.Wait(10)
@@ -586,10 +660,10 @@ RegisterCommand('homes', function(source, args, rawCommand)
     local user_id = vRP.getUserId(source)
     if user_id then
         if args[1] == "add" and homes[tostring(args[2])] then
-            local myHomes = vRP.query("homes/get_homeuserowner", { user_id = parseInt(user_id), home = tostring(args[2]) })
+            local myHomes = vRP.getHomeUserOwner(parseInt(user_id), tostring(args[2]))
             if myHomes[1] then
-                local totalResidents = vRP.query("homes/count_homepermissions", { home = tostring(args[2]) })
-                if parseInt(totalResidents[1].qtd) >= parseInt(homes[tostring(args[2])][2]) then
+                local totalResidents = vRP.countHomePermissions(tostring(args[2]))
+                if parseInt(totalResidents[1]) >= parseInt(homes[tostring(args[2])][2]) then
                     TriggerClientEvent("Notify", source, "negado", "A residência " .. tostring(args[2]) .. " atingiu o máximo de moradores.", 10000)
                     return
                 end
@@ -616,9 +690,9 @@ RegisterCommand('homes', function(source, args, rawCommand)
                 end
             end
         elseif args[1] == "rem" and homes[tostring(args[2])] then
-            local myHomes = vRP.query("homes/get_homeuserowner", { user_id = parseInt(user_id), home = tostring(args[2]) })
+            local myHomes = vRP.getHomeUserOwner(parseInt(user_id), tostring(args[2]))
             if myHomes[1] then
-                local userHomes = vRP.query("homes/get_homeuser", { user_id = parseInt(args[3]), home = tostring(args[2]) })
+                local userHomes = vRP.getHomeUser(parseInt(args[3]), tostring(args[2]))
                 if userHomes[1] then
                     exports.mongodb:deleteOne({ collection = "vrp_homes_permissions", query = { user_id = parseInt(args[3]), home = tostring(args[2]) } })
                     local identity = vRP.getUserIdentity(parseInt(args[3]))
@@ -628,9 +702,9 @@ RegisterCommand('homes', function(source, args, rawCommand)
                 end
             end
         elseif args[1] == "garage" and homes[tostring(args[2])] then
-            local myHomes = vRP.query("homes/get_homeuserowner", { user_id = parseInt(user_id), home = tostring(args[2]) })
+            local myHomes = vRP.getHomeUserOwner(parseInt(user_id), tostring(args[2]))
             if myHomes[1] then
-                local userHomes = vRP.query("homes/get_homeuser", { user_id = parseInt(args[3]), home = tostring(args[2]) })
+                local userHomes = vRP.getHomeUser(parseInt(args[3]), tostring(args[2]))
                 if userHomes[1] then
                     if vRP.tryFullPayment(user_id, 50000) then
                         exports.mongodb:updateOne({
@@ -650,9 +724,9 @@ RegisterCommand('homes', function(source, args, rawCommand)
         elseif args[1] == "list" then
             vCLIENT.setBlipsHomes(source, blipHomes)
         elseif args[1] == "check" and homes[tostring(args[2])] then
-            local myHomes = vRP.query("homes/get_homeuserowner", { user_id = parseInt(user_id), home = tostring(args[2]) })
+            local myHomes = vRP.getHomeUserOwner(parseInt(user_id), tostring(args[2]))
             if myHomes[1] then
-                local userHomes = vRP.query("homes/get_homepermissions", { home = tostring(args[2]) })
+                local userHomes = vRP.getHomePermissions(tostring(args[2]))
                 if parseInt(#userHomes) > 1 then
                     local permissoes = ""
                     for k, v in pairs(userHomes) do
@@ -671,7 +745,7 @@ RegisterCommand('homes', function(source, args, rawCommand)
                 end
             end
         elseif args[1] == "transfer" and homes[tostring(args[2])] then
-            local myHomes = vRP.query("homes/get_homeuserowner", { user_id = parseInt(user_id), home = tostring(args[2]) })
+            local myHomes = vRP.getHomeUserOwner(parseInt(user_id), tostring(args[2]))
             if myHomes[1] then
                 local identity = vRP.getUserIdentity(parseInt(args[3]))
                 if identity then
@@ -693,7 +767,7 @@ RegisterCommand('homes', function(source, args, rawCommand)
                 end
             end
         elseif args[1] == "tax" and homes[tostring(args[2])] then
-            local ownerHomes = vRP.query("homes/get_homeuseridowner", { home = tostring(args[2]) })
+            local ownerHomes = vRP.getHomeUserIdOwner(tostring(args[2]))
             if ownerHomes[1] then
                 --if not vRP.hasGroup(user_id,"Platina") then
                 local house_price = parseInt(homes[tostring(args[2])][1])
@@ -720,10 +794,10 @@ RegisterCommand('homes', function(source, args, rawCommand)
                 --end
             end
         else
-            local myHomes = vRP.query("homes/get_homeuserid", { user_id = parseInt(user_id) })
+            local myHomes = vRP.getHomeUserId(parseInt(user_id))
             if parseInt(#myHomes) >= 1 then
                 for k, v in pairs(myHomes) do
-                    local ownerHomes = vRP.query("homes/get_homeuseridowner", { home = tostring(v.home) })
+                    local ownerHomes = vRP.getHomeUserIdOwner(tostring(v.home))
                     if ownerHomes[1] then
                         local house_price = parseInt(homes[tostring(v.home)][1])
                         local house_tax = 0.10
@@ -750,7 +824,7 @@ AddEventHandler("vRP:playerSpawn", function(user_id, source, first_spawn)
     local source = source
     local user_id = vRP.getUserId(source)
     if user_id then
-        local myHomes = vRP.query("homes/get_homeuserid", { user_id = parseInt(user_id) })
+        local myHomes = vRP.getHomeUserId(parseInt(user_id))
         if parseInt(#myHomes) >= 1 then
             for k, v in pairs(myHomes) do
                 vCLIENT.setBlipsOwner(source, v.home)
@@ -786,10 +860,10 @@ function src.checkPermissions(homeName)
         local identity = vRP.getUserIdentity(user_id)
         if identity then
             if not vRP.searchReturn(source, user_id) then
-                local homeResult = vRP.query("homes/get_homepermissions", { home = tostring(homeName) })
+                local homeResult = vRP.getHomePermissions(tostring(homeName))
                 if parseInt(#homeResult) >= 1 then
-                    local myResult = vRP.query("homes/get_homeuser", { user_id = parseInt(user_id), home = tostring(homeName) })
-                    local resultOwner = vRP.query("homes/get_homeuseridowner", { home = tostring(homeName) })
+                    local myResult = vRP.getHomeUser(parseInt(user_id), tostring(homeName))
+                    local resultOwner = vRP.getHomeUserIdOwner(tostring(homeName))
                     if myResult[1] then
 
                         if homes[homeName][1] >= 7000000 then
@@ -901,7 +975,7 @@ function src.checkIntPermissions(homeName)
     local user_id = vRP.getUserId(source)
     if user_id then
         if not vRP.searchReturn(source, user_id) then
-            local myResult = vRP.query("homes/get_homeuser", { user_id = parseInt(user_id), home = tostring(homeName) })
+            local myResult = vRP.getHomeUser(parseInt(user_id), tostring(homeName))
             if myResult[1] or vRP.hasPermission(user_id, "policia.permissao") then
                 return true
             end
@@ -917,7 +991,7 @@ RegisterCommand('outfit', function(source, args, rawCommand)
     local user_id = vRP.getUserId(source)
     if user_id then
         local homeName = vCLIENT.getHomeStatistics(source)
-        local myResult = vRP.query("homes/get_homeuser", { user_id = parseInt(user_id), home = tostring(homeName) })
+        local myResult = vRP.getHomeUser(parseInt(user_id), tostring(homeName))
         if myResult[1] then
             local data = vRP.getSData("outfit:" .. tostring(homeName))
             local result = json.decode(data) or {}

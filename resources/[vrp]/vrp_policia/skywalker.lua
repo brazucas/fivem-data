@@ -157,7 +157,7 @@ RegisterCommand('detido',function(source,args,rawCommand)
 		local oficialid = vRP.getUserIdentity(user_id)
         if vehicle then
             local puser_id = vRP.getUserByRegistration(placa)
-            local rows = vRP.query("creative/get_vehicles",{ user_id = parseInt(puser_id), vehicle = vname })
+            local rows = vRP.getUserVehicles(parseInt(puser_id), vname)
             if rows[1] then
                 if parseInt(rows[1].detido) == 1 then
                     TriggerClientEvent("Notify",source,"importante","Este veículo já se encontra detido.",8000)
