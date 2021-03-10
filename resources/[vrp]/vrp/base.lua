@@ -136,6 +136,8 @@ function vRP.getUserIdByIdentifiers(ids)
                     end
                 end)
 
+                print("Citizen.await exists? " .. tostring(Citizen.await))
+
                 local find_existing = Citizen.await(p);
 
                 print("[vRP.getUserIdByIdentifiers] find_existing " .. tostring(find_existing))
