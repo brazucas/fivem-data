@@ -121,13 +121,12 @@ function vRP.getUserIdByIdentifiers(ids)
                 exports.mongodb:findOne({ collection = "vrp_user_ids", query = { identifier = ids[i] } }, function(success, result)
                     if success then
                         if #result > 0 then
-                            p:resolve(result[1].user_id)
+                            p:resolve(result[1]._id)
                         else
                             p:resolve()
                         end
                     else
                         p:reject("[vRP.getUserIdByIdentifiers] ERROR " .. tostring(result))
-                        return
                     end
                 end)
 
