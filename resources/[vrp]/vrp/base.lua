@@ -103,13 +103,36 @@ vRP.prepare("vRP/set_whitelisted", "UPDATE vrp_users SET whitelisted = @whitelis
 vRP.prepare("vRP/update_ip", "UPDATE vrp_users SET ip = @ip WHERE id = @uid")
 vRP.prepare("vRP/update_login", "UPDATE vrp_users SET last_login = @ll WHERE id = @uid")
 
+function vRP.addIdentifier(identifier, user_id)
+    return exports.mongodb:insertOne({ collection = "vrp_user_ids", document = { identifier = identifier, user_id = user_id } }, function(success, result, insertedIds)
+        if success then
+            return insertedIds
+        else
+            print("[MongoDB][Example] Error in insertOne: " .. tostring(result))
+            error("test")
+            return
+        end
+    end)
+end
+
 function vRP.getUserIdByIdentifiers(ids)
     if ids and #ids then
         for i = 1, #ids do
             if (string.find(ids[i], "ip:") == nil) then
-                local rows = vRP.query("vRP/userid_byidentifier", { identifier = ids[i] })
-                if #rows > 0 then
-                    return rows[1].user_id
+                local find_existing = exports.mongodb:findOne({ collection = "vrp_user_ids", query = { identifier = ids[i] } }, function(success, result)
+                    if success and #result then
+                        print("[vRP.getUserIdByIdentifiers] User found! " .. tostring(result))
+                        return result[1].user_id
+                    else
+                        print("[vRP.getUserIdByIdentifiers] ERROR " .. tostring(result))
+                        return
+                    end
+                end)
+
+                print("[vRP.getUserIdByIdentifiers] find_existing " .. tostring(find_existing))
+
+                if (find_existing) then
+                    return find_existing
                 end
             end
         end
@@ -120,23 +143,9 @@ function vRP.getUserIdByIdentifiers(ids)
             local user_id = rows[1].id
             for l, w in pairs(ids) do
                 if (string.find(w, "ip:") == nil) then
-                    exports.mongodb:insertOne({ collection = "users", document = { username = username, password = "123" } }, function(success, result, insertedIds)
-                        if not success then
-                            print("[MongoDB][Example] Error in insertOne: " .. tostring(result))
-                            return
-                        end
-                        print("[MongoDB][Example] User created. New ID: " .. tostring(insertedIds[1]))
-                        printUser(insertedIds[1])
-                    end)
+                    local test = vRP.vRP.addIdentifier(w, user_id)
+                    print("[addIdentifier] New user registered: " .. tostring(test))
 
-                    exports.mongodb:insertOne({ collection = "vrp_user_ids", document = { identifier = w, user_id = user_id } }, function(success, result, insertedIds)
-                        if success then
-                            print("[MongoDB] New user registered: " .. tostring(result) .. tostring(insertedIds))
-                        else
-                            print("[MongoDB][Example] Error in insertOne: " .. tostring(result))
-                            return
-                        end
-                    end)
                     vRP.execute("vRP/add_identifier", { user_id = user_id, identifier = w })
                 end
             end
