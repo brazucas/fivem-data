@@ -120,10 +120,15 @@ function vRP.getUserIdByIdentifiers(ids)
         for i = 1, #ids do
             if (string.find(ids[i], "ip:") == nil) then
                 local p = promise.new()
+                print("[vRP.getUserIdByIdentifiers] Searching by identifier " .. tostring(ids[i]))
                 exports.mongodb:findOne({ collection = "vrp_user_ids", query = { identifier = ids[i] } }, function(success, result)
-                    if success and #result then
-                        print("[vRP.getUserIdByIdentifiers] User found! " .. tostring(result))
-                        p:resolve(result[1].user_id)
+                    if success then
+                        if #result > 0 then
+                            print("[vRP.getUserIdByIdentifiers] User found! " .. tostring(result) .. tostring(result[1]))
+                            p:resolve(result[1].user_id)
+                        else
+                            p:resolve()
+                        end
                     else
                         p:reject("[vRP.getUserIdByIdentifiers] ERROR " .. tostring(result))
                         return
