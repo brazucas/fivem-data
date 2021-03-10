@@ -9,11 +9,6 @@ vRP = Proxy.getInterface("vRP")
 dmv = {}
 Tunnel.bindInterface("vrp_autoescola",dmv)
 
---[ mySQL ]------------------------------------------------------------------------------------------------------------------------------
-
-vRP._prepare("vRP/update_driverlicense","UPDATE vrp_user_identities SET driverlicense = @driverlicense WHERE user_id = @user_id")
-vRP._prepare("vRP/get_driverlicense","SELECT user_id FROM vrp_user_identities WHERE driverlicense = @driverlicense")
-
 --[ AÇÃO ]-------------------------------------------------------------------------------------------------------------------------------
 
 function dmv.pagamento()
@@ -104,6 +99,6 @@ end)
 
 RegisterServerEvent("carteira")
 AddEventHandler("carteira",function(driverlicense,user_id)
-    vRP.execute("vRP/update_driverlicense", {driverlicense = driverlicense, user_id = user_id})
+    exports.mongodb:updateOne({ collection = "vrp_user_identities", query = { user_id = user_id }, update = { ["$set"] = { driverlicense = driverlicense } }})
 end)
 
