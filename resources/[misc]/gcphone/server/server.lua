@@ -103,9 +103,9 @@ function getOrGeneratePhoneNumber(sourcePlayer, identifier, cb)
             collection = "vrp_user_identities",
             query = { user_id = identifier },
             update = { ["$set"] = { phone = myPhoneNumber } }
-        }, function(success, result, insertedIds)
+        }, function(success, result)
             if success then
-                p:resolve(insertedIds[1])
+                p:resolve()
             else
                 p:reject("[MongoDB] ERROR " .. tostring(result))
             end
@@ -169,9 +169,9 @@ function updateContact(source, identifier, id, number, display)
                 display = display,
             }
         }
-    }, function(success, result, insertedIds)
+    }, function(success, result)
         if success then
-            p:resolve(insertedIds[1])
+            p:resolve()
         else
             p:reject("[MongoDB] ERROR " .. tostring(result))
         end
@@ -296,9 +296,9 @@ function setReadMessageNumber(identifier, num)
         collection = "phone_messages",
         query = { receiver = mePhoneNumber, transmitter = num },
         update = { ["$set"] = { isRead = true } }
-    }, function(success, result, insertedIds)
+    }, function(success, result)
         if success then
-            p:resolve(insertedIds[1])
+            p:resolve()
         else
             p:reject("[MongoDB] ERROR " .. tostring(result))
         end

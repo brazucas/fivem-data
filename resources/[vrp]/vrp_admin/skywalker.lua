@@ -58,9 +58,9 @@ RegisterCommand('renomear', function(source, args, rawCommand)
                     phone = nuidentity.phone
                 }
             }
-        }, function(success, result, insertedIds)
+        }, function(success, result)
             if success then
-                p:resolve(insertedIds[1])
+                p:resolve()
             else
                 p:reject("[MongoDB][renomear] Error in updateOne: " .. tostring(result))
             end
@@ -164,9 +164,9 @@ RegisterCommand('estoque', function(source, args, rawCommand)
                         quantidade = args[2],
                     }
                 }
-            }, function(success, result, insertedIds)
+            }, function(success, result)
                 if success then
-                    p:resolve(insertedIds[1])
+                    p:resolve()
                 else
                     p:reject("[MongoDB][renomear] Error in updateOne: " .. tostring(result))
                 end

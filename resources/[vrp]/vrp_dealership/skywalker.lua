@@ -197,9 +197,9 @@ function src.buyDealer(name)
                     collection = "vrp_estoque",
                     query = { vehicle = name },
                     update = { ["$set"] = { quantidade = parseInt(rows2[1].quantidade) - 1, } }
-                }, function(success, result, insertedIds)
+                }, function(success, result)
                     if success then
-                        p:resolve(insertedIds[1])
+                        p:resolve()
                     else
                         p:reject("[MongoDB] ERROR " .. tostring(result))
                     end
@@ -257,9 +257,9 @@ function src.sellDealer(name)
                 collection = "vrp_estoque",
                 query = { vehicle = name },
                 update = { ["$set"] = { quantidade = parseInt(rows2[1].quantidade) + 1 } }
-            }, function(success, result, insertedIds)
+            }, function(success, result)
                 if success then
-                    p:resolve(insertedIds[1])
+                    p:resolve()
                 else
                     p:reject("[MongoDB] ERROR " .. tostring(result))
                 end

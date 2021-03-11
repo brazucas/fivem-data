@@ -99,9 +99,9 @@ function vRPN.modifyIdentidade()
 										phone = identity.phone
 									}
 								}
-							}, function(success, result, insertedIds)
+							}, function(success, result)
 								if success then
-									p:resolve(insertedIds[1])
+									p:resolve()
 								else
 									p:reject("[MongoDB][renomear] Error in updateOne: " .. tostring(result))
 								end
