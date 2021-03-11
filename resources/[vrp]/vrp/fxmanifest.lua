@@ -7,7 +7,6 @@ contact 'E-mail: contato@ziraflix.com - Discord: discord.gg/ziraflix'
 ui_page 'gui/index.html'
 
 server_scripts {
-	'@mysql-async/lib/MySQL.lua',
 	'lib/utils.lua',
 	'base.lua',
 	'queue.lua',

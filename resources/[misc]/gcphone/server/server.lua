@@ -744,10 +744,6 @@ AddEventHandler('gcPhone:allUpdate', function()
     sendHistoriqueCall(sourcePlayer, num)
 end)
 
-AddEventHandler('onMySQLReady', function()
-    exports.mongodb:delete({ collection = "phone_messages", query = { ["time"] = { ["$gt"] = {10} } } })
-end)
-
 RegisterNetEvent("vRP/update_gc_phone")
 AddEventHandler("vRP/update_gc_phone", function()
     local _source = source

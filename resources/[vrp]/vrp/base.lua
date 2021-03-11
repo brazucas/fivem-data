@@ -33,31 +33,6 @@ local logAdmStatus = ""
 
 --[ BASE.LUA ]---------------------------------------------------------------------------------------------------------------------------
 
-function vRP.registerDBDriver(name, on_init, on_prepare, on_query)
-    if not db_drivers[name] then
-        db_drivers[name] = { on_init, on_prepare, on_query }
-
-        if name == config.db.driver then
-            db_driver = db_drivers[name]
-
-            local ok = on_init(config.db)
-            if ok then
-                db_initialized = true
-                for _, prepare in pairs(cached_prepares) do
-                    on_prepare(table.unpack(prepare, 1, table.maxn(prepare)))
-                end
-
-                for _, query in pairs(cached_queries) do
-                    query[2](on_query(table.unpack(query[1], 1, table.maxn(query[1]))))
-                end
-
-                cached_prepares = nil
-                cached_queries = nil
-            end
-        end
-    end
-end
-
 function vRP.format(n)
     local left, num, right = string.match(n, '^([^%d]*%d)(%d*)(.-)$')
     return left .. (num:reverse():gsub('(%d%d%d)', '%1.'):reverse()) .. right
@@ -567,7 +542,7 @@ function vRP.dropPlayer(source)
             end
         end
 
-        vRP.setUData(user_id, "vRP:datatable", vRP.getUserDataTable(user_id))
+        vRP.setUData(user_id, "vRP:datatable", json.encode(vRP.getUserDataTable(user_id)))
 
         vRP.users[vRP.rusers[user_id]] = nil
         vRP.rusers[user_id] = nil
@@ -617,7 +592,7 @@ AddEventHandler("queue:playerConnecting", function(source, ids, name, setKickRea
                         vRP.user_tmp_tables[user_id] = {}
                         vRP.user_sources[user_id] = source
 
-                        local data = sdata
+                        local data = json.decode(sdata)
                         if type(data) == "table" then vRP.user_tables[user_id] = data end
 
                         local tmpdata = vRP.getUserTmpTable(user_id)
