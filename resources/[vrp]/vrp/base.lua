@@ -121,7 +121,7 @@ function vRP.getUserIdByIdentifiers(ids)
                 exports.mongodb:findOne({ collection = "vrp_user_ids", query = { identifier = ids[i] } }, function(success, result)
                     if success then
                         if #result > 0 then
-                            p:resolve(result[1]._id)
+                            p:resolve(result[1].user_id)
                         else
                             p:resolve()
                         end
@@ -157,7 +157,7 @@ end
 
 function vRP.getPlayerById(user_id)
     local p = promise.new()
-    exports.mongodb:findOne({ collection = "vrp_users", query = { user_id = user_id } }, function(success, result)
+    exports.mongodb:findOne({ collection = "vrp_users", query = { _id = user_id } }, function(success, result)
         if success then
             if #result > 0 then
                 p:resolve(result[1])
