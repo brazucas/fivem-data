@@ -10,7 +10,9 @@ tvRP = {}
 Tunnel.bindInterface("vRP", tvRP)
 vRPclient = Tunnel.getInterface("vRP")
 
+vRP.friendly_ids_inc = 1;
 vRP.users = {}
+vRP.friendly_ids = {}
 vRP.rusers = {}
 vRP.user_tables = {}
 vRP.user_tmp_tables = {}
@@ -298,8 +300,26 @@ function vRP.getUsers()
     return users
 end
 
+function vRP.getFriendlyIdByUserId(user_id)
+    for k, v in pairs(vRP.friendly_ids) do
+        if v == user_id then
+            return k
+        end
+    end
+end
+
 function vRP.getUserSource(user_id)
-    return vRP.user_sources[user_id]
+    local source = vRP.user_sources[user_id]
+
+    if not source then
+        local get_user_id = vRP.friendly_ids[user_id]
+
+        if get_user_id then
+            source = vRP.user_sources[get_user_id]
+        end
+    end
+
+    return source
 end
 
 function vRP.kick(source, reason)
@@ -598,6 +618,9 @@ AddEventHandler("queue:playerConnecting", function(source, ids, name, setKickRea
                         local tmpdata = vRP.getUserTmpTable(user_id)
                         tmpdata.spawns = 0
 
+                        vRP.friendly_ids[vRP.friendly_ids_inc] = user_id
+                        vRP.friendly_ids_inc = vRP.friendly_ids_inc + 1
+
                         TriggerEvent("vRP:playerJoin", user_id, source, name)
 
                         PerformHttpRequest(logEntrada, function(err, text, headers) end, 'POST', json.encode({
@@ -650,6 +673,15 @@ end)
 
 AddEventHandler("playerDropped", function(reason)
     local source = source
+
+    local user_id = vRP.getUserId(source)
+
+    for k, v in pairs(vRP.friendly_ids) do
+        if v == user_id then
+            vRP.friendly_ids[k] = nil
+        end
+    end
+
     vRP.dropPlayer(source)
 end)
 
