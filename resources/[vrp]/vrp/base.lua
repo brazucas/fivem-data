@@ -66,6 +66,22 @@ function vRP.execute(name, params)
     return vRP.query(name, params, "execute")
 end
 
+function vRP.getConMaxVehs(user_id)
+    local p = promise.new()
+    exports.mongodb:count({ collection = "vrp_user_vehicles", query = { user_id = user_id } }, function(success, count)
+        if success then
+            p:resolve(count)
+        else
+            p:reject("[vRP.getUserAddress] ERROR ")
+            return
+        end
+    end)
+
+    local count = Citizen.Await(p)
+
+    return count
+end
+
 function vRP.addIdentifier(identifier, user_id)
     local p = promise.new()
     exports.mongodb:insertOne({ collection = "vrp_user_ids", document = { identifier = identifier, user_id = user_id } }, function(success, result, insertedIds)
@@ -76,6 +92,107 @@ function vRP.addIdentifier(identifier, user_id)
         end
     end)
     return p
+end
+
+function vRP.getEstoque(vehicle)
+    local p = promise.new()
+    exports.mongodb:findOne({ collection = "vrp_estoque", query = { vehicle = vehicle } }, function(success, results)
+        if success then
+            p:resolve(results or {})
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
+            return
+        end
+    end)
+
+    local estoque = Citizen.Await(p)
+
+    return estoque
+end
+
+function vRP.countHomePermissions(home)
+    local p = promise.new()
+    exports.mongodb:count({ collection = "vrp_homes_permissions", query = { home = home } }, function(success, count)
+        if success then
+            p:resolve(count)
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(count))
+            return
+        end
+    end)
+
+    return Citizen.Await(p)
+end
+
+function vRP.getHomePermissions(home)
+    local p = promise.new()
+    exports.mongodb:find({ collection = "vrp_homes_permissions", query = { home = home } }, function(success, results)
+        if success then
+            p:resolve(results or {})
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
+            return
+        end
+    end)
+
+    return Citizen.Await(p)
+end
+
+function vRP.getHomeUserOwner(user_id, home)
+    local p = promise.new()
+    exports.mongodb:findOne({ collection = "vrp_homes_permissions", query = { home = home, user_id = user_id, owner = true } }, function(success, results)
+        if success then
+            p:resolve(results or {})
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
+            return
+        end
+    end)
+
+    return Citizen.Await(p)
+end
+
+function vRP.getHomeUser(user_id, home)
+    local p = promise.new()
+    exports.mongodb:findOne({ collection = "vrp_homes_permissions", query = { home = home, user_id = user_id } }, function(success, results)
+        if success then
+            p:resolve(results or {})
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
+            return
+        end
+    end)
+
+    return Citizen.Await(p)
+end
+
+function vRP.getHomeUserIdOwner(home)
+    local p = promise.new()
+    exports.mongodb:findOne({ collection = "vrp_homes_permissions", query = { home = home, owner = true } }, function(success, results)
+        if success then
+            p:resolve(results or {})
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
+            return
+        end
+    end)
+
+    return Citizen.Await(p)
+end
+
+function vRP.getHomeUserId(user_id)
+    local p = promise.new()
+    exports.mongodb:find({ collection = "vrp_homes_permissions", query = { user_id = user_id } }, function(success, results)
+        if success then
+            p:resolve(results or {})
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
+            return
+        end
+    end)
+
+    local address = Citizen.Await(p)
+    return address or {}
 end
 
 function vRP.createUser()

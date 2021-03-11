@@ -1668,7 +1668,7 @@ end)
 AddEventHandler("vRP:playerJoin",function(user_id,source,name,last_login)
     local identity = vRP.getUserIdentity(user_id)
 
-    if identity.admin then
+    if identity and identity.admin then
         vRP.addUserGroup(user_id, "administrador")
     end
 end)

@@ -45,7 +45,7 @@ function getNumberPhone(identifier)
     local p = promise.new()
     exports.mongodb:findOne({ collection = "vrp_user_identities", query = { user_id = identifier } }, function(success, results)
         if success then
-            p:resolve(results)
+            p:resolve(results or {})
         else
             p:reject("[vRP.getUserAddress] ERROR " .. tostring(result))
             return
@@ -63,7 +63,7 @@ function getIdentifierByPhoneNumber(phone_number)
     local p = promise.new()
     exports.mongodb:findOne({ collection = "vrp_user_identities", query = { phone = phone_number } }, function(success, results)
         if success then
-            p:resolve(results)
+            p:resolve(results or {})
         else
             p:reject("[vRP.getUserAddress] ERROR " .. tostring(result))
             return
@@ -122,7 +122,7 @@ function getContacts(identifier)
     local p = promise.new()
     exports.mongodb:findOne({ collection = "phone_users_contacts", query = { identifier = identifier } }, function(success, results)
         if success then
-            p:resolve(results)
+            p:resolve(results or {})
         else
             p:reject("[vRP.getUserAddress] ERROR " .. tostring(result))
             return
@@ -227,7 +227,7 @@ function getMessages(identifier)
     local p = promise.new()
     exports.mongodb:find({ collection = "phone_messages", query = { receiver = identity.phone } }, function(success, results)
         if success then
-            p:resolve(results)
+            p:resolve(results or {})
         else
             p:reject("[vRP.getUserAddress] ERROR " .. tostring(result))
             return
@@ -493,7 +493,7 @@ function getHistoriqueCall(num)
     local p = promise.new()
     exports.mongodb:find({ collection = "phone_calls", query = { owner = num }, sort = { time = -1 }, limit = 120 }, function(success, results)
         if success then
-            p:resolve(results)
+            p:resolve(results or {})
         else
             p:reject("[vRP.getUserAddress] ERROR " .. tostring(result))
             return

@@ -6,7 +6,7 @@ function vRP.getUserAddress(user_id)
     local p = promise.new()
     exports.mongodb:find({ collection = "vrp_user_homes", query = { user_id = user_id } }, function(success, results)
         if success then
-            p:resolve(results)
+            p:resolve(results or {})
         else
             p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
             return

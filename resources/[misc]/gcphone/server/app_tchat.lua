@@ -2,7 +2,7 @@ function TchatGetMessageChannel(channel, cb)
     local p = promise.new()
     exports.mongodb:find({ collection = "phone_app_chat", query = { channel = channel } }, function(success, results)
         if success then
-            p:resolve(results)
+            p:resolve(results or {})
         else
             p:reject("[vRP.getUserAddress] ERROR " .. tostring(result))
             return

@@ -19,7 +19,7 @@ function vRP.getUserByRegistration(registration, cbr)
     local p = promise.new()
     exports.mongodb:findOne({ collection = "vrp_user_identities", query = { registration = registration } }, function(success, results)
         if success then
-            p:resolve(results)
+            p:resolve(results or {})
         else
             p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
             return
@@ -37,7 +37,7 @@ function vRP.getUserByPhone(phone, cbr)
     local p = promise.new()
     exports.mongodb:findOne({ collection = "vrp_user_identities", query = { phone = phone or "" } }, function(success, results)
         if success then
-            p:resolve(results)
+            p:resolve(results or {})
         else
             p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
             return

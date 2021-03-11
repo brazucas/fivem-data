@@ -108,21 +108,7 @@ end
 
 --[ FUNÇÕES ]---------------------------------------
 
-function vRP.getConMaxVehs(user_id)
-    local p = promise.new()
-    exports.mongodb:count({ collection = "vrp_user_vehicles", query = { user_id = user_id } }, function(success, count)
-        if success then
-            p:resolve(count)
-        else
-            p:reject("[vRP.getUserAddress] ERROR ")
-            return
-        end
-    end)
 
-    local count = Citizen.Await(p)
-
-    return count
-end
 
 --[ BUYDEALER ]--------------------------------------------------------------------------------------------------------------------------
 

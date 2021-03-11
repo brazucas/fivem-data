@@ -17,29 +17,13 @@ function vRP.getUsers(user_id)
     local p = promise.new()
     exports.mongodb:find({ collection = "vrp_users", query = { _id = user_id } }, function(success, results)
         if success then
-            p:resolve(results)
+            p:resolve(results or {})
         else
             p:reject("[vRP.getUserAddress] ERROR " .. tostring(result))
             return
         end
     end)
     return Citizen.Await(p)
-end
-
-function vRP.getEstoque(vehicle)
-    local p = promise.new()
-    exports.mongodb:findOne({ collection = "vrp_estoque", query = { vehicle = vehicle } }, function(success, results)
-        if success then
-            p:resolve(results)
-        else
-            p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
-            return
-        end
-    end)
-
-    local estoque = Citizen.Await(p)
-
-    return estoque
 end
 
 --[ WEBHOOK ]----------------------------------------------------------------------------------------------------------------------------
@@ -437,7 +421,7 @@ function vRP.getUserVehicle(user_id)
     local p = promise.new()
     exports.mongodb:findOne({ collection = "vrp_user_vehicles", query = { user_id = user_id } }, function(success, results)
         if success then
-            p:resolve(results)
+            p:resolve(results or {})
         else
             p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
             return
@@ -453,7 +437,7 @@ function vRP.getUserVehicles(user_id, vehicle)
     local p = promise.new()
     exports.mongodb:findOne({ collection = "vrp_user_vehicles", query = { user_id = user_id, vehicle = vehicle } }, function(success, results)
         if success then
-            p:resolve(results)
+            p:resolve(results or {})
         else
             p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
             return
