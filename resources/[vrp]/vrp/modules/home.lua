@@ -22,7 +22,7 @@ function vRP.getUserAddress2(user_id)
             if (#results > 0) then
                 p:resolve(results[1])
             else
-                p:resolve(results)
+                p:resolve(false)
             end
         else
             p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
@@ -65,7 +65,7 @@ function vRP.getUserByAddress(home, number)
             if (#results > 0) then
                 p:resolve(results[1])
             else
-                p:resolve(results)
+                p:resolve(false)
             end
         else
             p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))

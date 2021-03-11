@@ -5,7 +5,7 @@ function vRP.getUserIdentity(user_id, cbr)
             if (#results > 0) then
                 p:resolve(results[1])
             else
-                p:resolve(results)
+                p:resolve(false)
             end
         else
             p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
