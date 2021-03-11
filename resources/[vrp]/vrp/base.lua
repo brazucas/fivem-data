@@ -170,8 +170,6 @@ end
 function vRP.isWhitelisted(user_id, cbr)
     local user = vRP.getPlayerById(user_id);
 
-    print("Usuário encontrado? " .. tostring(user) .. tostring(user.whitelisted))
-
     if user ~= nil then
         return user.whitelisted
     else
@@ -193,7 +191,7 @@ function vRP.setUData(user_id, key, value)
     local uData = vRP.getUData(user_id, key)
 
     if string.len(uData) > 0 then
-        exports.mongodb:updateOne({ collection = "vrp_user_data", query = { _id = user_id }, update = { ["$set"] = { dvalue = value } } }, function(success, result)
+        exports.mongodb:updateOne({ collection = "vrp_user_data", query = { user_id = user_id, dkey = key }, update = { ["$set"] = { dvalue = value } } }, function(success, result)
             p:resolve(success)
         end)
     else
