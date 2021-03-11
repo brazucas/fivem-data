@@ -176,7 +176,7 @@ end
 function vRP.isBanned(user_id, cbr)
     local user = vRP.getPlayerById(user_id);
 
-    if user ~= nil and #user > 0 then
+    if user ~= nil then
         return user.banned
     else
        return false
@@ -251,7 +251,7 @@ function vRP.getUData(user_id, key, cbr)
 
     local uData =  Citizen.Await(p);
 
-    if uData ~= nil and #uData > 0 then
+    if uData ~= nil then
         return uData[1].dvalue
     else
         return ""
@@ -296,7 +296,7 @@ function vRP.getSData(key, cbr)
 
     local uData =  Citizen.Await(p);
 
-    if uData ~= nil and #uData > 0 then
+    if uData ~= nil then
         return uData[1].dvalue
     else
         return ""
