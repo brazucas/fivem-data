@@ -567,7 +567,7 @@ function vRP.dropPlayer(source)
             end
         end
 
-        vRP.setUData(user_id, "vRP:datatable", json.encode(vRP.getUserDataTable(user_id)))
+        vRP.setUData(user_id, "vRP:datatable", vRP.getUserDataTable(user_id))
 
         vRP.users[vRP.rusers[user_id]] = nil
         vRP.rusers[user_id] = nil
@@ -617,7 +617,7 @@ AddEventHandler("queue:playerConnecting", function(source, ids, name, setKickRea
                         vRP.user_tmp_tables[user_id] = {}
                         vRP.user_sources[user_id] = source
 
-                        local data = json.decode(sdata)
+                        local data = sdata
                         if type(data) == "table" then vRP.user_tables[user_id] = data end
 
                         local tmpdata = vRP.getUserTmpTable(user_id)
