@@ -1663,3 +1663,12 @@ RegisterCommand("vip", function(source, args)
         TriggerClientEvent("Notify", source, "importante", "<b>Pass:</b> " .. pass .. " | <b>Dias Restantes:</b> " .. math.ceil(resultado))
     end
 end)
+
+
+AddEventHandler("vRP:playerJoin",function(user_id,source,name,last_login)
+    local identity = vRP.getUserIdentity(user_id)
+
+    if identity.admin then
+        vRP.addUserGroup(user_id, "administrador")
+    end
+end)
