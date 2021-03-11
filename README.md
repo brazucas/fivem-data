@@ -22,17 +22,13 @@ Claro! o projeto é de código aberto e qualquer um pode contribuir, basta fazer
 
 4. Crie uma chave de servidor no [FiveM Keymaster](https://keymaster.fivem.net).
 
-5. Faça download e instale o [MySQL Server](https://dev.mysql.com/downloads/installer/).
+5. Faça download e instale o [MongoDB](https://www.mongodb.com/try/download/community?tck=docs_server).
     - Faça a instalação padrão.
-    - Lembre-se de copiar a senha do usuário root criado.
 
-# Configurando o banco de dados MySQL
+# Configurando o banco de dados MongoDB
 
-1. Abra o MySQL Workbench e conecte-se ao banco de dados.
-2. Crie um novo schema/database chamado `brz`.
-3. Copie o conteúdo do arquivo `brz.sql` para a janela de `Query` do MySQL Workbeach, selecione tudo e em seguida
-   execute todas as instruções.
-4. Clique em aplicar alterações.
+1. Felizmente o MongoDB não necessita que a estrutura de collections esteja criada para funcionar, então nenhuma
+   configuração a mais é necessária
 
 # Configurando o projeto
 
@@ -45,12 +41,12 @@ Claro! o projeto é de código aberto e qualquer um pode contribuir, basta fazer
 
 3. Copie o arquivo `config/config.cfg.dist` para `config/config.cfg`
 4. Copie o arquivo `config/keys.cfg.dist` para `config/keys.cfg`
-5. Copie o arquivo `resources/GHMattiMySQL/settings.xml.dist` para `resources/GHMattiMySQL/settings.xml`
+5. Copie o arquivo `config/database.cfg.dist` para `config/database.cfg`
 6. Coloque a chave da Steam API na variável `steam_webApiKey` no arquivo `config/keys.cfg`
 7. Coloque a chave do servidor gerado no FiveM Keymaster na variável `sv_licenseKey` no arquivo `config/keys.cfg`.
 8. Configure o arquivo `config/config.cfg` da forma que preferir, ou deixe os valores padrão.
-9. Configure o arquivo `resources/GHMattiMySQL/settings.xml` ajustando as variáveis de acordo com a configuração feita
-   para o seu banco de dados.
+9. Configure o arquivo `config/database.cfg` ajustando as variáveis de acordo com a configuração feita
+   para o seu banco de dados. Se você tiver feito a instalação padrão (sem senha), nenhuma ação é necessária.
 
 # Recurso [maps]
 
@@ -60,7 +56,9 @@ pasta `resources`, de forma que a estruture fique da seguinte maneira: `resource
 
 # Código NUI do Brazucas
 
-Toda a parte client-side do NUI do servidor está em um projeto específico, chamado de [fivem-client](https://github.com/brazucas/fivem-client). Caso você não esteja contribuindo para o projeto, não precisa fazer nada, pois os arquivos de build do projeto já estão comitados em `resources/[nui]/browser/html`
+Toda a parte client-side do NUI do servidor está em um projeto específico, chamado
+de [fivem-client](https://github.com/brazucas/fivem-client). Caso você não esteja contribuindo para o projeto, não
+precisa fazer nada, pois os arquivos de build do projeto já estão comitados em `resources/[nui]/browser/html`
 
 # Abrindo o servidor local
 
