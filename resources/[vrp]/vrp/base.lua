@@ -197,7 +197,7 @@ function vRP.isWhitelisted(user_id, cbr)
 
     print("Usuário encontrado? " .. tostring(user) .. tostring(user.whitelisted))
 
-    if user ~= nil and #user > 0 then
+    if user ~= nil then
         return user.whitelisted
     else
         return false
