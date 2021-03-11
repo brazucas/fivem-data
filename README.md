@@ -24,11 +24,16 @@ Claro! o projeto é de código aberto e qualquer um pode contribuir, basta fazer
 
 5. Faça download e instale o [MongoDB](https://www.mongodb.com/try/download/community?tck=docs_server).
     - Faça a instalação padrão.
+   
+6. Instale o [NodeJS](https://nodejs.org/en/download/).
+
+7. (Opcional) Instale o [Yarn](https://classic.yarnpkg.com/en/docs/install).
 
 # Configurando o banco de dados MongoDB
 
 1. Felizmente o MongoDB não necessita que a estrutura de collections esteja criada para funcionar, então nenhuma
    configuração a mais é necessária
+2. Execute o comando `npm install` ou `yarn install` na pasta `resources/mongodb`.
 
 # Configurando o projeto
 
