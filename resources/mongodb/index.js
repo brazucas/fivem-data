@@ -45,7 +45,7 @@ function getParamsCollection(params) {
  * @param {Object} params.options - Options passed to insert.
  */
 function dbInsert(params, callback) {
-  console.log('[MONGODB] dbInsert ', params);
+  // console.log('[MONGODB] dbInsert ', params);
   if (!checkDatabaseReady()) return;
   if (!checkParams(params)) return console.log(`[MongoDB][ERROR] exports.insert: Invalid params object.`);
 
@@ -84,7 +84,7 @@ function dbInsert(params, callback) {
  * @param {number} params.limit - Limit documents count.
  */
 function dbFind(params, callback) {
-  console.log('[MONGODB] dbFind ', params);
+  // console.log('[MONGODB] dbFind ', params);
   if (!checkDatabaseReady()) return;
   if (!checkParams(params)) return console.log(`[MongoDB][ERROR] exports.find: Invalid params object.`);
 
@@ -116,7 +116,7 @@ function dbFind(params, callback) {
  * @param {Object} params.options - Options passed to insert.
  */
 function dbUpdate(params, callback, isUpdateOne) {
-  console.log('[MONGODB] dbUpdate ', params);
+  // console.log('[MONGODB] dbUpdate ', params);
   if (!checkDatabaseReady()) return;
   if (!checkParams(params)) return console.log(`[MongoDB][ERROR] exports.update: Invalid params object.`);
 
@@ -146,7 +146,7 @@ function dbUpdate(params, callback, isUpdateOne) {
  * @param {Object} params.options - Options passed to insert.
  */
 function dbCount(params, callback) {
-  console.log('[MONGODB] dbCount ', params);
+  // console.log('[MONGODB] dbCount ', params);
   if (!checkDatabaseReady()) return;
   if (!checkParams(params)) return console.log(`[MongoDB][ERROR] exports.count: Invalid params object.`);
 
@@ -174,7 +174,7 @@ function dbCount(params, callback) {
  * @param {Object} params.options - Options passed to insert.
  */
 function dbDelete(params, callback, isDeleteOne) {
-  console.log('[MONGODB] dbDelete ', params);
+  // console.log('[MONGODB] dbDelete ', params);
   if (!checkDatabaseReady()) return;
   if (!checkParams(params)) return console.log(`[MongoDB][ERROR] exports.delete: Invalid params object.`);
 
