@@ -252,7 +252,7 @@ function vRP.getUData(user_id, key, cbr)
     local uData =  Citizen.Await(p);
 
     if uData ~= nil then
-        return uData[1].dvalue
+        return uData.dvalue
     else
         return ""
     end
@@ -297,7 +297,7 @@ function vRP.getSData(key, cbr)
     local uData =  Citizen.Await(p);
 
     if uData ~= nil then
-        return uData[1].dvalue
+        return uData.dvalue
     else
         return ""
     end
