@@ -195,6 +195,8 @@ end
 function vRP.isWhitelisted(user_id, cbr)
     local user = vRP.getPlayerById(user_id);
 
+    print("Usuário encontrado? " .. tostring(user) .. user.whitelisted)
+
     if user ~= nil and #user > 0 then
         return user.whitelisted
     else
