@@ -177,7 +177,7 @@ function vRP.isBanned(user_id, cbr)
     local user = vRP.getPlayerById(user_id);
 
     if user ~= nil and #user > 0 then
-        return user[1].banned
+        return user.banned
     else
        return false
     end
@@ -196,7 +196,7 @@ function vRP.isWhitelisted(user_id, cbr)
     local user = vRP.getPlayerById(user_id);
 
     if user ~= nil and #user > 0 then
-        return user[1].whitelisted
+        return user.whitelisted
     else
         return false
     end
