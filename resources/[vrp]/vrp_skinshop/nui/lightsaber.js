@@ -7,7 +7,7 @@ $(document).ready(function() {
         if (data.keyCode == 27) {
             $('footer').html('');
             $(".loja-de-roupa").fadeOut();
-            $('#total').html('0'); 
+            $('#total').html('0');
             change = {};
             $.post('http://vrp_skinshop/reset', JSON.stringify({}))
             $.post('http://ph-hud/fechar', JSON.stringify({ id: false }))
@@ -54,7 +54,7 @@ $(document).ready(function() {
             for (var i = 0; i <= item.drawa; i++) {
                 $("footer").append(`
                     <div class="item-clothe" data-id="${i}" onclick="select(this)">
-                        <div class="img-clothe" style="background-image: url('http://192.99.251.232:3554/images/vrp_clothes/${item.category}/${item.sexo}/${item.prefix}(${i}).jpg')">  
+                        <div class="img-clothe" style="background-image: url('https://cdn.brz.gg/gtav/vrp/images/vrp_clothes/${item.category}/${item.sexo}/${item.prefix}(${i}).jpg')">  
                             <div class="overlay">
                                 <span>${i}</span>
                             </div>
@@ -69,7 +69,7 @@ $(document).ready(function() {
             for (var i = 0; i <= item.drawa; i++) {
                 $("footer").append(`
                     <div class="item-clothe" data-id="${i}" onclick="select(this)">
-                        <div class="img-clothe" style="background-image: url('http://192.99.251.232:3554/images/vrp_clothes/${item.category}/${item.sexo}/${item.prefix}(${i}).jpg')">  
+                        <div class="img-clothe" style="background-image: url('https://cdn.brz.gg/gtav/vrp/images/vrp_clothes/${item.category}/${item.sexo}/${item.prefix}(${i}).jpg')">  
                             <div class="overlay">
                                 <span>${i}</span>
                             </div>

@@ -180,7 +180,7 @@ const updateChest = () => {
 			<div class="esquerda">
 				${nameList2.map((item) => (`
 					<div class="item" data-item-key="${item.key}">
-						<div class="thumb"><img src='http://192.99.251.232:3554/images/vrp_itens/${item.index}.png'></div>	
+						<div class="thumb"><img src='https://cdn.brz.gg/gtav/vrp/images/vrp_itens/${item.index}.png'></div>	
 						<div id="peso">${(item.peso*item.amount).toFixed(2)}Kg</div>
 						<div id="quantity">${formatarNumero(item.amount)}x</div>
 						<div id="itemname">${item.name}</div>
@@ -195,7 +195,7 @@ const updateChest = () => {
 			<div class="direita">
 				${nameList.map((item) => (`
 					<div class="item2" data-item-key="${item.key}">
-						<div class="thumb"><img src='http://192.99.251.232:3554/images/vrp_itens/${item.index}.png'></div>		
+						<div class="thumb"><img src='https://cdn.brz.gg/gtav/vrp/images/vrp_itens/${item.index}.png'></div>		
 						<div id="peso">${(item.peso*item.amount).toFixed(2)}Kg</div>
 						<div id="quantity">${formatarNumero(item.amount)}x</div>
 						<div id="itemname">${item.name}</div>

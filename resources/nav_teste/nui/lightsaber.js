@@ -54,16 +54,16 @@ function init() {
 				sendData("ButtonClick", data);
 			});
 		}
-	
+
 		if ($(this).attr("data-sub")) {
 		var menu = $(this).data("sub");
 		var element = $("#" + menu);
-	
+
 		$(this).click(function() {
 			element.show();
 			$("#mainmenu").hide();
 		});
-	
+
 		$(".subtop button, .back").click(function() {
 			element.hide();
 			$("#mainmenu").show();
@@ -81,7 +81,7 @@ $(document).on('click','button',function(){
 		});
 	}
 })
-	
+
 const sendData = (name, data, item) => {
 	$.post("http://nav_teste/"+name,JSON.stringify(data),JSON.stringify(item),function(datab){});
 }
@@ -132,7 +132,7 @@ const updateChest = () => {
 				<div class='itemSessao' data-item-key='${item.anotherindex}'>
 					<div class='item-info'>
 						<div class='fotoItem'>
-							<img src='http://192.99.251.232:3554/images/vrp_itens/${item.anotherindex}.png'>
+							<img src='https://cdn.brz.gg/gtav/vrp/images/vrp_itens/${item.anotherindex}.png'>
 						</div>
 						<div class='menuItem'>
 							<div class='nomeItem'>
@@ -144,23 +144,23 @@ const updateChest = () => {
 						</div>
 						<div class="ingredients">
 							<div class='ingre'>
-								<img src='http://192.99.251.232:3554/images/vrp_itens/${item.ingrOne}.png'>
+								<img src='https://cdn.brz.gg/gtav/vrp/images/vrp_itens/${item.ingrOne}.png'>
 								<div class='ingreAmount'>${formatarNumero(item.ingrOneAmount)}x</div>
 							</div>
 							<div class='ingre'>
-								<img src='http://192.99.251.232:3554/images/vrp_itens/${item.ingrTwo}.png'>
+								<img src='https://cdn.brz.gg/gtav/vrp/images/vrp_itens/${item.ingrTwo}.png'>
 								<div class='ingreAmount'>${formatarNumero(item.ingrTwoAmount)}x</div>
 							</div>
 							<div class='ingre'>
-								<img src='http://192.99.251.232:3554/images/vrp_itens/${item.ingrThree}.png'>
+								<img src='https://cdn.brz.gg/gtav/vrp/images/vrp_itens/${item.ingrThree}.png'>
 								<div class='ingreAmount'>${formatarNumero(item.ingrThreeAmount)}x</div>
 							</div>
 							<div class='ingre'>
-								<img src='http://192.99.251.232:3554/images/vrp_itens/${item.ingrFour}.png'>
+								<img src='https://cdn.brz.gg/gtav/vrp/images/vrp_itens/${item.ingrFour}.png'>
 								<div class='ingreAmount'>${formatarNumero(item.ingrFourAmount)}x</div>
 							</div>
 							<div class='ingre'>
-								<img src='http://192.99.251.232:3554/images/vrp_itens/${item.ingrFive}.png'>
+								<img src='https://cdn.brz.gg/gtav/vrp/images/vrp_itens/${item.ingrFive}.png'>
 								<div class='ingreAmount'>${formatarNumero(item.ingrFiveAmount)}x</div>
 							</div>
 						</div>
@@ -174,7 +174,7 @@ const updateChest = () => {
 				<div class='itemSessao' data-item-key='${item.anotherindex}'>
 					<div class='item-info'>
 						<div class='fotoItem'>
-							<img src='http://192.99.251.232:3554/images/vrp_itens/${item.anotherindex}.png'>
+							<img src='https://cdn.brz.gg/gtav/vrp/images/vrp_itens/${item.anotherindex}.png'>
 						</div>
 						<div class='menuItem'>
 							<div class='nomeItem'>
@@ -186,23 +186,23 @@ const updateChest = () => {
 						</div>
 						<div class="ingredients">
 							<div class='ingre'>
-								<img src='http://192.99.251.232:3554/images/vrp_itens/${item.ingrOne}.png'>
+								<img src='https://cdn.brz.gg/gtav/vrp/images/vrp_itens/${item.ingrOne}.png'>
 								<div class='ingreAmount'>${formatarNumero(item.ingrOneAmount)}x</div>
 							</div>
 							<div class='ingre'>
-								<img src='http://192.99.251.232:3554/images/vrp_itens/${item.ingrTwo}.png'>
+								<img src='https://cdn.brz.gg/gtav/vrp/images/vrp_itens/${item.ingrTwo}.png'>
 								<div class='ingreAmount'>${formatarNumero(item.ingrTwoAmount)}x</div>
 							</div>
 							<div class='ingre'>
-								<img src='http://192.99.251.232:3554/images/vrp_itens/${item.ingrThree}.png'>
+								<img src='https://cdn.brz.gg/gtav/vrp/images/vrp_itens/${item.ingrThree}.png'>
 								<div class='ingreAmount'>${formatarNumero(item.ingrThreeAmount)}x</div>
 							</div>
 							<div class='ingre'>
-								<img src='http://192.99.251.232:3554/images/vrp_itens/${item.ingrFour}.png'>
+								<img src='https://cdn.brz.gg/gtav/vrp/images/vrp_itens/${item.ingrFour}.png'>
 								<div class='ingreAmount'>${formatarNumero(item.ingrFourAmount)}x</div>
 							</div>
 							<div class='ingre'>
-								<img src='http://192.99.251.232:3554/images/vrp_itens/${item.ingrFive}.png'>
+								<img src='https://cdn.brz.gg/gtav/vrp/images/vrp_itens/${item.ingrFive}.png'>
 								<div class='ingreAmount'>${formatarNumero(item.ingrFiveAmount)}x</div>
 							</div>
 						</div>

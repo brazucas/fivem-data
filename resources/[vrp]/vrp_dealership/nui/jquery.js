@@ -77,7 +77,7 @@ const updateCarros = () => {
 			<div class="title">CARROS</div>
 			${nameList.map((item) => (`
 				<div class="model" data-name-key="${item.k}">
-					<div class="imagem-carro"><img src="http://192.99.251.232:3554/images/vrp_vehicles/${item.nome}.png"/></div>
+					<div class="imagem-carro"><img src="https://cdn.brz.gg/gtav/vrp/images/vrp_vehicles/${item.nome}.png"/></div>
 					<div class="id">${i = i + 1}</div>
 					<div class="name">${item.nome}</div>
 					<div class="valor">$${formatarNumero(item.price)}</div>
@@ -99,7 +99,7 @@ const updateMotos = () => {
 			<div class="title">MOTOS</div>
 			${nameList.map((item) => (`
 				<div class="model" data-name-key="${item.k}">
-					<div class="imagem-carro"><img src="http://192.99.251.232:3554/images/vrp_vehicles/${item.nome}.png"/></div>
+					<div class="imagem-carro"><img src="https://cdn.brz.gg/gtav/vrp/images/vrp_vehicles/${item.nome}.png"/></div>
 					<div class="id">${i = i + 1}</div>
 					<div class="name">${item.nome}</div>
 					<div class="valor">$${formatarNumero(item.price)}</div>
@@ -121,7 +121,7 @@ const updateImport = () => {
 			<div class="title">IMPORTADOS</div>
 			${nameList.map((item) => (`
 				<div class="model" data-name-key="${item.k}">
-					<div class="imagem-carro"><img src="http://192.99.251.232:3554/images/vrp_vehicles/${item.nome}.png"/></div>
+					<div class="imagem-carro"><img src="https://cdn.brz.gg/gtav/vrp/images/vrp_vehicles/${item.nome}.png"/></div>
 					<div class="id">${i = i + 1}</div>
 					<div class="name">${item.nome}</div>
 					<div class="valor">$${formatarNumero(item.price)}</div>
@@ -143,7 +143,7 @@ const updatePossuidos = () => {
 			<div class="title">POSSUÍDOS</div>
 			${nameList.map((item) => (`
 				<div class="model" data-name-key="${item.k}">
-					<div class="imagem-carro"><img src="http://192.99.251.232:3554/images/vrp_vehicles/${item.nome}.png"/></div>
+					<div class="imagem-carro"><img src="https://cdn.brz.gg/gtav/vrp/images/vrp_vehicles/${item.nome}.png"/></div>
 					<div class="id">${i = i + 1}</div>
 					<div class="name2">${item.nome}</div>
 					<div class="valor">$${formatarNumero(item.price)}</div>
