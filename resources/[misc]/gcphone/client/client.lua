@@ -533,9 +533,11 @@ RegisterNUICallback('deleteALL', function(data, cb)
   cb()
 end)
 
+
 function TooglePhone() 
   menuIsOpen = not menuIsOpen
   SendNUIMessage({show = menuIsOpen})
+  SetNuiFocus(menuIsOpen,menuIsOpen)
   if menuIsOpen == true then 
     PhonePlayIn()
   else
@@ -554,6 +556,7 @@ RegisterNUICallback('closePhone', function(data, cb)
   menuIsOpen = false
   SendNUIMessage({show = false})
   PhonePlayOut()
+  SetNuiFocus(false,false)
   cb()
 end)
 
