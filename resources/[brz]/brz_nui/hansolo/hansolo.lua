@@ -9,8 +9,9 @@ RegisterCommand("nui", function(source, args)
 end)
 
 --very important cb
-RegisterNUICallback("Fechar", function(data)
+RegisterNUICallback("Fechar", function(data, cb)
     SetDisplay(false)
+    cb(true)
 end)
 
 function SetDisplay(bool)

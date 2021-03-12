@@ -15,3 +15,10 @@ RegisterCommand("criarveiculo", function(source, args)
         TriggerClientEvent("brzNui:MudarPagina", source, "admin/criar-veiculo", { })
     end
 end)
+
+RegisterServerEvent("brzAdminVeiculos:CriarVeiculo")
+AddEventHandler("brzAdminVeiculos:CriarVeiculo",function(pagina, paramsStr)
+    local params = json.decode(paramsStr)
+
+    print("[Criar Veículo] Solicitação recebida: " .. tostring(params))
+end)

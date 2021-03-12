@@ -1,5 +1,7 @@
-RegisterNUICallback("CriarVeiculo", function(data)
+RegisterNUICallback("CriarVeiculo", function(data, cb)
     -- Criar veículo
 
-    print("[brzAdminVeiculos:criar] " .. tostring(data))
+    TriggerServerEvent("brzAdminVeiculos:CriarVeiculo", json.encode(data))
+
+    cb(true)
 end)
