@@ -1,8 +1,4 @@
-RegisterServerEvent("brzNui:mudar-pagina")
-AddEventHandler("brzNui:mudar-pagina", function(pagina, params)
-    print("brzNui:mudar-pagina Comando recebido " .. pagina)
-    local source = source
+local Tunnel = module("vrp","lib/Tunnel")
+local Proxy = module("vrp","lib/Proxy")
+vRP = Proxy.getInterface("vRP")
 
-    SendNUIMessage({ event = 'acessar', pagina = pagina, params = params })
-    TriggerClientEvent("brzNui:SetDisplay", true)
-end)

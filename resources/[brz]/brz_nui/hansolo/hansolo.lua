@@ -1,3 +1,7 @@
+local Tunnel = module("vrp","lib/Tunnel")
+local Proxy = module("vrp","lib/Proxy")
+vRP = Proxy.getInterface("vRP")
+
 local display = false
 
 RegisterCommand("nui", function(source, args)
@@ -7,18 +11,6 @@ end)
 --very important cb
 RegisterNUICallback("Fechar", function(data)
     chat("exited", {0,255,0})
-    SetDisplay(false)
-end)
-
--- this cb is used as the main route to transfer data back
--- and also where we hanld the data sent from js
-RegisterNUICallback("main", function(data)
-    chat(data.text, {0,255,0})
-    SetDisplay(false)
-end)
-
-RegisterNUICallback("error", function(data)
-    chat(data.error, {255,0,0})
     SetDisplay(false)
 end)
 
@@ -50,18 +42,8 @@ Citizen.CreateThread(function()
     end
 end)
 
-function chat(str, color)
-    TriggerEvent(
-        'chat:addMessage',
-        {
-            color = color,
-            multiline = true,
-            args = {str}
-        }
-    )
-end
-
-RegisterNetEvent("brzNui:SetDisplay")
-AddEventHandler("brzNui:SetDisplay", function(bool)
-    SetDisplay(bool)
+RegisterNetEvent("brzNui:MudarPagina")
+AddEventHandler("brzNui:MudarPagina", function(pagina, params)
+    SendNUIMessage({ event = 'acessar', pagina = pagina, params = params })
+    SetDisplay(true)
 end)
