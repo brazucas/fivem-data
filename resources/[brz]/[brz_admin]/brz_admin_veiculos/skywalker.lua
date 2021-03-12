@@ -16,6 +16,7 @@ RegisterCommand("criarveiculo", function(source, args)
     if vRP.hasPermission(user_id, "administrador.permissao") then
         print("criarveiculo2")
 
-        TriggerClientEvent('MudarPagina', 'admin/criar-veiculo', { })
+        TriggerClientEvent("Notify",source,"sucesso","Criando veículo.",8000)
+        TriggerClientEvent('brzNui:MudarPagina', 'admin/criar-veiculo', { })
     end
 end)

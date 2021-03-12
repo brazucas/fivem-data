@@ -42,11 +42,6 @@ Citizen.CreateThread(function()
     end
 end)
 
-RegisterNetEvent("brzNui:SetDisplay")
-AddEventHandler("brzNui:SetDisplay", function(bool)
-    SetDisplay(bool)
-end)
-
 RegisterNetEvent("brzNui:MudarPagina")
 AddEventHandler("brzNui:MudarPagina", function(pagina, params)
     print("brzNui:MudarPagina Comando recebido " .. pagina)
