@@ -2,11 +2,6 @@ local Tunnel = module("vrp","lib/Tunnel")
 local Proxy = module("vrp","lib/Proxy")
 vRP = Proxy.getInterface("vRP")
 
-RegisterServerEvent("brzAdminVeiculos:acessar")
-AddEventHandler("brzAdminVeiculos:acessar",function(source)
-    TriggerServerEvent('brzNui:MudarPagina', source, "admin/criar-veiculo", {})
-end)
-
 RegisterCommand("criarveiculo", function(source, args)
     local user_id = vRP.getUserId(source)
     local identity = vRP.getUserIdentity(user_id)
