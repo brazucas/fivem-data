@@ -24,7 +24,7 @@ Claro! o projeto é de código aberto e qualquer um pode contribuir, basta fazer
 
 5. Faça download e instale o [MongoDB](https://www.mongodb.com/try/download/community?tck=docs_server).
     - Faça a instalação padrão.
-   
+
 6. Instale o [NodeJS](https://nodejs.org/en/download/).
 
 7. (Opcional) Instale o [Yarn](https://classic.yarnpkg.com/en/docs/install).
@@ -50,8 +50,8 @@ Claro! o projeto é de código aberto e qualquer um pode contribuir, basta fazer
 6. Coloque a chave da Steam API na variável `steam_webApiKey` no arquivo `config/keys.cfg`
 7. Coloque a chave do servidor gerado no FiveM Keymaster na variável `sv_licenseKey` no arquivo `config/keys.cfg`.
 8. Configure o arquivo `config/config.cfg` da forma que preferir, ou deixe os valores padrão.
-9. Configure o arquivo `config/database.cfg` ajustando as variáveis de acordo com a configuração feita
-   para o seu banco de dados. Se você tiver feito a instalação padrão (sem senha), nenhuma ação é necessária.
+9. Configure o arquivo `config/database.cfg` ajustando as variáveis de acordo com a configuração feita para o seu banco
+   de dados. Se você tiver feito a instalação padrão (sem senha), nenhuma ação é necessária.
 
 # Recurso [maps]
 
@@ -59,11 +59,16 @@ Como os mapas customizados do servidor possuem arquivos muito grandes, é necess
 resource [maps] [em nosso CDN](https://cdn.brz.gg/fivem-data/%5Bmap%5D.zip). Em seguida descompacte o arquivo dentro da
 pasta `resources`, de forma que a estruture fique da seguinte maneira: `resources/[maps]/zirix_maps`
 
+# Recurso [brz]
+
+Apesar de modificarmos o `vRP` para adaptar a nossa proposta do Brazucas, sistemas novos feitos pela equipe estão sendo
+feitos em um recurso a parte, chamado de `[brz]`.
+
 # Código NUI do Brazucas
 
 Toda a parte client-side do NUI do servidor está em um projeto específico, chamado
 de [fivem-client](https://github.com/brazucas/fivem-client). Caso você não esteja contribuindo para o projeto, não
-precisa fazer nada, pois os arquivos de build do projeto já estão comitados em `resources/[nui]/browser/html`
+precisa fazer nada, pois os arquivos de build do projeto já estão comitados em `resources/[brz]/brz_bui/nui`
 
 # Abrindo o servidor local
 
