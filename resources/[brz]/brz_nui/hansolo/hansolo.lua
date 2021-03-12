@@ -5,7 +5,7 @@ RegisterCommand("nui", function(source, args)
 end)
 
 --very important cb
-RegisterNUICallback("fechar", function(data)
+RegisterNUICallback("Fechar", function(data)
     chat("exited", {0,255,0})
     SetDisplay(false)
 end)
@@ -26,7 +26,7 @@ function SetDisplay(bool)
     display = bool
     SetNuiFocus(bool, bool)
     SendNUIMessage({
-        type = "ui",
+        event = "ui",
         status = bool,
     })
 end
@@ -60,3 +60,8 @@ function chat(str, color)
         }
     )
 end
+
+RegisterNetEvent("brzNui:SetDisplay")
+AddEventHandler("brzNui:SetDisplay", function(bool)
+    SetDisplay(bool)
+end)

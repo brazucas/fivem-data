@@ -8,6 +8,7 @@ client_script "hansolo/hansolo.lua"
 server_script "skywalker.lua"
 
 files {
+    "nui/*",
     "nui/**/*",
     "nui/biomp/*",
     "nui/biomp/**/*",
