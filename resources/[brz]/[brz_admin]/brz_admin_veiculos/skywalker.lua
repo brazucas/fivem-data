@@ -17,7 +17,7 @@ RegisterCommand("criarveiculo", function(source, args)
 end)
 
 RegisterServerEvent("brzAdminVeiculos:CriarVeiculo")
-AddEventHandler("brzAdminVeiculos:CriarVeiculo",function(pagina, paramsStr)
+AddEventHandler("brzAdminVeiculos:CriarVeiculo",function(paramsStr)
     local params = json.decode(paramsStr)
 
     print("[Criar Veículo] Solicitação recebida: " .. tostring(params))

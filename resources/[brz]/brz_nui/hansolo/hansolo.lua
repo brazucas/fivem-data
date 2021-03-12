@@ -8,12 +8,6 @@ RegisterCommand("nui", function(source, args)
     SetDisplay(not display)
 end)
 
---very important cb
-RegisterNUICallback("Fechar", function(data, cb)
-    SetDisplay(false)
-    cb(true)
-end)
-
 function SetDisplay(bool)
     display = bool
     SetNuiFocus(bool, bool)
@@ -40,6 +34,11 @@ Citizen.CreateThread(function()
         DisableControlAction(0, 322, display) -- ESC
         DisableControlAction(0, 106, display) -- VehicleMouseControlOverride
     end
+end)
+
+RegisterNUICallback("Fechar", function(data, cb)
+    SetDisplay(false)
+    cb()
 end)
 
 RegisterNetEvent("brzNui:MudarPagina")
