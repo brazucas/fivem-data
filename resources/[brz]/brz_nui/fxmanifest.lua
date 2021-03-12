@@ -8,12 +8,12 @@ client_script "hansolo/hansolo.lua"
 server_script "skywalker.lua"
 
 files {
-    "html/**/*",
-    "html/biomp/*",
-    "html/biomp/**/*",
-    "html/build/*",
-    "html/build/**/*",
-    "html/vendor/*",
-    "html/vendor/**/*",
-    "html/vendor/**/**/*",
+    "nui/**/*",
+    "nui/biomp/*",
+    "nui/biomp/**/*",
+    "nui/build/*",
+    "nui/build/**/*",
+    "nui/vendor/*",
+    "nui/vendor/**/*",
+    "nui/vendor/**/**/*",
 }
