@@ -17,6 +17,6 @@ RegisterCommand("criarveiculo", function(source, args)
         print("criarveiculo2")
 
         TriggerClientEvent("Notify",source,"sucesso","Criando veículo.",8000)
-        TriggerClientEvent('brzNui:MudarPagina', "admin/criar-veiculo", { })
+        TriggerClientEvent("brzNui:MudarPagina", "admin/criar-veiculo", { })
     end
 end)
