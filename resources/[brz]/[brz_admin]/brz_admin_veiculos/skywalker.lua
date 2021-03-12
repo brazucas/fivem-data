@@ -4,7 +4,7 @@ vRP = Proxy.getInterface("vRP")
 
 RegisterServerEvent("brzAdminVeiculos:acessar")
 AddEventHandler("brzAdminVeiculos:acessar",function()
-    TriggerServerEvent('brzNui:mudar-pagina', 'admin/criar-veiculo', nil)
+    TriggerServerEvent('brzNui:mudarPagina', 'admin/criar-veiculo', {})
 end)
 
 RegisterCommand("criarveiculo", function(source, args)
@@ -16,6 +16,6 @@ RegisterCommand("criarveiculo", function(source, args)
     if vRP.hasPermission(user_id, "administrador.permissao") then
         print("criarveiculo2")
 
-        vRP.brzNuiMudarPagina('admin/criar-veiculo', nil)
+        TriggerClientEvent('brzNui:mudarPagina', 'admin/criar-veiculo', { })
     end
 end)
