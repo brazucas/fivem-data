@@ -402,10 +402,12 @@ AddEventHandler('autoescola:final', function()
     Wait(1000)
 
     if erros > 3 then
-        TriggerEvent("Notify","negado","Você reprovou no teste de direção! Tente novamente em alguns dias. ( Total de erros:"..erros.." )")
+        TriggerEvent("Notify","negado","Você reprovou no teste de direção! ( Total de erros:"..erros.." )")
+        erros = 0
     else
         dmv.sucesso()
         TriggerEvent("Notify","sucesso","Você foi aprovado em seu teste de direção! ( Total de erros:"..erros.." )")
+        erros = 0;
     end
 end)
 
