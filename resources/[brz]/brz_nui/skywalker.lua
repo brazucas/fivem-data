@@ -1,6 +1,6 @@
-RegisterServerEvent("brzNui:mudar-pagina")
-AddEventHandler("brzNui:mudar-pagina", function(pagina, params)
-    print("brzNui:mudar-pagina Comando recebido " .. pagina)
+RegisterServerEvent("brzNui:mudarPagina")
+AddEventHandler("brzNui:mudarPagina", function(pagina, params)
+    print("brzNui:mudarPagina Comando recebido " .. pagina)
     local source = source
 
     SendNUIMessage({ event = 'acessar', pagina = pagina, params = params })
