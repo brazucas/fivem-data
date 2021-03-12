@@ -1,38 +1,10 @@
 var playlist = [
 	{
-		"song"    : "Bandoleros",
-		"album"   : "Los Bandoleros",
-		"artist"  : "Don Omar",
-		"artwork" : "imagens/do-bandoleros.jpg",
-		"mp3"     : "musicas/do-bandoleros.mp3"
-	},
-	{
-		"song"    : "Magenta Ca$h",
-		"album"   : "ALEGORIA",
-		"artist"  : "Gloria Grove",
-		"artwork" : "imagens/gg-magentacash.png",
-		"mp3"     : "musicas/gg-magentacash.mp3"
-	},
-	{
-		"song"    : "Drown",
-		"album"   : "Drown",
-		"artist"  : "Martin Garrix",
-		"artwork" : "imagens/mg-drown.jpg",
-		"mp3"     : "musicas/mg-drown.mp3"
-    },
-    {
-		"song"    : "HIGHEST IN THE ROOM",
-		"album"   : "JACKBOYS",
-		"artist"  : "Travis Scott",
-		"artwork" : "imagens/tc-highestintheroom.jpg",
-		"mp3"     : "musicas/tc-highestintheroom.mp3"
-    },
-    {
-		"song"    : "Tudo no sigilo",
-		"album"   : "N/A",
-		"artist"  : "Vytinho NG",
-		"artwork" : "imagens/vng-tudonosigilo.png",
-		"mp3"     : "musicas/vng-tudonosigilo.mp3"
+		"song"    : "Nunca Vai Ser Eu",
+		"album"   : "Você Não Me Deu Moral",
+		"artist"  : "Barões da Pisadinha",
+		"artwork" : "imagens/baroes.jpg",
+		"mp3"     : "musicas/baroes-lofi.mp3"
 	}
     
 ];
