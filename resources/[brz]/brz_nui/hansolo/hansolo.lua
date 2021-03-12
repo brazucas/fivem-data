@@ -10,7 +10,6 @@ end)
 
 --very important cb
 RegisterNUICallback("Fechar", function(data)
-    chat("exited", {0,255,0})
     SetDisplay(false)
 end)
 
