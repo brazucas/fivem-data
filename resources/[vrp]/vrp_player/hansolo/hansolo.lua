@@ -295,7 +295,7 @@ function GetPlayers()
   return players
 end
 
---[[Citizen.CreateThread(function()
+Citizen.CreateThread(function()
   RequestAnimDict("facials@gen_male@variations@normal")
   RequestAnimDict("mp_facial")
 
@@ -316,7 +316,7 @@ end
           end
       end
   end
-end)]]
+end)
 
 --[ NOCARJACK ]--------------------------------------------------------------------------------------------------------------------------
 
