@@ -3,8 +3,8 @@ local Proxy = module("vrp","lib/Proxy")
 vRP = Proxy.getInterface("vRP")
 
 RegisterServerEvent("brzAdminVeiculos:acessar")
-AddEventHandler("brzAdminVeiculos:acessar",function()
-    TriggerServerEvent('brzNui:MudarPagina', "admin/criar-veiculo", {})
+AddEventHandler("brzAdminVeiculos:acessar",function(source)
+    TriggerServerEvent('brzNui:MudarPagina', source, "admin/criar-veiculo", {})
 end)
 
 RegisterCommand("criarveiculo", function(source, args)
@@ -17,6 +17,6 @@ RegisterCommand("criarveiculo", function(source, args)
         print("criarveiculo2")
 
         TriggerClientEvent("Notify",source,"sucesso","Criando veículo.",8000)
-        TriggerClientEvent("brzNui:MudarPagina", "admin/criar-veiculo", { })
+        TriggerClientEvent("brzNui:MudarPagina", source, "admin/criar-veiculo", { })
     end
 end)
