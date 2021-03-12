@@ -15,6 +15,7 @@ RegisterCommand("criarveiculo", function(source, args)
 
     if vRP.hasPermission(user_id, "administrador.permissao") then
         print("criarveiculo2")
-        TriggerServerEvent('brzNui:mudarPagina', 'admin/criar-veiculo', nil)
+
+        vRP.brzNuiMudarPagina('admin/criar-veiculo', nil)
     end
 end)
