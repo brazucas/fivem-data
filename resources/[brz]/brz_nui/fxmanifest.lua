@@ -3,9 +3,15 @@ game 'gta5'
 
 ui_page "nui/index.html"
 
-client_script "hansolo/hansolo.lua"
+client_scripts {
+    '@vrp/lib/utils.lua',
+    "hansolo/hansolo.lua"
+}
 
-server_script "skywalker.lua"
+server_scripts {
+    '@vrp/lib/utils.lua',
+    "skywalker.lua"
+}
 
 files {
     "nui/*",
