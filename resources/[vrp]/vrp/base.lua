@@ -714,8 +714,7 @@ AddEventHandler("queue:playerConnecting", function(source, ids, name, setKickRea
             if not vRP.isBanned(user_id) then
                 deferrals.update("Carregando whitelist.")
                 if vRP.isWhitelisted(user_id) then
-                    exports.mongodb:updateOne({ collection = "vrp_users", query = { _id = user_id }, update = { ["$set"] = { ip = vRP.getPlayerEndpoint(source) } } })
-                    exports.mongodb:updateOne({ collection = "vrp_users", query = { _id = user_id }, update = { ["$set"] = { ll = os.date("%H:%M:%S %d/%m/%Y") } } })
+                    exports.mongodb:updateOne({ collection = "vrp_users", query = { _id = user_id }, update = { ["$set"] = { ip = vRP.getPlayerEndpoint(source), ll = os.date("%H:%M:%S %d/%m/%Y") } } })
 
                     if vRP.rusers[user_id] == nil then
                         deferrals.update("Carregando banco de dados.")
