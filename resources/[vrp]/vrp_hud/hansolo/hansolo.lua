@@ -93,7 +93,7 @@ Citizen.CreateThread(function()
 			else
 				farol = 0
       end
-      
+
       DisplayRadar(true)
     else
 			if on_gps then
@@ -109,7 +109,7 @@ Citizen.CreateThread(function()
       farol = nil
 
     end
-    
+
 		SendNUIMessage({
 			show = show,
       incar = inCar,
@@ -182,13 +182,13 @@ Citizen.CreateThread(function()
           TriggerEvent("cancelando",true)
           if cintoseg then
             TriggerEvent("vrp_sound:source",'unbelt',0.5)
-            SetTimeout(2000,function()
+            SetTimeout(1000,function()
               cintoseg = false
               TriggerEvent("cancelando",false)
             end)
           else
             TriggerEvent("vrp_sound:source",'belt',0.5)
-              SetTimeout(3000,function()
+              SetTimeout(1500,function()
                 cintoseg = true
                 TriggerEvent("cancelando",false)
               end)
@@ -219,7 +219,7 @@ end)
 Citizen.CreateThread(function()
   while true do
   Citizen.Wait(100)
-    if started then 
+    if started then
       if IsPauseMenuActive() or menu_celular then
         displayValue = false
       else
@@ -235,25 +235,25 @@ Citizen.CreateThread(function()
     if disabled then
       DisableControlAction(1,243,true)
       DisableControlAction(1,213,true)
-      DisableControlAction(0,21,true) 
+      DisableControlAction(0,21,true)
       DisableControlAction(0,24,true)
-      DisableControlAction(0,25,true) 
-      DisableControlAction(0,47,true) 
+      DisableControlAction(0,25,true)
+      DisableControlAction(0,47,true)
       DisableControlAction(0,49,true)
-      DisableControlAction(0,44,true) 
-      DisableControlAction(0,303,true) 
-      DisableControlAction(0,246,true) 
-      DisableControlAction(0,311,true) 
-      DisableControlAction(0,58,true) 
-      DisableControlAction(0,263,true) 
-      DisableControlAction(0,264,true) 
-      DisableControlAction(0,257,true) 
-      DisableControlAction(0,140,true) 
-      DisableControlAction(0,141,true) 
+      DisableControlAction(0,44,true)
+      DisableControlAction(0,303,true)
+      DisableControlAction(0,246,true)
+      DisableControlAction(0,311,true)
+      DisableControlAction(0,58,true)
+      DisableControlAction(0,263,true)
+      DisableControlAction(0,264,true)
+      DisableControlAction(0,257,true)
+      DisableControlAction(0,140,true)
+      DisableControlAction(0,141,true)
       DisableControlAction(0,142,true)
-      DisableControlAction(0,143,true) 
-      DisableControlAction(0,75,true) 
-      DisableControlAction(27,75,true) 
+      DisableControlAction(0,143,true)
+      DisableControlAction(0,75,true)
+      DisableControlAction(27,75,true)
     end
   end
 end)
