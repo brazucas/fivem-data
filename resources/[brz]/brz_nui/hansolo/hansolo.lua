@@ -47,9 +47,9 @@ AddEventHandler("brzNui:SetDisplay", function(bool)
     SetDisplay(bool)
 end)
 
-RegisterNetEvent("brzNui:mudarPagina")
-AddEventHandler("brzNui:mudarPagina", function(pagina, params)
-    print("brzNui:mudarPagina Comando recebido " .. pagina)
+RegisterNetEvent("brzNui:MudarPagina")
+AddEventHandler("brzNui:MudarPagina", function(pagina, params)
+    print("brzNui:MudarPagina Comando recebido " .. pagina)
     local source = source
 
     SendNUIMessage({ event = 'acessar', pagina = pagina, params = params })
