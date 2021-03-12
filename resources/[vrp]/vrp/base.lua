@@ -679,8 +679,6 @@ function vRP.dropPlayer(source)
 
         vRP.setUData(user_id, "vRP:datatable", json.encode(vRP.getUserDataTable(user_id)))
 
-        print("Salvando dados: " .. json.encode(vRP.getUserDataTable(user_id)))
-
         vRP.users[vRP.rusers[user_id]] = nil
         vRP.rusers[user_id] = nil
         vRP.user_tables[user_id] = nil
