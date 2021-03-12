@@ -2012,6 +2012,7 @@ webpackJsonp([0], [, , , , , , function(t, e, n) {
             sonido: JSON.parse(window.localStorage.gc_sonido || null),
             zoom: window.localStorage.gc_zoom || "100%",
             volume: parseFloat(window.localStorage.gc_volume) || 1,
+            // mouse: "true" === window.localStorage.gc_mouse,
             mouse: true,
             lang: window.localStorage.gc_language,
             config: {
