@@ -7,7 +7,7 @@ body {
     height: 1080px;
     font-family: Helvetica, Arial;
     background: #161922;
-    background-image: url("imagens/background.png");
+    background-image: url("imagens/brz_banner.gif");
     background-repeat: no-repeat;
     background-attachment: fixed;
 	background-position: center;
@@ -309,7 +309,7 @@ input[type="range"] {
 	border-radius: 14px;
 	padding: 0px 1px;
 	background: rgb(21, 21, 24);
-	outline: none;	
+	outline: none;
 }
 
 input[type="range"]::-moz-range-track {

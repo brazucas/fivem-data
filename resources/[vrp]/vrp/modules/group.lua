@@ -13,7 +13,7 @@ end
 
 function vRP.getUserGroups(user_id)
 	local data = vRP.getUserDataTable(user_id)
-	if data then 
+	if data then
 		if data.groups == nil then
 			data.groups = {}
 		end
@@ -62,7 +62,7 @@ function vRP.addUserGroup(user_id,group)
 
 			local gtype = nil
 			if ngroup._config then
-				gtype = ngroup._config.gtype 
+				gtype = ngroup._config.gtype
 			end
 			TriggerEvent("vRP:playerJoinGroup",user_id,group,gtype)
 		end
@@ -72,8 +72,8 @@ end
 function vRP.getUsersByPermission(perm)
 	local users = {}
 	for k,v in pairs(vRP.rusers) do
-		if vRP.hasPermission(tonumber(k),perm) then
-			table.insert(users,tonumber(k))
+		if vRP.hasPermission(k,perm) then
+			table.insert(users,k)
 		end
 	end
 	return users
@@ -91,7 +91,7 @@ function vRP.removeUserGroup(user_id,group)
 
 	local gtype = nil
 	if groupdef._config then
-		gtype = groupdef._config.gtype 
+		gtype = groupdef._config.gtype
 	end
 
 	TriggerEvent("vRP:playerLeaveGroup",user_id,group,gtype)
@@ -280,7 +280,7 @@ local function build_client_selectors(source)
 				local function selector_enter(source)
 					local user_id = vRP.getUserId(source)
 					if user_id and vRP.hasPermissions(user_id,gcfg.permissions or {}) then
-						vRP.openMenu(source,menu) 
+						vRP.openMenu(source,menu)
 					end
 				end
 
