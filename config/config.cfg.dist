@@ -18,8 +18,8 @@ sets locale "pt-BR"
 sets tags "brazucas, server, brz, roleplay, vrpex, economia balanceada, cabelos personalisados, empresas, casas, apartamentos, empregos legais e ilegais, sistemas unicos"
 #--=[ CONFIGURAÇÕES VISUAIS ]=============================================--#
 load_server_icon brz.png
-#sets banner_detail "https://i.imgur.com/gMp4utf.png"
-#sets banner_connecting "https://i.imgur.com/AHuTrSF.png"
+sets banner_detail "https://cdn.brz.gg/brz_banner.gif"
+sets banner_connecting "https://cdn.brz.gg/brz_banner.gif"
 #--=[ CONFIG PORTA PRIVADA & SCRIPHOOK ]==================================--#
 sv_scriptHookAllowed 0
 sv_endpointprivacy true
