@@ -2,30 +2,31 @@ local Tunnel = module("vrp", "lib/Tunnel")
 local Proxy = module("vrp", "lib/Proxy")
 vRP = Proxy.getInterface("vRP")
 
-autocompletes = {}
+local dadosEventos = {}
 
-RegisterNUICallback("AutocompleteJogadores", function(texto, cb)
-    if #texto < 1 then
+RegisterNUICallback("AutocompleteJogadores", function(body, cb)
+    if #body.data < 1 then
         cb({})
     else
-        autocompletes = {}
-
-        TriggerServerEvent("brzMisc:AutocompleteJogadores", texto)
-
-        local threadTime = 0
-        local increment = 300
-        Citizen.CreateThread(function()
-            while threadTime < 5000 and #autocompletes == 0 do -- esperar por 5 segundos
-                Citizen.Wait(increment)
-                threadTime = threadTime + increment
-            end
-
-            cb(autocompletes)
-        end)
+        TriggerServerEvent("brzMisc:AutocompleteJogadores", body.eventId, body.data)
+        esperarEvento(body.eventId, cb)
     end
 end)
 
 RegisterNetEvent("brzMisc:AutocompleteJogadores")
-AddEventHandler("brzMisc:AutocompleteJogadores", function(results)
-    autocompletes = json.decode(results)
+AddEventHandler("brzMisc:AutocompleteJogadores", function(eventId, results)
+    dadosEventos[eventId] = json.decode(results)
 end)
+
+function esperarEvento(eventId, cb)
+    local threadTime = 0
+    local increment = 300
+    Citizen.CreateThread(function()
+        while threadTime < 5000 and dadosEventos[eventId] == nil do -- esperar por 5 segundos
+            Citizen.Wait(increment)
+            threadTime = threadTime + increment
+        end
+
+        cb(dadosEventos[eventId])
+    end)
+end

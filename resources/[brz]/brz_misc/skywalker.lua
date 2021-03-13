@@ -3,9 +3,9 @@ local Proxy = module("vrp", "lib/Proxy")
 vRP = Proxy.getInterface("vRP")
 
 RegisterServerEvent("brzMisc:AutocompleteJogadores")
-AddEventHandler("brzMisc:AutocompleteJogadores", function(texto)
+AddEventHandler("brzMisc:AutocompleteJogadores", function(eventId, texto)
     local p = promise.new()
-    --{$or: [{name: {$regex: /prem/i}}, {firstname: {$regex: /prem/i}}]}
+
     print("brzMisc:AutocompleteJogadores buscando pelo texto " .. texto)
     exports.mongodb:find({
         collection = "vrp_user_identities",
@@ -25,5 +25,5 @@ AddEventHandler("brzMisc:AutocompleteJogadores", function(texto)
     end)
     local results = mapObject(Citizen.Await(p), function(item) return { nome = item.firstname .. item.name, userId = item.user_id } end)
 
-    TriggerClientEvent("brzMisc:AutocompleteJogadores", -1, json.encode(results))
+    TriggerClientEvent("brzMisc:AutocompleteJogadores", -1, eventId, json.encode(results))
 end)
