@@ -45,7 +45,7 @@ end
 local function wait(self)
 	local rets = Citizen.Await(self.p)
 	if not rets then
-		rets = self.r 
+		rets = self.r
 	end
 	return table.unpack(rets,1,table.maxn(rets))
 end
@@ -65,7 +65,7 @@ end
 
 function parseInt(v)
 	local n = tonumber(v)
-	if n == nil then 
+	if n == nil then
 		return 0
 	else
 		return math.floor(n)
@@ -132,4 +132,12 @@ function joinStrings(list, sep)
 		if count < size then str = str..sep end
 	end
 	return str
+end
+
+function mapObject(tbl, f)
+	local t = {}
+	for k,v in pairs(tbl) do
+		t[k] = f(v)
+	end
+	return t
 end

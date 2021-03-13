@@ -16,6 +16,7 @@ end
 
 RegisterNUICallback("ButtonClick",function(data,cb)
 	if data == "comprar-pibwassen" then
+
 		TriggerServerEvent("bar-comprar","pibwassen")
 
 	elseif data == "comprar-tequilya" then
@@ -53,7 +54,7 @@ RegisterNUICallback("ButtonClick",function(data,cb)
 
 	elseif data == "fechar" then
 		ToggleActionMenu()
-	
+
 	end
 end)
 
@@ -80,7 +81,7 @@ Citizen.CreateThread(function()
 			local bowz,cdz = GetGroundZFor_3dCoord(v.x,v.y,v.z)
 			local distance = GetDistanceBetweenCoords(v.x,v.y,cdz,x,y,z,true)
 			local lojas = lojas[k]
-			
+
 			if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), lojas.x, lojas.y, lojas.z, true ) <= 1.5 and not menuactive then
 				DrawText3D(lojas.x, lojas.y, lojas.z, "Pressione [~p~E~w~] para acessar o ~p~MENU DO BAR~w~.")
 			end
@@ -104,7 +105,7 @@ end)
 function DrawText3D(x,y,z, text)
     local onScreen,_x,_y=World3dToScreen2d(x,y,z)
     local px,py,pz=table.unpack(GetGameplayCamCoords())
-    
+
     SetTextScale(0.28, 0.28)
     SetTextFont(4)
     SetTextProportional(1)
