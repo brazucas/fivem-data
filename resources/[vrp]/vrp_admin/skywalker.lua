@@ -1066,6 +1066,45 @@ RegisterCommand('tpway', function(source, args, rawCommand)
     end
 end)
 
+--[ TELECOORDS ]-------------------------------------------------------------------------------------------------------------------
+
+RegisterCommand('tlcoords', function(source, args, rawCommand)
+    local user_id = vRP.getUserId(source)
+    local identity = vRP.getUserIdentity(user_id)
+    if vRP.hasPermission(user_id, "administrador.permissao") or vRP.hasPermission(user_id, "moderador.permissao") or vRP.hasPermission(user_id, "manager.permissao") then
+        if args[1] and args[2] and args[3] then
+            PerformHttpRequest(logAdminTps, function(err, text, headers) end, 'POST', json.encode({
+                embeds = {
+                    {
+                        ------------------------------------------------------------
+                        title = "REGISTRO DE TELECOORDS⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀",
+                        thumbnail = {
+                            url = "https://i.imgur.com/5ydYKZg.png"
+                        },
+                        fields = {
+                            {
+                                name = "**COLABORADOR:**",
+                                value = "**" .. identity.name .. " " .. identity.firstname .. "** [**" .. user_id .. "**]\n⠀"
+                            },
+                            {
+                                name = "**COORDENADAS: **" .. args[1] .. args[2] .. args[3],
+                                value = "⠀"
+                            }
+                        },
+                        footer = {
+                            text = "BRZ - " .. os.date("%d/%m/%Y | %H:%M:%S"),
+                            icon_url = "https://i.imgur.com/5ydYKZg.png"
+                        },
+                        color = 15906321
+                    }
+                }
+            }), { ['Content-Type'] = 'application/json' })
+
+            TriggerClientEvent('telecoords', source, parseFloat(args[1]), parseFloat(args[2]), parseFloat(args[3]))
+        end
+    end
+end)
+
 --[ DELNPCS ]-----------------------------------------------------------------------------------------------------------------
 
 RegisterCommand('delnpcs', function(source, args, rawCommand)
