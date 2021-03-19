@@ -32,6 +32,7 @@ client_scripts {
 	'client/iplloader.lua',
 	'client/gui.lua',
 	'client/player_state.lua',
+	'client/peds.lua',
 	'client/survival.lua',
 	'client/map.lua',
 	'client/identity.lua',

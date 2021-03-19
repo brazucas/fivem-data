@@ -244,6 +244,7 @@ function tvRP.CarregarObjeto(dict,anim,prop,flag,hand,pos1,pos2,pos3,pos4,pos5,p
 		AttachEntityToEntity(object,ped,GetPedBoneIndex(ped,hand),0.0,0.0,0.0,0.0,0.0,0.0,false,false,false,false,2,true)
 	end
 	Citizen.InvokeNative(0xAD738C3085FE7E11,object,true,true)
+	return object
 end
 
 function tvRP.DeletarObjeto()
@@ -253,6 +254,13 @@ function tvRP.DeletarObjeto()
         TriggerServerEvent("trydeleteobj",ObjToNet(object))
         object = nil
     end
+end
+
+function tvRP.JogadorComObjetoAnexado()
+    if DoesEntityExist(object) then
+		if IsEntityAttachedToAnyPed(object) then return true else return false end
+    end
+	return false
 end
 
 local menu_celular = false

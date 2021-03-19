@@ -104,11 +104,12 @@ end
 local anims = {}
 local anim_ids = Tools.newIDGenerator()
 
-function tvRP.playAnim(upper,seq,looping)
+function tvRP.playAnim(upper,seq,looping,ped)
+	ped = ped or PlayerPedId()
 	if seq.task then
 		tvRP.stopAnim(true)
 
-		local ped = PlayerPedId()
+		--local ped = PlayerPedId()
 		if seq.task == "PROP_HUMAN_SEAT_CHAIR_MP_PLAYER" then
 			local x,y,z = tvRP.getPosition()
 			TaskStartScenarioAtPosition(ped,seq.task,x,y,z-1,GetEntityHeading(ped),0,0,false)
@@ -150,10 +151,10 @@ function tvRP.playAnim(upper,seq,looping)
 						if not first then inspeed = 2.0 end
 						if not last then outspeed = 2.0 end
 
-						TaskPlayAnim(PlayerPedId(),dict,name,inspeed,outspeed,-1,flags,0,0,0,0)
+						TaskPlayAnim(ped,dict,name,inspeed,outspeed,-1,flags,0,0,0,0)
 					end
 						Citizen.Wait(5)
-						while GetEntityAnimCurrentTime(PlayerPedId(),dict,name) <= 0.95 and IsEntityPlayingAnim(PlayerPedId(),dict,name,3) and anims[id] do
+						while GetEntityAnimCurrentTime(ped,dict,name) <= 0.95 and IsEntityPlayingAnim(ped,dict,name,3) and anims[id] do
 							Citizen.Wait(5)
 						end
 					end
@@ -165,12 +166,13 @@ function tvRP.playAnim(upper,seq,looping)
 	end
 end
 
-function tvRP.stopAnim(upper)
+function tvRP.stopAnim(upper, ped)
+	ped = ped or PlayerPedId()
 	anims = {}
 	if upper then
-		ClearPedSecondaryTask(PlayerPedId())
+		ClearPedSecondaryTask(ped)
 	else
-		ClearPedTasks(PlayerPedId())
+		ClearPedTasks(ped)
 	end
 end
 
