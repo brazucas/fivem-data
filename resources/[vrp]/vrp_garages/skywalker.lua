@@ -372,7 +372,8 @@ local garages = {
     [614] = { ['name'] = "Minerador", ['payment'] = false, ['public'] = true },
     [615] = { ['name'] = "Lixeiro", ['payment'] = false, ['public'] = true },
     [616] = { ['name'] = "Leiteiro", ['payment'] = false, ['public'] = true },
-    [617] = { ['name'] = "Aluguel", ['payment'] = true, ['public'] = true }
+    [617] = { ['name'] = "Aluguel", ['payment'] = true, ['public'] = true }--[[,
+    [618] = { ['name'] = "Pizzaboy01", ['payment'] = false, ['public'] = true }]]
 }
 
 --[ GARAGEMS ]---------------------------------------------------------------------------------------------------------------------------
@@ -388,6 +389,9 @@ local workgarage = {
     },
     ["DPLAH"] = {
         "policiaheli"
+    },
+    ["Pizzaboy"] = {
+        "faggio2"
     },
     ["Taxista"] = {
         "taxi"

@@ -15,8 +15,8 @@ AddEventHandler("BrzSpawnVeiculo", function(brzVeiculoId, params)
     print("debug2")
     if HasModelLoaded(mhash) then
         print("debug3")
-        local ped = GetPlayerPed()
-        local nveh = CreateVehicle(mhash, GetEntityCoords(ped), GetEntityHeading(ped), true, false)
+        local ped = PlayerPedId()
+        local nveh = CreateVehicle(mhash, GetEntityCoords(ped),GetEntityHeading(ped), true, false)
         print("debug4")
         NetworkRegisterEntityAsNetworked(nveh)
         while not NetworkGetEntityIsNetworked(nveh) do
