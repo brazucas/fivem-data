@@ -560,13 +560,13 @@ Citizen.CreateThread(function()
     end
 end)
 
-RegisterCommand("coords",function(source,args)
+--[[RegisterCommand("coords",function(source,args)
     if showcoords then
         showcoords = false
     else
         showcoords = true
     end
-end)
+end)]]
 
 Citizen.CreateThread(function()
     while true do

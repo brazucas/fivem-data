@@ -1107,6 +1107,23 @@ end)
 
 --[ DELNPCS ]-----------------------------------------------------------------------------------------------------------------
 
+RegisterCommand('savepos', function(source, args, rawCommand)
+    local user_id = vRP.getUserId(source)
+    if vRP.hasPermission(user_id, "administrador.permissao") or vRP.hasPermission(user_id, "manager.permissao") then
+        local ped = GetPlayerPed(source)
+        local coords = GetEntityCoords(ped)
+        local heading = GetEntityHeading(ped)
+        file = io.open( './coords.txt', "a")
+        if file then
+            file:write("{" .. coords.x .. ",".. coords.y .. "," .. coords.z .. ", HEADING:" .. heading .. "},")
+            file:write("\n")
+        end
+        file:close()
+    end
+end)
+
+--[ DELNPCS ]-----------------------------------------------------------------------------------------------------------------
+
 RegisterCommand('delnpcs', function(source, args, rawCommand)
     local user_id = vRP.getUserId(source)
     if vRP.hasPermission(user_id, "administrador.permissao") or vRP.hasPermission(user_id, "manager.permissao") then

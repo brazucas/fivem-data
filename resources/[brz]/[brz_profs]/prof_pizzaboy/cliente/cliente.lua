@@ -5,6 +5,7 @@ vRP = Proxy.getInterface("vRP")
 --[ CONNECTION ]----------------------------------------------------------------------------------------------------------------
 
 prof = Tunnel.getInterface("prof_pizzaboy")
+brzNPC = Proxy.getInterface("brz_npcs")
 
 --[ VARIABLES ]-----------------------------------------------------------------------------------------------------------------
 
@@ -26,10 +27,6 @@ local recebeuPizzaCliente = false
 local indoEntregarPizza = false
 local spawnCliente = {}
 local proximoAoCliente = false
-
-local coordX = -349.99
-local coordY = -1569.89
-local coordZ = 25.23
 
 local locs = {
 	{1088.57666015625, -775.6830444335938, 58.27894973754883 - 1.0},
@@ -105,45 +102,62 @@ RegisterCommand("testepizza", function(source, args)
 	if DoesBlipExist(blips) then RemoveBlip(blips) end
 	if DoesEntityExist(ClientePizza) then DeletePed(ClientePizza) end
 	indoEntregarPizza = true
-	createBlip(spawnCliente[1], spawnCliente[2], spawnCliente[3])
+	CreateBlipNPC(spawnCliente[1], spawnCliente[2], spawnCliente[3])
 	--CriarClientePizza(4,"a_m_y_business_01")
     --TriggerEvent("chatMessage", '', { 0, 0x99, 255}, "" .. tostring(GetEntityModel(objPizza)) )
 end)
---[[Citizen.CreateThread(function()
+
+--[ INTERAÇÃO NPC ]------------------------------------------------------------------------------------------------------------------
+
+Citizen.CreateThread(function()
 	while true do
 		local idle = 1000
 		local ped = PlayerPedId()
 		if not IsPedInAnyVehicle(ped) then
-			local x,y,z = table.unpack(GetEntityCoords(ped))
-			local bowz,cdz = GetGroundZFor_3dCoord(coordX,coordY,coordZ)
-			local distance = GetDistanceBetweenCoords(coordX,coordY,cdz,x,y,z,true)
-			if distance < 10.1 then
-				idle = 5
-				DrawMarker(23,coordX,coordY,coordZ-0.99,0,0,0,0,0,0,1.0,1.0,0.5,136, 96, 240, 180,0,0,0,0)
-				
-				if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), coordX, coordY, coordZ, true ) < 1.3 then
-					DrawText3D(coordX, coordY, coordZ, "Pressione [~p~E~w~] para iniciar a coleta de ~p~LIXO~w~.")
-				end
-				
-				if distance < 1.1 then
-					if IsControlJustPressed(1,38) then
-						CalculateTimeToDisplay()
-						if parseInt(hour) >= 06 and parseInt(hour) <= 20 then
-							if not working then
-								working = true
-							  	selected = 1
-							  	createBlip(locs,selected)
-						  	end
-						else
-							TriggerEvent("Notify","importante","Funcionamento é das <b>06:00</b> as <b>20:00</b>.",8000)
+			local npcPizza = brzNPC.maisProximo("pizzaboy")
+			if DoesEntityExist(npcPizza) then
+				local coordX,coordY,coordZ = table.unpack(GetEntityCoords(npcPizza))
+				local x,y,z = table.unpack(GetEntityCoords(ped))
+				local bowz,cdz = GetGroundZFor_3dCoord(coordX,coordY,coordZ)
+				local distance = GetDistanceBetweenCoords(coordX,coordY,cdz,x,y,z,true)
+
+				if distance < 10.1 then
+					idle = 5
+					--DrawMarker(23,coordX,coordY,coordZ-0.99,0,0,0,0,0,0,1.0,1.0,0.5,136, 96, 240, 180,0,0,0,0)
+					
+					if not working then
+						if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), coordX, coordY, coordZ, true ) < 1.3 then
+							DrawText3D(coordX, coordY, coordZ, "Pressione [~p~E~w~] para iniciar as entregas de ~p~PIZZA~w~.")
+						end
+					else
+						if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), coordX, coordY, coordZ, true ) < 1.3 then
+							DrawText3D(coordX, coordY, coordZ, "Pressione [~p~E~w~] para pegar outra ~p~PIZZA~w~.")
+						end
+					end
+					
+					if distance < 1.3 then
+						if IsControlJustPressed(1,38) then
+							--CalculateTimeToDisplay()
+							--if parseInt(hour) >= 06 and parseInt(hour) <= 20 then
+								if not working then
+									IniciarMissaoPizza()
+									TriggerEvent("Notify","importante","Você agora está trabalhando como pizzaboy. Vá até o cliente para entregar está pizza!",1000)
+								else
+									IniciarMissaoPizza()
+									TriggerEvent("Notify","importante","Vá até o cliente para entregar está pizza!",1000)
+								end
+							--else
+								--TriggerEvent("Notify","importante","Funcionamento é das <b>06:00</b> as <b>20:00</b>.",8000)
+							--end
 						end
 					end
 				end
 			end
+			
 		end
 		Citizen.Wait(idle)
 	end
-end)]]
+end)
 
 --[ FUNCTION ]------------------------------------------------------------------------------------------------------------------
 
@@ -159,6 +173,12 @@ Citizen.CreateThread(function()
 			--local prop = "prop_cs_rub_binbag_01"
 
 			local vehicle = vRP.getNearestVehicle(7)
+
+			if IsPedInAnyVehicle(ped) then
+				drawTxt("PRESSIONE ~r~F7~w~ PARA ENCERRAR O SERVIÇO",4,0.218,0.963,0.35,255,255,255,120)
+			else
+				drawTxt("PRESSIONE ~r~F7~w~ PARA ENCERRAR O SERVIÇO",4,0.068,0.963,0.35,255,255,255,120)
+			end
 
 			ChecarPizzaNaMao(ped)
 			
@@ -197,6 +217,10 @@ Citizen.CreateThread(function()
 							pizzaHand = false
 							recebeuPizzaCliente = true
 							indoEntregarPizza = false
+							local npc = brzNPC.maisProximo("pizzaboy")
+							local x,y,z = table.unpack(GetEntityCoords(npc))
+							if DoesBlipExist(blips) then RemoveBlip(blips) end
+							CreateBlipPizza(x, y, z)
 							--PlayMissionCompleteAudio("FRANKLIN_BIG_01") 
 							PlaySoundFrontend(-1, "LOCAL_PLYR_CASH_COUNTER_COMPLETE", "DLC_HEISTS_GENERAL_FRONTEND_SOUNDS", 1)
 						end
@@ -216,14 +240,7 @@ Citizen.CreateThread(function()
 		if working then
 			idle = 5
 			if IsControlJustPressed(0,168) then
-				working = false
-				vRP._DeletarObjeto()
-				objPizza = 0
-				vRP._stopAnim(true)
-				if DoesEntityExist(ClientePizza) then DeletePed(ClientePizza) end
-				pizzaHand = false
-				recebeuPizzaCliente = false
-				RemoveBlip(blips)
+				EncerrarMissaoPizza()
 			end
 		end
 		Citizen.Wait(idle)
@@ -247,7 +264,7 @@ Citizen.CreateThread(function()
 				--local distancia = GetDistanceBetweenCoords(spawnCliente, GetEntityCoords(ped), 2)
 				--Citizen.Trace(tostring(distancia) .. "\n")
 				if distancia < 200 then
-					if not DoesBlipExist(blips) then createBlip(blips) end
+					if not DoesBlipExist(blips) then CreateBlipNPC(blips) end
 					CriarClientePizza(4,"a_m_y_business_01")
 				end
 			else
@@ -288,13 +305,6 @@ Citizen.CreateThread(function()
 							currentAnimDict = randomWave[1]
 							currentAnimName = randomWave[2]
 							vRP._playAnim(false, {{currentAnimDict,currentAnimName}}, false, ClientePizza)
-							--[[recebeuPizzaCliente = false
-							SetTimeout(10000,function()
-								if DoesEntityExist(ClientePizza) then
-									DeletePed(ClientePizza)
-								end
-							end)]]
-							--Citizen.Wait(5)
 						end
 					end
 				Citizen.Wait(5)
@@ -323,9 +333,32 @@ function drawTxt(text,font,x,y,scale,r,g,b,a)
 	DrawText(x,y)
 end
 
+function IniciarMissaoPizza()
+	working = true
+	spawnCliente = locs[ math.random( #locs ) ]
+	if DoesBlipExist(blips) then RemoveBlip(blips) end
+	if DoesEntityExist(ClientePizza) then DeletePed(ClientePizza) end
+	indoEntregarPizza = true
+	CreateBlipNPC(spawnCliente[1], spawnCliente[2], spawnCliente[3])
+	vRP._playAnim(true, {{"anim@heists@box_carry@","idle"}}, true)
+	objPizza = vRP.CarregarObjeto("","","prop_pizza_box_01",50,28422,0, -0.35, -0.14,0)
+	pizzaHand = true
+	PlaySoundFrontend(-1, "Grab_Parachute", "BASEJUMPS_SOUNDS", 1)
+end
+
+function EncerrarMissaoPizza()
+	working = false
+	vRP._DeletarObjeto()
+	objPizza = 0
+	vRP._stopAnim(true)
+	if DoesEntityExist(ClientePizza) then DeletePed(ClientePizza) end
+	pizzaHand = false
+	recebeuPizzaCliente = false
+	RemoveBlip(blips)
+end
+
 function CriarClientePizza(type,model,pos)
     --Citizen.CreateThread(function()
-		
 
       	-- Define variables
       	local hash = GetHashKey(model)
@@ -349,7 +382,7 @@ function CriarClientePizza(type,model,pos)
 		--SetBlockingOfNonTemporaryEvents(ClientePizza, true)
 		SetPedCanRagdoll(ClientePizza, true)
 		SetPedCanRagdollFromPlayerImpact(ClientePizza, true)
-		--createBlip(spawnCliente[1], spawnCliente[2], spawnCliente[3])
+		--CreateBlipNPC(spawnCliente[1], spawnCliente[2], spawnCliente[3])
 		--Citizen.Trace(tostring(DoesEntityExist(ClientePizza)))
 		--while DoesEntityExist(ClientePizza) do
 			
@@ -415,7 +448,7 @@ function ChecarPizzaNaMao(ped)
 	end
 end
 
-function createBlip(x, y, z)
+function CreateBlipNPC(x, y, z)
 	--if DoesBlipExist(blips) then RemoveBlip(blips) end
 	if DoesEntityExist(ClientePizza) then
 		blips = AddBlipForEntity(ClientePizza)
@@ -430,6 +463,20 @@ function createBlip(x, y, z)
 	SetBlipRoute(blips,true)
 	BeginTextCommandSetBlipName("STRING")
 	AddTextComponentString("Cliente")
+	EndTextCommandSetBlipName(blips)
+end
+
+function CreateBlipPizza(x, y, z)
+	--if DoesBlipExist(blips) then RemoveBlip(blips) end
+	blips = AddBlipForCoord(x, y, z)
+	--blips = AddBlipForCoord(x, y, z)
+	SetBlipSprite(blips,1)
+	SetBlipColour(blips,5)
+	SetBlipScale(blips,0.4)
+	SetBlipAsShortRange(blips,false)
+	SetBlipRoute(blips,true)
+	BeginTextCommandSetBlipName("STRING")
+	AddTextComponentString("Pizza")
 	EndTextCommandSetBlipName(blips)
 end
 
