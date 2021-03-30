@@ -578,12 +578,16 @@ local vehList = {
 
 --[ VEHLIST ]----------------------------------------------------------------------------------------------------------------------------
 
-function tvRP.vehListHash()
+function tvRP.vehListHash(radius)
 	local ped = PlayerPedId()
 	local veh = GetVehiclePedIsUsing(ped)
 
 	if not IsPedInAnyVehicle(ped) then
-		veh = GetPlayersLastVehicle()
+		if radius > 0 then
+			veh = tvRP.getNearestVehicle(radius)
+		else
+			veh = GetPlayersLastVehicle()
+		end
 	end
 
 	if IsEntityAVehicle(veh) then
