@@ -374,7 +374,13 @@ local garages = {
     [616] = { ['name'] = "Leiteiro", ['payment'] = false, ['public'] = true },
     [617] = { ['name'] = "Aluguel", ['payment'] = true, ['public'] = true },
     [618] = { ['name'] = "Pizzaboy", ['payment'] = false, ['public'] = true },
-    [619] = { ['name'] = "Pizzaboy", ['payment'] = false, ['public'] = true }
+    [619] = { ['name'] = "Pizzaboy", ['payment'] = false, ['public'] = true },
+    [620] = { ['name'] = "Pizzaboy", ['payment'] = false, ['public'] = true },
+    [621] = { ['name'] = "Pizzaboy", ['payment'] = false, ['public'] = true },
+    [622] = { ['name'] = "Pizzaboy", ['payment'] = false, ['public'] = true },
+    [623] = { ['name'] = "Pizzaboy", ['payment'] = false, ['public'] = true },
+    [624] = { ['name'] = "Pizzaboy", ['payment'] = false, ['public'] = true },
+    [625] = { ['name'] = "Pizzaboy", ['payment'] = false, ['public'] = true }
 }
 
 --[ GARAGEMS ]---------------------------------------------------------------------------------------------------------------------------
