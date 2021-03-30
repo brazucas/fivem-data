@@ -203,7 +203,7 @@ Citizen.CreateThread(function()
 				end
 			end
 			
-			if prof.checkPlate(GetEntityModel(vehicle)) then
+			if IsVehicleModel(vehicle,GetHashKey("faggio2")) then
 				local coord = GetOffsetFromEntityInWorldCoords(ped,0.0,1.0,-0.94)
 				local portaMalas = GetWorldPositionOfEntityBone(vehicle, GetEntityBoneIndexByName(vehicle,"exhaust"))
 				local distanciaPortaMalas = GetDistanceBetweenCoords(portaMalas, coord, 2)
@@ -219,7 +219,7 @@ Citizen.CreateThread(function()
 								PlaySoundFrontend(-1, "Grab_Parachute", "BASEJUMPS_SOUNDS", 1)
 							end
 						end
-					else
+					else 
 						--drawTxt("PRESSIONE ~b~E~w~ PARA GUARDAR A PIZZA",4,0.5,0.93,0.50,255,255,255,180)
 						DrawText3D(portaMalas[1], portaMalas[2], portaMalas[3], "PRESSIONE ~b~E~w~ PARA GUARDAR A PIZZA")
 						if IsControlJustPressed(0,38) then
