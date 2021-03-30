@@ -11,8 +11,8 @@ local pedlist = {
 
 	-- NPC Pizzaboy;
 	{ ['x'] = 18.77592086792, ['y'] = -1345.283203125, ['z'] = 29.288366317749, ['h'] = 88.010803222656, ['hash'] = pizzaBoy.hash, ['hash2'] = pizzaBoy.hash2, ['tipo'] = "pizzaboy" },
-	{ ['x'] = 1152.7318115234, ['y'] = -328.36584472656, ['z'] = 69.213195800781, ['h'] = 190.51698303223, ['hash'] = pizzaBoy.hash, ['hash2'] = pizzaBoy.hash2, ['tipo'] = "pizzaboy" }
-	
+	{ ['x'] = 1152.7318115234, ['y'] = -328.36584472656, ['z'] = 69.213195800781, ['h'] = 190.51698303223, ['hash'] = pizzaBoy.hash, ['hash2'] = pizzaBoy.hash2, ['tipo'] = "pizzaboy" },
+	{ ['x'] = 369.48782348633, ['y'] = 331.04071044922, ['z'] = 103.53788757324, ['h'] = 72.599563598633, ['hash'] = pizzaBoy.hash, ['hash2'] = pizzaBoy.hash2, ['tipo'] = "pizzaboy" },
 }
 
 local pedStorage = {}

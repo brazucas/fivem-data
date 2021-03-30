@@ -9,3 +9,4 @@ config/keys.cfg
 /config/keys.cfg
 /config/database.cfg
 /resources/GHMattiMySQL/settings.xml
+coords.txt

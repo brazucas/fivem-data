@@ -40,6 +40,20 @@ function tvRP.getPosition()
 	return x,y,z
 end
 
+function tvRP.getCoordsForSaving()
+    local ped = PlayerPedId()
+	local estado = "[A PÉ]"
+    if IsPedInAnyVehicle(ped) then 
+		ped = GetVehiclePedIsIn(ped)
+		estado = "[" .. GetDisplayNameFromVehicleModel(GetEntityModel(ped)) .. "]"
+	end
+    local coords = GetEntityCoords(PlayerPedId(),true)
+    local heading = GetEntityHeading(ped)
+    local currentStreetHash, intersectStreetHash = GetStreetNameAtCoord(coords.x, coords.y, coords.z, currentStreetHash, intersectStreetHash)
+	local msg = "{" .. estado .. coords.x .. ", ".. coords.y .. ", " .. coords.z .. ", HEADING: " .. heading .. " Local: " .. GetStreetNameFromHashKey(currentStreetHash) .. "},"
+    return msg
+end
+
 function tvRP.isInside()
 	local x,y,z = tvRP.getPosition()
 	return not (GetInteriorAtCoords(x,y,z) == 0)

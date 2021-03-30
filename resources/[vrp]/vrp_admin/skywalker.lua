@@ -1110,12 +1110,13 @@ end)
 RegisterCommand('savepos', function(source, args, rawCommand)
     local user_id = vRP.getUserId(source)
     if vRP.hasPermission(user_id, "administrador.permissao") or vRP.hasPermission(user_id, "manager.permissao") then
-        local ped = GetPlayerPed(source)
-        local coords = GetEntityCoords(ped)
-        local heading = GetEntityHeading(ped)
         file = io.open( './coords.txt', "a")
         if file then
-            file:write("{" .. coords.x .. ",".. coords.y .. "," .. coords.z .. ", HEADING:" .. heading .. "},")
+            if args[1] then
+                file:write(args[1] .. ": " .. vRPclient.getCoordsForSaving(source))
+            else
+                file:write(vRPclient.getCoordsForSaving(source))
+            end
             file:write("\n")
         end
         file:close()

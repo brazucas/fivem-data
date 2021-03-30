@@ -10,14 +10,15 @@ Tunnel.bindInterface("prof_pizzaboy",prof)
 
 --[ FUNCTION ]------------------------------------------------------------------------------------------------------------------
 
-function prof.payment()
+function prof.payment(gorjeta)
 	local source = source
 	local user_id = vRP.getUserId(source)
-	local payment = 20 + math.random(5,40)
+	local base = 20
+	local payment = base + gorjeta
 	
 	if user_id then
 		vRP.giveDinheirama(user_id,payment)
-		TriggerClientEvent("Notify",source,"sucesso","<b>Lixo coletado!</b> | Ganhos: <b>$"..payment.." dólares</b>.")
+		TriggerClientEvent("Notify",source,"sucesso","<b>Pizza entregue!</b> | Ganhos: <b>R$"..base.." + "..gorjeta.." reais de gorjeta</b>.",2000)
 	end
 end
 

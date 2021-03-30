@@ -27,6 +27,11 @@ local recebeuPizzaCliente = false
 local indoEntregarPizza = false
 local spawnCliente = {}
 local proximoAoCliente = false
+local gorjeta = 0
+local testeCoords = 0
+local testeMinutos = 0
+local HoraDeEntrega = 0
+local MinutoDeEntrega = 0
 
 local locs = {
 	{1088.57666015625, -775.6830444335938, 58.27894973754883 - 1.0},
@@ -62,25 +67,32 @@ local locs = {
 --[ EVENTS ]--------------------------------------------------------------------------------------------------------------------
 
 function CalculateTimeToDisplay()
-	hour = GetClockHours()
-	if hour <= 9 then
-		hour = "0" .. hour
+	local horaDisplay = HoraDeEntrega
+	local minutoDisplay = MinutoDeEntrega
+	if HoraDeEntrega <= 9 then
+		horaDisplay = "0" .. HoraDeEntrega
 	end
+	if MinutoDeEntrega <= 9 then
+		minutoDisplay = "0" .. MinutoDeEntrega
+	end
+	return horaDisplay .. ":" .. minutoDisplay
 end
 
 --[ EVENTS ]--------------------------------------------------------------------------------------------------------------------
 
 RegisterCommand("pizzaboy", function(source, args)
-    if not working then
-		working = true
-		--vRP._playAnim(true,{{"anim@heists@box_carry@","idle"}},true)
-		--SetTaskWalk(ClientePizza, spawnCliente[1], spawnCliente[2], spawnCliente[3], 15.0)
-		--TaskWanderStandard(ClientePizza)
-		TriggerEvent("Notify","importante","Você está trabalhando como pizzaboy.",1000)
+	local ped = PlayerPedId()
+	if testeCoords ~= 0 then
+		local x1,y1,z1 = table.unpack(testeCoords)
+		local x2,y2,z2 = table.unpack(GetEntityCoords(ped))
+		local distancia = Vdist(x1,y1,z1, x2,y2,z2)
+		testeMinutos = GetClockMinutes() - testeMinutos
+		Citizen.Trace("velocidade: "..tostring(distancia/testeMinutos) .. " | " .. tostring(distancia).. " | " ..tostring(testeMinutos) .."\n")
+		testeCoords = 0
+		testeMinutos = 0
 	else
-		working = false
-		--vRP._stopAnim(false)
-		TriggerEvent("Notify","importante","Você não está mais trabalhando como pizzaboy.",1000)
+		testeCoords = GetEntityCoords(ped)
+		testeMinutos = GetClockMinutes()
 	end
 end) 
 
@@ -141,10 +153,12 @@ Citizen.CreateThread(function()
 							--if parseInt(hour) >= 06 and parseInt(hour) <= 20 then
 								if not working then
 									IniciarMissaoPizza()
-									TriggerEvent("Notify","importante","Você agora está trabalhando como pizzaboy. Vá até o cliente para entregar está pizza!",1000)
+									TriggerEvent("Notify","importante","Você agora está trabalhando como pizzaboy. Vá até o cliente para entregar está pizza!",2000)
 								else
-									IniciarMissaoPizza()
-									TriggerEvent("Notify","importante","Vá até o cliente para entregar está pizza!",1000)
+									if not indoEntregarPizza then
+										IniciarMissaoPizza()
+										TriggerEvent("Notify","importante","Vá até o cliente para entregar está pizza!",2000)
+									end
 								end
 							--else
 								--TriggerEvent("Notify","importante","Funcionamento é das <b>06:00</b> as <b>20:00</b>.",8000)
@@ -168,8 +182,7 @@ Citizen.CreateThread(function()
 			idle = 5
 			local ped = PlayerPedId()
 			--local x,y,z = table.unpack(GetEntityCoords(ped))
-
-			local coord = GetOffsetFromEntityInWorldCoords(ped,0.0,1.0,-0.94)
+			
 			--local prop = "prop_cs_rub_binbag_01"
 
 			local vehicle = vRP.getNearestVehicle(7)
@@ -180,22 +193,35 @@ Citizen.CreateThread(function()
 				drawTxt("PRESSIONE ~r~F7~w~ PARA ENCERRAR O SERVIÇO",4,0.068,0.963,0.35,255,255,255,120)
 			end
 
-			ChecarPizzaNaMao(ped)
+			if indoEntregarPizza then
+				--MissionText("Entregue a pizza no local marcado até o seguinte horário: ~r~", idle)
+				drawTxt("Entregue a pizza no local marcado até o seguinte horário: ~r~" .. CalculateTimeToDisplay(),4,0.5,0.93,0.50,255,255,255,180)
+				ChecarPizzaNaMao(ped)
+				if GetClockHours() == HoraDeEntrega and GetClockMinutes() == MinutoDeEntrega then
+					TriggerEvent("Notify","importante","Você demorou muito para entregar a pizza! O serviço foi encerrado!",2000)
+					EncerrarMissaoPizza()
+				end
+			end
 			
-			if IsVehicleModel(vehicle,GetHashKey("faggio2")) then
+			if prof.checkPlate(GetEntityModel(vehicle)) then
+				local coord = GetOffsetFromEntityInWorldCoords(ped,0.0,1.0,-0.94)
 				local portaMalas = GetWorldPositionOfEntityBone(vehicle, GetEntityBoneIndexByName(vehicle,"exhaust"))
 				local distanciaPortaMalas = GetDistanceBetweenCoords(portaMalas, coord, 2)
 				if distanciaPortaMalas < 1.0 and IsPedOnFoot(ped) then
 					if not pizzaHand then
-						drawTxt("PRESSIONE ~b~E~w~ PARA PEGAR A PIZZA",4,0.5,0.93,0.50,255,255,255,180)
-						if IsControlJustPressed(0,38) then
-							vRP._playAnim(true, {{"anim@heists@box_carry@","idle"}}, true)
-							objPizza = vRP.CarregarObjeto("","","prop_pizza_box_01",50,28422,0, -0.35, -0.14,0)
-							pizzaHand = true
-							PlaySoundFrontend(-1, "Grab_Parachute", "BASEJUMPS_SOUNDS", 1)
+						if indoEntregarPizza then
+							--drawTxt("PRESSIONE ~b~E~w~ PARA PEGAR A PIZZA",4,0.5,0.93,0.50,255,255,255,180)
+							DrawText3D(portaMalas[1], portaMalas[2], portaMalas[3], "PRESSIONE ~b~E~w~ PARA PEGAR A PIZZA")
+							if IsControlJustPressed(0,38) then
+								vRP._playAnim(true, {{"anim@heists@box_carry@","idle"}}, true)
+								objPizza = vRP.CarregarObjeto("","","prop_pizza_box_01",50,28422,0, -0.35, -0.14,0)
+								pizzaHand = true
+								PlaySoundFrontend(-1, "Grab_Parachute", "BASEJUMPS_SOUNDS", 1)
+							end
 						end
-					else 
-						drawTxt("PRESSIONE ~b~E~w~ PARA GUARDAR A PIZZA",4,0.5,0.93,0.50,255,255,255,180)
+					else
+						--drawTxt("PRESSIONE ~b~E~w~ PARA GUARDAR A PIZZA",4,0.5,0.93,0.50,255,255,255,180)
+						DrawText3D(portaMalas[1], portaMalas[2], portaMalas[3], "PRESSIONE ~b~E~w~ PARA GUARDAR A PIZZA")
 						if IsControlJustPressed(0,38) then
 							vRP._DeletarObjeto()
 							objPizza = 0
@@ -207,9 +233,11 @@ Citizen.CreateThread(function()
 				end
 			elseif pizzaHand then
 				if DoesEntityExist(ClientePizza) then
-					local distancia = GetDistanceBetweenCoords(GetEntityCoords(ClientePizza), GetEntityCoords(ped), 2)
+					local posCliente = GetEntityCoords(ClientePizza)
+					local distancia = GetDistanceBetweenCoords(posCliente, GetEntityCoords(ped), 2)
 					if distancia < 1.5 and IsPedFacingPed(ClientePizza, ped, 45.0) then
-						drawTxt("PRESSIONE ~b~E~w~ PARA ENTREGAR A PIZZA",4,0.5,0.93,0.50,255,255,255,180)
+						--drawTxt("PRESSIONE ~b~E~w~ PARA ENTREGAR A PIZZA",4,0.5,0.93,0.50,255,255,255,180)
+						DrawText3D(posCliente[1], posCliente[2], posCliente[3], "PRESSIONE ~b~E~w~ PARA ENTREGAR A PIZZA")
 						if IsControlJustPressed(0,38) then
 							vRP._DeletarObjeto()
 							objPizza = 0
@@ -221,6 +249,8 @@ Citizen.CreateThread(function()
 							local x,y,z = table.unpack(GetEntityCoords(npc))
 							if DoesBlipExist(blips) then RemoveBlip(blips) end
 							CreateBlipPizza(x, y, z)
+							prof.payment(gorjeta)
+							Citizen.Trace("entregou: "..tostring(GetClockMinutes()) .. "\n")
 							--PlayMissionCompleteAudio("FRANKLIN_BIG_01") 
 							PlaySoundFrontend(-1, "LOCAL_PLYR_CASH_COUNTER_COMPLETE", "DLC_HEISTS_GENERAL_FRONTEND_SOUNDS", 1)
 						end
@@ -252,8 +282,8 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		local idle = 1000
-		if indoEntregarPizza then
-			idle = 500
+		if working then
+			--idle = 500
 			--Citizen.Trace(tostring(DoesEntityExist(ClientePizza)) .. "\n")
 			if not DoesEntityExist(ClientePizza) then
 				local ped = PlayerPedId()
@@ -263,7 +293,7 @@ Citizen.CreateThread(function()
 				
 				--local distancia = GetDistanceBetweenCoords(spawnCliente, GetEntityCoords(ped), 2)
 				--Citizen.Trace(tostring(distancia) .. "\n")
-				if distancia < 200 then
+				if distancia < 200 and indoEntregarPizza then
 					if not DoesBlipExist(blips) then CreateBlipNPC(blips) end
 					CriarClientePizza(4,"a_m_y_business_01")
 				end
@@ -333,8 +363,55 @@ function drawTxt(text,font,x,y,scale,r,g,b,a)
 	DrawText(x,y)
 end
 
+function MissionText(text, time)
+	--EndTextCommandClearPrint()
+	SetTextEntry_2("STRING")
+	AddTextComponentString(text)
+	--DrawSubtitleTimed(time, 1)
+	EndTextCommandPrint(time, false)
+	EndTextCommandIsMessageDisplayed()
+end
+
+function CalcularGorjeta()
+	local ped = PlayerPedId()
+	local x,y,z = table.unpack(GetEntityCoords(ped))
+	local distancia = Vdist(spawnCliente[1], spawnCliente[2], spawnCliente[3], x, y, z)
+	Citizen.Trace("iniciou: "..tostring(GetClockMinutes()) .. "\n")
+	Citizen.Trace("iniciou: "..tostring(distancia) .. "\n")
+	local velocidadeMedia = GetVehicleModelMaxSpeed(GetHashKey("faggio2")) * 3.6
+	Citizen.Trace("iniciou: "..tostring(velocidadeMedia) .. "\n")
+	Citizen.Trace("iniciou: "..tostring(distancia / velocidadeMedia) .. "\n")
+	if distancia > 100 then
+		gorjeta = math.floor((distancia / 100) + 0.5)
+
+	else
+		gorjeta = 0
+	end
+	local TempoEntrega = math.floor((distancia / velocidadeMedia) + 0.5)
+	local TempoEntregaH = math.floor(TempoEntrega / 60)
+	local TempoEntregaM = math.floor((math.fmod(TempoEntrega / 60,1) * 60) + 0.5)
+
+	local Hrs = GetClockHours()
+	local Min = GetClockMinutes()
+	if Hrs + TempoEntregaH >= 24 then
+		HoraDeEntrega= Hrs+TempoEntregaH-24
+	else
+		HoraDeEntrega= Hrs+TempoEntregaH
+	end
+	if Min + TempoEntregaM >= 60 then
+		MinutoDeEntrega=Min+TempoEntregaM-60
+	else
+		MinutoDeEntrega=Min+TempoEntregaM
+	end
+	if MinutoDeEntrega >= 60 then
+		MinutoDeEntrega = MinutoDeEntrega - 60
+		HoraDeEntrega = HoraDeEntrega + 1
+	end
+end
+
 function IniciarMissaoPizza()
 	working = true
+	
 	spawnCliente = locs[ math.random( #locs ) ]
 	if DoesBlipExist(blips) then RemoveBlip(blips) end
 	if DoesEntityExist(ClientePizza) then DeletePed(ClientePizza) end
@@ -343,6 +420,7 @@ function IniciarMissaoPizza()
 	vRP._playAnim(true, {{"anim@heists@box_carry@","idle"}}, true)
 	objPizza = vRP.CarregarObjeto("","","prop_pizza_box_01",50,28422,0, -0.35, -0.14,0)
 	pizzaHand = true
+	CalcularGorjeta()
 	PlaySoundFrontend(-1, "Grab_Parachute", "BASEJUMPS_SOUNDS", 1)
 end
 
@@ -354,12 +432,12 @@ function EncerrarMissaoPizza()
 	if DoesEntityExist(ClientePizza) then DeletePed(ClientePizza) end
 	pizzaHand = false
 	recebeuPizzaCliente = false
+	indoEntregarPizza = false
 	RemoveBlip(blips)
 end
 
 function CriarClientePizza(type,model,pos)
     --Citizen.CreateThread(function()
-
       	-- Define variables
       	local hash = GetHashKey(model)
 		--local ped = PlayerPedId()
