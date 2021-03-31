@@ -534,7 +534,7 @@ function CalcularGorjeta()
 	else
 		gorjeta = 0
 	end
-	local TempoEntrega = math.floor((distancia / velocidadeMedia) + 0.5)
+	local TempoEntrega = (math.floor((distancia / velocidadeMedia) + 0.5) * 6)
 	local TempoEntregaH = math.floor(TempoEntrega / 60)
 	local TempoEntregaM = math.floor((math.fmod(TempoEntrega / 60,1) * 60) + 0.5)
 

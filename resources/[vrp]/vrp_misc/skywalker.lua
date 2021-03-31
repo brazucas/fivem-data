@@ -68,6 +68,8 @@ Citizen.CreateThread(function()
 		if minutes >= 60 then
 			minutes = 0
 			hours = hours + 1
+			local date = { hora = parseInt(hours) }
+			vRP.setSData("brz:date",json.encode(date))
 			if hours >= 24 then
 				hours = 0
 			end
@@ -104,7 +106,7 @@ end)
 	end
 end)]]
 
---local data = vRP.getSData("brz:date")
+local data = vRP.getSData("brz:date")
 
 --[ RICHPRESENCE | FUNCTION ]-----------------------------------------------------------------------
 
