@@ -348,14 +348,14 @@ end
 
 function vRP.setSData(key, value)
     local p = promise.new()
-    local uData = vRP.getUData(user_id, key)
+    local uData = vRP.getSData(key)
 
     if string.len(uData) > 0 then
-        exports.mongodb:updateOne({ collection = "vrp_srv_data", query = { dkey = key }, update = { ["$set"] = { dvalue = value } } }, function(success, result)
+        exports.mongodb:updateOne({ collection = "brz_srv_data", query = { dkey = key }, update = { ["$set"] = { dvalue = value } } }, function(success, result)
             p:resolve(success)
         end)
     else
-        exports.mongodb:insertOne({ collection = "vrp_srv_data", document = { dkey = key, dvalue = value } }, function(success, result, insertedIds)
+        exports.mongodb:insertOne({ collection = "brz_srv_data", document = { dkey = key, dvalue = value } }, function(success, result, insertedIds)
             if success then
                 p:resolve(insertedIds[1])
             else
@@ -369,7 +369,7 @@ end
 
 function vRP.getSData(key, cbr)
     local p = promise.new()
-    exports.mongodb:findOne({ collection = "vrp_srv_data", query = { dkey = key } }, function(success, result)
+    exports.mongodb:findOne({ collection = "brz_srv_data", query = { dkey = key } }, function(success, result)
         if success then
             if #result > 0 then
                 p:resolve(result[1])

@@ -1006,14 +1006,14 @@ RegisterCommand('vehs', function(source, args, rawCommand)
                                         local custom2 = json.decode(custom)
                                         if custom2 then
                                             vRP.setSData("custom:u" .. parseInt(args[2]) .. "veh_" .. tostring(args[1]), json.encode(custom2))
-                                            exports.mongodb:deleteOne({ collection = "vrp_srv_data", query = { dkey = "custom:u" .. parseInt(user_id) .. "veh_" .. tostring(args[1]) } })
+                                            exports.mongodb:deleteOne({ collection = "brz_srv_data", query = { dkey = "custom:u" .. parseInt(user_id) .. "veh_" .. tostring(args[1]) } })
                                         end
 
                                         local chest = vRP.getSData("chest:u" .. parseInt(user_id) .. "veh_" .. tostring(args[1]))
                                         local chest2 = json.decode(chest)
                                         if chest2 then
                                             vRP.setSData("chest:u" .. parseInt(args[2]) .. "veh_" .. tostring(args[1]), json.encode(chest2))
-                                            exports.mongodb:deleteOne({ collection = "vrp_srv_data", query = { dkey = "chest:u" .. parseInt(user_id) .. "veh_" .. tostring(args[1]) } })
+                                            exports.mongodb:deleteOne({ collection = "brz_srv_data", query = { dkey = "chest:u" .. parseInt(user_id) .. "veh_" .. tostring(args[1]) } })
                                         end
 
                                         TriggerClientEvent("Notify", source, "sucesso", "Você Vendeu <b>" .. vRP.vehicleName(tostring(args[1])) .. "</b> e Recebeu <b>$" .. vRP.format(parseInt(price)) .. "</b> dólares.", 20000)

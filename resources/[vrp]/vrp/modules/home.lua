@@ -55,7 +55,7 @@ end
 
 function vRP.removeUserAddress(user_id, home, chestid)
     exports.mongodb:deleteOne({ collection = "vrp_user_homes", query = { user_id = user_id, home = home } })
-    exports.mongodb:deleteOne({ collection = "vrp_srv_data", query = { dkey = "chest:u" .. user_id .. "-" .. chestid .. "home" } })
+    exports.mongodb:deleteOne({ collection = "brz_srv_data", query = { dkey = "chest:u" .. user_id .. "-" .. chestid .. "home" } })
 end
 
 function vRP.getUserByAddress(home, number)

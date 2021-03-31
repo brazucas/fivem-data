@@ -235,8 +235,8 @@ function src.sellDealer(name)
         local rows2 = vRP.getEstoque(name)
         if vehicle[1] then
             exports.mongodb:deleteOne({ collection = "vrp_user_vehicles", query = { user_id = parseInt(user_id), vehicle = name } })
-            exports.mongodb:deleteOne({ collection = "vrp_srv_data", query = { dkey = "custom:u" .. parseInt(user_id) .. "veh_" .. name } })
-            exports.mongodb:deleteOne({ collection = "vrp_srv_data", query = { dkey = "chest:u" .. parseInt(user_id) .. "veh_" .. name } })
+            exports.mongodb:deleteOne({ collection = "brz_srv_data", query = { dkey = "custom:u" .. parseInt(user_id) .. "veh_" .. name } })
+            exports.mongodb:deleteOne({ collection = "brz_srv_data", query = { dkey = "chest:u" .. parseInt(user_id) .. "veh_" .. name } })
 
             local p = promise.new()
             exports.mongodb:updateOne({

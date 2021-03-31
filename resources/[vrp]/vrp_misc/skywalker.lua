@@ -14,23 +14,55 @@ Tunnel.bindInterface("vrp_misc",misc)
 
 local hours = 6
 local minutes = 20
-local weather = "EXTRASUNNY"
+--[[local weather = "EXTRASUNNY"
 local timers = {
 	[1] = { "EXTRASUNNY" }
-}
+}]]
 
 --[ REQUESTSYNC ]-----------------------------------------------------------------------------------
 
 RegisterServerEvent("vrp_misc:requestSync")
 AddEventHandler("vrp_misc:requestSync",function()
-	TriggerClientEvent("vrp_misc:updateWeather",-1,weather)
+	TriggerClientEvent("vrp_misc:updateWeather",-1,activeWeatherSystems)
+end)
+
+RegisterServerEvent("dinoweather:syncWeather")
+AddEventHandler("dinoweather:syncWeather", function()
+	local _source = source
+	TriggerClientEvent("vrp_misc:updateWeather", _source, activeWeatherSystems)
+end)
+
+RegisterServerEvent("dinoweather:setWeatherInZone")
+AddEventHandler("dinoweather:setWeatherInZone", function(zoneName, weatherType)
+  local _source = source
+  if IsPlayerAceAllowed(_source, "dinoweather.cmds") then
+    local zoneArea = findZoneBySubZone(zoneName)
+    for _, weatherZone in ipairs(WeatherConfig.weatherSystems[zoneArea][1]) do
+      local foundInterval = nil
+      for i, activeZone in ipairs(activeWeatherSystems) do
+        if activeZone[1] == weatherZone then
+          foundInterval = i 
+        end
+      end
+      if foundInterval ~= nil then
+        activeWeatherSystems[foundInterval] = {zoneName, weatherType}
+      else
+        table.insert(activeWeatherSystems, {zoneName, weatherType})
+      end
+    end
+    TriggerClientEvent("dinoweather:syncWeather", -1, activeWeatherSystems)
+    TriggerClientEvent("chatMessage", _source, "^2Clima setado para ^3" .. weatherType .. "^2.")
+  else
+    TriggerClientEvent("chatMessage", _source, "^3Sem permissão.")
+  end
 end)
 
 --[ UPDATECLOCK ]-----------------------------------------------------------------------------------
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10000)
+		--Citizen.Wait(10000)
+		Citizen.Wait(2000)
 		minutes = minutes + 1
 		
 		if minutes >= 60 then
@@ -46,15 +78,23 @@ end)
 
 --[ UPDATETIMERS ]----------------------------------------------------------------------------------
 
-Citizen.CreateThread(function()
+--[[Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(600000)
 		weather = timers[math.random(1)][1]
 		TriggerClientEvent("vrp_misc:updateWeather",-1,weather)
 	end
+end)]]
+
+Citizen.CreateThread(function()
+	while true do
+	  Citizen.Wait(0)
+	  randomizeSystems()
+	  Citizen.Wait(WeatherConfig.randomizeTime)
+	end
 end)
 
-RegisterCommand('clima',function(source,args,rawCommand)
+--[[RegisterCommand('clima',function(source,args,rawCommand)
 	local user_id = vRP.getUserId(source)
 	
 	if user_id then
@@ -62,7 +102,9 @@ RegisterCommand('clima',function(source,args,rawCommand)
 			TriggerClientEvent("vrp_misc:updateWeather",-1,args[1])
 		end
 	end
-end)
+end)]]
+
+--local data = vRP.getSData("brz:date")
 
 --[ RICHPRESENCE | FUNCTION ]-----------------------------------------------------------------------
 

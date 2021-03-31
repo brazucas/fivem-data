@@ -11,14 +11,8 @@ brzNPC = Proxy.getInterface("brz_npcs")
 
 local blips = false
 local working = false
-local onTrash = false
+local ped = PlayerPedId()
 local pizzaHand = false
-local trashSpawn = false
-local onRota = false
-local onLocal = false
-local trashOn = false
-local selected = 0
-local hour = 0
 local objPizza = 0
 local currentAnimDict = 'friends@frj@ig_1'
 local currentAnimName = ''
@@ -28,12 +22,157 @@ local indoEntregarPizza = false
 local spawnCliente = {}
 local proximoAoCliente = false
 local gorjeta = 0
-local testeCoords = 0
-local testeMinutos = 0
 local HoraDeEntrega = 0
 local MinutoDeEntrega = 0
 local veiculoTrabalho = nil
 local proximoAoVeiculo = false
+
+local Skins = {"a_f_y_hipster_01",
+    "a_f_y_hipster_02",
+    "a_f_y_hipster_03",
+    "a_f_y_hipster_04",
+    "a_f_y_indian_01",
+    "a_f_y_juggalo_01",
+    "a_f_y_runner_01",
+    "a_f_y_rurmeth_01",
+    "a_f_y_scdressy_01",
+    "a_f_y_skater_01",
+    "a_f_y_soucent_01",
+    "a_f_y_soucent_02",
+    "a_f_y_soucent_03",
+    "a_f_y_tennis_01",
+    "a_f_y_topless_01",
+    "a_f_y_tourist_01",
+    "a_f_y_tourist_02",
+    "a_f_y_vinewood_01",
+    "a_f_y_vinewood_02",
+    "a_f_y_vinewood_03",
+    "a_f_y_vinewood_04",
+    "a_f_y_yoga_01",
+    "a_m_m_acult_01",
+    "a_m_m_afriamer_01",
+    "a_m_m_beach_01",
+    "a_m_m_beach_02",
+    "a_m_m_bevhills_01",
+    "a_m_m_bevhills_02",
+    "a_m_m_business_01",
+    "a_m_m_eastsa_01",
+    "a_m_m_eastsa_02",
+    "a_m_m_farmer_01",
+    "a_m_m_fatlatin_01",
+    "a_m_m_genfat_01",
+    "a_m_m_genfat_02",
+    "a_m_m_golfer_01",
+    "a_m_m_hasjew_01",
+    "a_m_m_hillbilly_01",
+    "a_m_m_hillbilly_02",
+    "a_m_m_indian_01",
+    "a_m_m_ktown_01",
+    "a_m_m_malibu_01",
+    "a_m_m_mexcntry_01",
+    "a_m_m_mexlabor_01",
+    "a_m_m_og_boss_01",
+    "a_m_m_paparazzi_01",
+    "a_m_m_polynesian_01",
+    "a_m_m_prolhost_01",
+    "a_m_m_rurmeth_01",
+    "a_m_m_salton_01",
+    "a_m_m_salton_02",
+    "a_m_m_salton_03",
+    "a_m_m_salton_04",
+    "a_m_m_skater_01",
+    "a_m_m_skidrow_01",
+    "a_m_m_socenlat_01",
+    "a_m_m_soucent_01",
+    "a_m_m_soucent_02",
+    "a_m_m_soucent_03",
+    "a_m_m_soucent_04",
+    "a_m_m_stlat_02",
+    "a_m_m_tennis_01",
+    "a_m_m_tourist_01",
+    "a_m_m_tramp_01",
+    "a_m_m_trampbeac_01",
+    "a_m_m_tranvest_01",
+    "a_m_m_tranvest_02",
+    "a_m_o_acult_01",
+    "a_m_o_acult_02",
+    "a_m_o_beach_01",
+    "a_m_o_genstreet_01",
+    "a_m_o_ktown_01",
+    "a_m_o_salton_01",
+    "a_m_o_soucent_01",
+    "a_m_o_soucent_02",
+    "a_m_o_soucent_03",
+    "a_m_o_tramp_01",
+    "a_m_y_acult_01",
+    "a_m_y_acult_02",
+    "a_m_y_beach_01",
+    "a_m_y_beach_02",
+    "a_m_y_beach_03",
+    "a_m_y_beachvesp_01",
+    "a_m_y_beachvesp_02",
+    "a_m_y_bevhills_01",
+    "a_m_y_bevhills_02",
+    "a_m_y_breakdance_01",
+    "a_m_y_busicas_01",
+    "a_m_y_business_01",
+    "a_m_y_business_02",
+    "a_m_y_business_03",
+    "a_m_y_cyclist_01",
+    "a_m_y_dhill_01",
+    "a_m_y_downtown_01",
+    "a_m_y_eastsa_01",
+    "a_m_y_eastsa_02",
+    "a_m_y_epsilon_01",
+    "a_m_y_epsilon_02",
+    "a_m_y_gay_01",
+    "a_m_y_gay_02",
+    "a_m_y_genstreet_01",
+    "a_m_y_genstreet_02",
+    "a_m_y_golfer_01",
+    "a_m_y_hasjew_01",
+    "a_m_y_hiker_01",
+    "a_m_y_hippy_01",
+    "a_m_y_hipster_01",
+    "a_m_y_hipster_02",
+    "a_m_y_hipster_03",
+    "a_m_y_indian_01",
+    "a_m_y_jetski_01",
+    "a_m_y_juggalo_01",
+    "a_m_y_ktown_01",
+    "a_m_y_ktown_02",
+    "a_m_y_latino_01",
+    "a_m_y_methhead_01",
+    "a_m_y_mexthug_01",
+    "a_m_y_motox_01",
+    "a_m_y_motox_02",
+    "a_m_y_musclbeac_01",
+    "a_m_y_musclbeac_02",
+    "a_m_y_polynesian_01",
+    "a_m_y_roadcyc_01",
+    "a_m_y_runner_01",
+    "a_m_y_runner_02",
+    "a_m_y_salton_01",
+    "a_m_y_skater_01",
+    "a_m_y_skater_02",
+    "a_m_y_soucent_01",
+    "a_m_y_soucent_02",
+    "a_m_y_soucent_03",
+    "a_m_y_soucent_04",
+    "a_m_y_stbla_01",
+    "a_m_y_stbla_02",
+    "a_m_y_stlat_01",
+    "a_m_y_stwhi_01",
+    "a_m_y_stwhi_02",
+    "a_m_y_sunbathe_01",
+    "a_m_y_surfer_01",
+    "a_m_y_vindouche_01",
+    "a_m_y_vinewood_01",
+    "a_m_y_vinewood_02",
+    "a_m_y_vinewood_03",
+    "a_m_y_vinewood_04",
+    "a_m_y_yoga_01"
+}
 
 local locs = {
 	{1088.57666015625, -775.6830444335938, 58.27894973754883 - 1.0},
@@ -84,7 +223,7 @@ end
 
 RegisterCommand("pizzaboy", function(source, args)
 	
-	Citizen.Trace(tostring(GetEntityModel(GetVehiclePedIsIn(PlayerPedId()))) .. "\n")
+	Citizen.Trace(tostring(GetEntityModel(GetVehiclePedIsIn(ped))) .. "\n")
 	--MissionText("Hi, ~o~orange~w~.", 1500)
 end)
 
@@ -116,7 +255,6 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		local idle = 1000
-		local ped = PlayerPedId()
 		if not IsPedInAnyVehicle(ped) then
 			local npcPizza = brzNPC.maisProximo("pizzaboy")
 			if DoesEntityExist(npcPizza) then
@@ -130,11 +268,11 @@ Citizen.CreateThread(function()
 					--DrawMarker(23,coordX,coordY,coordZ-0.99,0,0,0,0,0,0,1.0,1.0,0.5,136, 96, 240, 180,0,0,0,0)
 					
 					if not working then
-						if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), coordX, coordY, coordZ, true ) < 1.3 then
+						if GetDistanceBetweenCoords(GetEntityCoords(ped), coordX, coordY, coordZ, true ) < 1.3 then
 							DrawText3D(coordX, coordY, coordZ, "Pressione [~p~E~w~] para iniciar as entregas de ~p~PIZZA~w~.")
 						end
 					else
-						if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), coordX, coordY, coordZ, true ) < 1.3 then
+						if GetDistanceBetweenCoords(GetEntityCoords(ped), coordX, coordY, coordZ, true ) < 1.3 then
 							DrawText3D(coordX, coordY, coordZ, "Pressione [~p~E~w~] para pegar outra ~p~PIZZA~w~.")
 						end
 					end
@@ -172,7 +310,7 @@ Citizen.CreateThread(function()
 		local idle = 1000
 		if working then
 			idle = 5
-			local ped = PlayerPedId()
+			--local ped = PlayerPedId()
 			--local x,y,z = table.unpack(GetEntityCoords(ped))
 			
 			--local prop = "prop_cs_rub_binbag_01"
@@ -304,7 +442,7 @@ Citizen.CreateThread(function()
 			--idle = 500
 			--Citizen.Trace(tostring(DoesEntityExist(ClientePizza)) .. "\n")
 			if not DoesEntityExist(ClientePizza) then
-				local ped = PlayerPedId()
+				--local ped = PlayerPedId()
 				proximoAoCliente = false
 				local x,y,z = table.unpack(GetEntityCoords(ped))
 				local distancia = Vdist(spawnCliente[1], spawnCliente[2], spawnCliente[3], x, y, z)
@@ -313,10 +451,10 @@ Citizen.CreateThread(function()
 				--Citizen.Trace(tostring(distancia) .. "\n")
 				if distancia < 200 and indoEntregarPizza then
 					if not DoesBlipExist(blips) then CreateBlipNPC(blips) end
-					CriarClientePizza(4,"a_m_y_business_01")
+					CriarClientePizza(4,math.random( #Skins ) )
 				end
 			else
-				local ped = PlayerPedId()
+				--local ped = PlayerPedId()
 				local x,y,z = table.unpack(GetEntityCoords(ped))
 				local distancia = Vdist(spawnCliente[1], spawnCliente[2], spawnCliente[3], x, y, z)
 				if distancia < 30 then
@@ -382,7 +520,7 @@ function drawTxt(text,font,x,y,scale,r,g,b,a)
 end
 
 function CalcularGorjeta()
-	local ped = PlayerPedId()
+	--local ped = PlayerPedId()
 	local x,y,z = table.unpack(GetEntityCoords(ped))
 	local distancia = Vdist(spawnCliente[1], spawnCliente[2], spawnCliente[3], x, y, z)
 	Citizen.Trace("iniciou: "..tostring(GetClockMinutes()) .. "\n")

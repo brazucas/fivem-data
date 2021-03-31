@@ -793,7 +793,7 @@ function src.checkPermissions(homeName)
                             local cows = vRP.getSData("chest:" .. tostring(homeName))
                             local rows = json.decode(cows) or {}
                             if rows then
-                                exports.mongodb:deleteOne({ collection = "vrp_srv_data", query = { dkey = "chest:" .. tostring(homeName) } })
+                                exports.mongodb:deleteOne({ collection = "brz_srv_data", query = { dkey = "chest:" .. tostring(homeName) } })
                             end
 
                             exports.mongodb:delete({ collection = "vrp_homes_permissions", query = { home = tostring(homeName) } })
@@ -811,7 +811,7 @@ function src.checkPermissions(homeName)
                             local cows = vRP.getSData("chest:" .. tostring(homeName))
                             local rows = json.decode(cows) or {}
                             if rows then
-                                exports.mongodb:deleteOne({ collection = "vrp_srv_data", query = { dkey = "chest:" .. tostring(homeName) } })
+                                exports.mongodb:deleteOne({ collection = "brz_srv_data", query = { dkey = "chest:" .. tostring(homeName) } })
                             end
 
                             exports.mongodb:delete({ collection = "vrp_homes_permissions", query = { home = tostring(homeName) } })
