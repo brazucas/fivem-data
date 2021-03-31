@@ -14,6 +14,11 @@ Tunnel.bindInterface("vrp_misc",misc)
 
 local hours = 6
 local minutes = 20
+
+local day = 1
+local month = 1
+local year = 0
+
 --[[local weather = "EXTRASUNNY"
 local timers = {
 	[1] = { "EXTRASUNNY" }
@@ -60,6 +65,17 @@ end)
 --[ UPDATECLOCK ]-----------------------------------------------------------------------------------
 
 Citizen.CreateThread(function()
+	local data = vRP.getSData("brz:date")
+	local date = json.decode(data) or {}
+	if data and date ~= nil then
+		hours = date.hora
+		minutes = date.minutos
+
+		day = date.dia
+		month = date.mes
+		year = date.ano
+	end
+
 	while true do
 		--Citizen.Wait(10000)
 		Citizen.Wait(2000)
@@ -68,14 +84,55 @@ Citizen.CreateThread(function()
 		if minutes >= 60 then
 			minutes = 0
 			hours = hours + 1
-			local date = { hora = parseInt(hours) }
-			vRP.setSData("brz:date",json.encode(date))
+
 			if hours >= 24 then
 				hours = 0
+
+				day = day + 1
+
+				if day > misc.GetDaysInCurrentMonth() then
+					day = 1
+					
+					month = month + 1
+					if month > 11 then
+						month = 0
+						
+						year = year + 1
+					end
+				end
+			end
+			local svDate = { 
+				hora = parseInt(hours),
+				minutos = parseInt(minutes),
+				dia = parseInt(day),
+				mes = parseInt(month),
+				ano = parseInt(year),
+			}
+			vRP.setSData("brz:date",json.encode(svDate))
+		end
+		TriggerClientEvent("vrp_misc:syncTimers",-1,{minutes,hours,day,month,year})
+	end
+end)
+
+--[ MUDAR DATA ]-----------------------------------------------------------------------------------------------------------------
+
+RegisterCommand('tempo', function(source, args, rawCommand)
+    local user_id = vRP.getUserId(source)
+    if vRP.hasPermission(user_id, "administrador.permissao") or vRP.hasPermission(user_id, "manager.permissao") then
+        local dia = parseInt(args[1])
+		if dia >= 0 and dia <= misc.GetDaysInCurrentMonth() then
+			local horas = parseInt(args[2])
+			if horas >= 0 and horas < 24 then
+				local minutos = parseInt(args[3])
+				if minutos >= 0 and minutos < 60 then
+					hours = horas
+					minutes = minutos
+					day = dia
+					TriggerClientEvent("vrp_misc:syncTimers",-1,{minutes,hours,day,month,year})
+				end
 			end
 		end
-		TriggerClientEvent("vrp_misc:syncTimers",-1,{minutes,hours})
-	end
+    end
 end)
 
 --[ UPDATETIMERS ]----------------------------------------------------------------------------------
@@ -106,7 +163,31 @@ end)
 	end
 end)]]
 
-local data = vRP.getSData("brz:date")
+--[ GET DAYS IN MONTH | FUNCTION ]-----------------------------------------------------------------------
+
+function misc.GetCurrentYear()
+	return year
+end
+
+function misc.GetCurrentMonth()
+	return month
+end
+
+function misc.GetCurrentDay()
+	return day
+end
+
+--[ GET DAYS IN MONTH | FUNCTION ]-----------------------------------------------------------------------
+
+function misc.GetDaysInCurrentMonth()
+	if month == 1 then
+		return 28
+	elseif month == 3 or month == 5 or month == 8 or month == 10 then
+		return 30
+	elseif month == 0 or month == 2 or month == 4 or month == 6 or month == 7 or month == 9 or month == 11 then
+		return 31
+	end
+end
 
 --[ RICHPRESENCE | FUNCTION ]-----------------------------------------------------------------------
 

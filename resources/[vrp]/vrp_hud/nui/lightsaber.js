@@ -48,7 +48,7 @@ $(document).ready(function(){
 
     var data = event.data;
 
-    $("#tempo").html(data.hora+':'+data.minuto);
+    $("#tempo").html(data.diasemana+' '+data.dia+'/'+data.mes+'/'+data.ano+' '+data.hora+':'+data.minuto);
     $("#endereco").html(data.rua+'.');
     $("#fome").css("height", 100 - data.hunger + "%");
     $("#sede").css("height", 100 - data.thirst + "%");

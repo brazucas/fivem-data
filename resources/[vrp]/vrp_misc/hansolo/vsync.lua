@@ -1,5 +1,10 @@
 local hora = 6
 local minuto = 20
+
+local dia = 1
+local mes = 1
+local ano = 0
+
 --local currentweather = "EXRTASUNNY"
 --local lastWeather = currentweather
 local activeWeather = {}
@@ -70,6 +75,11 @@ RegisterNetEvent("vrp_misc:syncTimers")
 AddEventHandler("vrp_misc:syncTimers",function(timer)
 	hora = timer[2]
 	minuto = timer[1]
+
+	dia = timer[3]
+	mes = timer[4]
+	ano = timer[5]
+	SetClockDate(dia, mes, ano)
 end)
 
 --[ NETWORKCLOCK ]-----------------------------------------------------------------------------------------------------------------------

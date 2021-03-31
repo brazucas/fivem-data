@@ -6,6 +6,10 @@ vRP = Proxy.getInterface("vRP")
 
 local hour = 0
 local minute = 0
+local day = GetClockDayOfMonth()
+local month = GetClockMonth()
+local year = GetClockYear()
+local dayWeek = ""
 local started = true
 local displayValue = false
 local sBuffer = {}
@@ -16,10 +20,72 @@ local thirst, hunger = 0, 0
 local zones = { ['AIRP'] = "Aeroporto Internacional", ['ALAMO'] = "Alamo Sea", ['ALTA'] = "Alta", ['ARMYB'] = "Fort Zancudo", ['BANHAMC'] = "Banham Canyon Dr", ['BANNING'] = "Banning", ['BEACH'] = "Vespucci Beach", ['BHAMCA'] = "Banham Canyon", ['BRADP'] = "Braddock Pass", ['BRADT'] = "Braddock Tunnel", ['BURTON'] = "Burton", ['CALAFB'] = "Calafia Bridge", ['CANNY'] = "Raton Canyon", ['CCREAK'] = "Cassidy Creek", ['CHAMH'] = "Chamberlain Hills", ['CHIL'] = "Vinewood Hills", ['CHU'] = "Chumash", ['CMSW'] = "Chiliad Mountain State Wilderness", ['CYPRE'] = "Cypress Flats", ['DAVIS'] = "Davis", ['DELBE'] = "Del Perro Beach", ['DELPE'] = "Del Perro", ['DELSOL'] = "La Puerta", ['DESRT'] = "Grand Senora Desert", ['DOWNT'] = "Downtown", ['DTVINE'] = "Downtown Vinewood", ['EAST_V'] = "East Vinewood", ['EBURO'] = "El Burro Heights", ['ELGORL'] = "El Gordo Lighthouse", ['ELYSIAN'] = "Elysian Island", ['GALFISH'] = "Galilee", ['GOLF'] = "GWC and Golfing Society", ['GRAPES'] = "Grapeseed", ['GREATC'] = "Great Chaparral", ['HARMO'] = "Harmony", ['HAWICK'] = "Hawick", ['HORS'] = "Vinewood Racetrack", ['HUMLAB'] = "Humane Labs and Research", ['JAIL'] = "Bolingbroke Penitentiary", ['KOREAT'] = "Little Seoul", ['LACT'] = "Land Act Reservoir", ['LAGO'] = "Lago Zancudo", ['LDAM'] = "Land Act Dam", ['LEGSQU'] = "Legion Square", ['LMESA'] = "La Mesa", ['LOSPUER'] = "La Puerta", ['MIRR'] = "Mirror Park", ['MORN'] = "Morningwood", ['MOVIE'] = "Richards Majestic", ['MTCHIL'] = "Mount Chiliad", ['MTGORDO'] = "Mount Gordo", ['MTJOSE'] = "Mount Josiah", ['MURRI'] = "Murrieta Heights", ['NCHU'] = "North Chumash", ['NOOSE'] = "N.O.O.S.E", ['OCEANA'] = "Pacific Ocean", ['PALCOV'] = "Paleto Cove", ['PALETO'] = "Paleto Bay", ['PALFOR'] = "Paleto Forest", ['PALHIGH'] = "Palomino Highlands", ['PALMPOW'] = "Palmer-Taylor Power Station", ['PBLUFF'] = "Pacific Bluffs", ['PBOX'] = "Pillbox Hill", ['PROCOB'] = "Procopio Beach", ['RANCHO'] = "Rancho", ['RGLEN'] = "Richman Glen", ['RICHM'] = "Richman", ['ROCKF'] = "Rockford Hills", ['RTRAK'] = "Redwood Lights Track", ['SANAND'] = "San Andreas", ['SANCHIA'] = "San Chianski Mountain Range", ['SANDY'] = "Sandy Shores", ['SKID'] = "Mission Row", ['SLAB'] = "Stab City", ['STAD'] = "Maze Bank Arena", ['STRAW'] = "Strawberry", ['TATAMO'] = "Tataviam Mountains", ['TERMINA'] = "Terminal", ['TEXTI'] = "Textile City", ['TONGVAH'] = "Tongva Hills", ['TONGVAV'] = "Tongva Valley", ['VCANA'] = "Vespucci Canals", ['VESP'] = "Vespucci", ['VINE'] = "Vinewood", ['WINDF'] = "Ron Alternates Wind Farm", ['WVINE'] = "West Vinewood", ['ZANCUDO'] = "Zancudo River", ['ZP_ORT'] = "Port of South Los Santos", ['ZQ_UAR'] = "Davis Quartz" }
 
 --[ DATA E HORA ]------------------------------------------------------------------------------------------------------------------------
+Citizen.CreateThread(function()
+  Citizen.Wait(1)
+  dayWeek = CalculateDayOfWeek()
+  day = GetClockDayOfMonth()
+  month = GetClockMonth()
+  year = GetClockYear()
+end)
+
+function CalculateDayOfWeek()
+  dayWeek = GetClockDayOfWeek()
+
+  if day <= 9 then
+    day = "0" .. day
+  end
+  if month <= 9 then
+    month = "0" .. month
+  end
+  if year <= 9 then
+    year = "0" .. year
+  end
+
+  local switch = {
+    [1] = function()
+      dayWeek = "Dom."
+    end,
+    [2] = function()
+      dayWeek = "Seg."
+    end,
+    [3] = function()
+      dayWeek = "Ter."
+    end,
+    [4] = function()
+      dayWeek = "Qua."
+    end,
+    [5] = function()
+      dayWeek = "Qui."
+    end,
+    [6] = function()
+      dayWeek = "Sex."
+    end,
+    [7] = function()
+      dayWeek = "Sáb."
+    end
+  }
+
+  local execDayWeek = switch[dayWeek+1]
+  if(execDayWeek) then
+    execDayWeek()
+  else
+    dayWeek = ""
+  end
+  return dayWeek
+end
 
 function CalculateTimeToDisplay()
 	hour = GetClockHours()
 	minute = GetClockMinutes()
+
+  if hour == 0 and minute == 0 then
+    day = GetClockDayOfMonth()
+    month = GetClockMonth()
+    year = GetClockYear()
+
+    CalculateDayOfWeek()
+  end
+
 	if hour <= 9 then
 		hour = "0" .. hour
 	end
@@ -120,6 +186,10 @@ Citizen.CreateThread(function()
       hunger = hunger,
       hora = hour,
       minuto = minute,
+      dia = day,
+      mes = month,
+      ano = year,
+      diasemana = dayWeek,
       rua = ruas,
       gas = gasolina,
       cinto = cintoseg,

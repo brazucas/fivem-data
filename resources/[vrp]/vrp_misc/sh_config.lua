@@ -25,6 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ]]
 
+local Proxy = module("vrp","lib/Proxy")
+misc = Proxy.getInterface("vrp_misc")
+
 WeatherConfig = {}
 WeatherConfig = setmetatable(WeatherConfig, {})
 activeWeatherSystems = {}
@@ -139,7 +142,8 @@ WeatherConfig.timesOfYear = {
 function getCurrentSeason()
   for i, timeOfYear in ipairs(WeatherConfig.timesOfYear) do
     for k, month in ipairs(WeatherConfig.timesOfYear[i]) do
-      if month == os.date("*t").month then
+      --if month == os.date("*t").month then
+      if month == misc.GetCurrentMonth()+1 then
         return i
       end
     end
@@ -148,7 +152,8 @@ end
 
 function isSnowDay()
   for i, decemberSnowDay in ipairs(WeatherConfig.decemberSnowDays) do
-    if decemberSnowDay == os.date("*t").day then
+    --if decemberSnowDay == os.date("*t").day then
+    if decemberSnowDay == misc.GetCurrentDay() then
       return true
     end
   end
@@ -172,7 +177,8 @@ function randomizeSystems()
     local availableWeathers = weatherSystem[currentSeason + 1]
     local pickedWeather = availableWeathers[math.random(1, #availableWeathers)]
     for _, weatherZone in ipairs(weatherSystem[1]) do
-      if os.date("*t").month == 12 and isSnowDay() and WeatherConfig.snowEnabled then
+      --if os.date("*t").month == 12 and isSnowDay() and WeatherConfig.snowEnabled then
+      if misc.GetCurrentMonth()+1 == 12 and isSnowDay() and WeatherConfig.snowEnabled then
         table.insert(activeWeatherSystems, {weatherZone, "XMAS"})
       else
         table.insert(activeWeatherSystems, {weatherZone, pickedWeather})

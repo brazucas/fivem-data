@@ -222,8 +222,13 @@ end
 --[ EVENTS ]--------------------------------------------------------------------------------------------------------------------
 
 RegisterCommand("pizzaboy", function(source, args)
-	
-	Citizen.Trace(tostring(GetEntityModel(GetVehiclePedIsIn(ped))) .. "\n")
+	Citizen.Trace(GetClockDayOfWeek().." "..GetClockDayOfMonth().." "..GetClockMonth().." "..GetClockYear().. "\n")
+	--MissionText("Hi, ~o~orange~w~.", 1500)
+end)
+
+RegisterCommand("testehorario", function(source, args)
+	SetClockDate(30, 11, 0)
+	SetClockTime(23, 58, 0)
 	--MissionText("Hi, ~o~orange~w~.", 1500)
 end)
 
@@ -340,7 +345,7 @@ Citizen.CreateThread(function()
 			if proximoAoVeiculo then
 				local coord = GetOffsetFromEntityInWorldCoords(ped,0.0,1.0,-0.94)
 				local portaMalas = GetWorldPositionOfEntityBone(veiculoTrabalho, GetEntityBoneIndexByName(veiculoTrabalho,"exhaust"))
-				local distanciaPortaMalas = GetDistanceBetweenCoords(portaMalas, coord, 2)
+				local distanciaPortaMalas = GetDistanceBetweenCoords(portaMalas, coord, true)
 				if distanciaPortaMalas < 1.0 and IsPedOnFoot(ped) then
 					if not pizzaHand then
 						if indoEntregarPizza then
@@ -372,7 +377,7 @@ Citizen.CreateThread(function()
 			elseif pizzaHand then
 				if DoesEntityExist(ClientePizza) then
 					local posCliente = GetEntityCoords(ClientePizza)
-					local distancia = GetDistanceBetweenCoords(posCliente, GetEntityCoords(ped), 2)
+					local distancia = GetDistanceBetweenCoords(posCliente, GetEntityCoords(ped), true)
 					if distancia < 1.5 and IsPedFacingPed(ClientePizza, ped, 45.0) then
 						--drawTxt("PRESSIONE ~b~E~w~ PARA ENTREGAR A PIZZA",4,0.5,0.93,0.50,255,255,255,180)
 						DrawText3D(posCliente[1], posCliente[2], posCliente[3], "PRESSIONE ~b~E~w~ PARA ENTREGAR A PIZZA")
@@ -388,7 +393,7 @@ Citizen.CreateThread(function()
 							if DoesBlipExist(blips) then RemoveBlip(blips) end
 							CreateBlipPizza(x, y, z)
 							prof.payment(gorjeta)
-							Citizen.Trace("entregou: "..tostring(GetClockMinutes()) .. "\n")
+							--Citizen.Trace("entregou: "..tostring(GetClockMinutes()) .. "\n")
 							--PlayMissionCompleteAudio("FRANKLIN_BIG_01") 
 							PlaySoundFrontend(-1, "LOCAL_PLYR_CASH_COUNTER_COMPLETE", "DLC_HEISTS_GENERAL_FRONTEND_SOUNDS", 1)
 						end
@@ -410,6 +415,8 @@ Citizen.CreateThread(function()
 				if GetEntityModel(vehicle) == 55628203 then
 					veiculoTrabalho = vehicle
 					proximoAoVeiculo = true
+				else
+					proximoAoVeiculo = false
 				end
 			end
 		end
@@ -450,8 +457,9 @@ Citizen.CreateThread(function()
 				--local distancia = GetDistanceBetweenCoords(spawnCliente, GetEntityCoords(ped), 2)
 				--Citizen.Trace(tostring(distancia) .. "\n")
 				if distancia < 200 and indoEntregarPizza then
-					if not DoesBlipExist(blips) then CreateBlipNPC(blips) end
-					CriarClientePizza(4,math.random( #Skins ) )
+					CriarClientePizza(math.random(4,5), Skins[ math.random( #Skins ) ] )
+					if DoesBlipExist(blips) then RemoveBlip(blips) end
+					CreateBlipNPC()
 				end
 			else
 				--local ped = PlayerPedId()
@@ -546,7 +554,7 @@ function CalcularGorjeta()
 		HoraDeEntrega= Hrs+TempoEntregaH
 	end
 	if Min + TempoEntregaM >= 60 then
-		HoraDeEntrega = HoraDeEntrega + 1
+		if TempoEntregaH < 2 then HoraDeEntrega = HoraDeEntrega + 1 end
 		MinutoDeEntrega=Min+TempoEntregaM-60
 	else
 		MinutoDeEntrega=Min+TempoEntregaM
