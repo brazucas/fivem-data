@@ -26,6 +26,7 @@ Citizen.CreateThread(function()
   day = GetClockDayOfMonth()
   month = GetClockMonth()
   year = GetClockYear()
+  CalculateDayOfWeek()
 end)
 
 function CalculateDayOfWeek()

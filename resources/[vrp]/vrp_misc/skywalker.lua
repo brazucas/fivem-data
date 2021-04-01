@@ -119,16 +119,20 @@ end)
 RegisterCommand('tempo', function(source, args, rawCommand)
     local user_id = vRP.getUserId(source)
     if vRP.hasPermission(user_id, "administrador.permissao") or vRP.hasPermission(user_id, "manager.permissao") then
-        local dia = parseInt(args[1])
-		if dia >= 0 and dia <= misc.GetDaysInCurrentMonth() then
-			local horas = parseInt(args[2])
-			if horas >= 0 and horas < 24 then
-				local minutos = parseInt(args[3])
-				if minutos >= 0 and minutos < 60 then
-					hours = horas
-					minutes = minutos
-					day = dia
-					TriggerClientEvent("vrp_misc:syncTimers",-1,{minutes,hours,day,month,year})
+		if args[1] == nil then
+			--msg de erro
+		else
+			local dia = parseInt(args[1])
+			if dia >= 0 and dia <= misc.GetDaysInCurrentMonth() then
+				local horas = parseInt(args[2])
+				if horas >= 0 and horas < 24 then
+					local minutos = parseInt(args[3])
+					if minutos >= 0 and minutos < 60 then
+						hours = horas
+						minutes = minutos
+						day = dia
+						TriggerClientEvent("vrp_misc:syncTimers",-1,{minutes,hours,day,month,year})
+					end
 				end
 			end
 		end

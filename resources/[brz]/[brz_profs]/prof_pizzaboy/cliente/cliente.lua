@@ -11,7 +11,6 @@ brzNPC = Proxy.getInterface("brz_npcs")
 
 local blips = false
 local working = false
-local ped = PlayerPedId()
 local pizzaHand = false
 local objPizza = 0
 local currentAnimDict = 'friends@frj@ig_1'
@@ -260,6 +259,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		local idle = 1000
+		local ped = PlayerPedId()
 		if not IsPedInAnyVehicle(ped) then
 			local npcPizza = brzNPC.maisProximo("pizzaboy")
 			if DoesEntityExist(npcPizza) then
@@ -314,6 +314,7 @@ Citizen.CreateThread(function()
 	while true do
 		local idle = 1000
 		if working then
+			local ped = PlayerPedId()
 			idle = 5
 			--local ped = PlayerPedId()
 			--local x,y,z = table.unpack(GetEntityCoords(ped))
@@ -446,6 +447,7 @@ Citizen.CreateThread(function()
 		local idle = 1000
 		--Citizen.Trace(tostring(GetVehiclePedIsTryingToEnter(PlayerPedId())) .. "\n")
 		if working then
+			local ped = PlayerPedId()
 			--idle = 500
 			--Citizen.Trace(tostring(DoesEntityExist(ClientePizza)) .. "\n")
 			if not DoesEntityExist(ClientePizza) then
@@ -528,7 +530,7 @@ function drawTxt(text,font,x,y,scale,r,g,b,a)
 end
 
 function CalcularGorjeta()
-	--local ped = PlayerPedId()
+	local ped = PlayerPedId()
 	local x,y,z = table.unpack(GetEntityCoords(ped))
 	local distancia = Vdist(spawnCliente[1], spawnCliente[2], spawnCliente[3], x, y, z)
 	Citizen.Trace("iniciou: "..tostring(GetClockMinutes()) .. "\n")
