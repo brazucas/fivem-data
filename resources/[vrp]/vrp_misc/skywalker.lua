@@ -67,7 +67,8 @@ end)
 Citizen.CreateThread(function()
 	local data = vRP.getSData("brz:date")
 	local date = json.decode(data) or {}
-	if data and date ~= nil then
+	--if data and date.minutos ~= nil then
+	if data then
 		hours = date.hora
 		minutes = date.minutos
 

@@ -387,7 +387,7 @@ function vRP.getSData(key, cbr)
     if uData ~= nil then
         return uData.dvalue
     else
-        return nil
+        return ""
     end
 end
 
