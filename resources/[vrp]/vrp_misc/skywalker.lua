@@ -74,6 +74,15 @@ Citizen.CreateThread(function()
 		day = date.dia
 		month = date.mes
 		year = date.ano
+	else
+		local svDate = { 
+			hora = parseInt(hours),
+			minutos = parseInt(minutes),
+			dia = parseInt(day),
+			mes = parseInt(month),
+			ano = parseInt(year),
+		}
+		vRP.setSData("brz:date",json.encode(svDate))
 	end
 
 	while true do
