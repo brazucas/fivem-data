@@ -233,18 +233,21 @@ Citizen.CreateThread(function()
 	end
 end)
 
-function DrawText3Ds(x,y,z,text)
-	local onScreen,_x,_y = World3dToScreen2d(x,y,z)
-
+function DrawText3Ds(x,y,z, text) -- some useful function, use it if you want! 
+	SetDrawOrigin(x, y, z, 0)
 	SetTextFont(4)
-	SetTextScale(0.35,0.35)
-	SetTextColour(255,255,255,150)
+	SetTextProportional(1)
+	SetTextScale(0.35, 0.35)
+	SetTextColour(255, 255, 255, 215)
+	SetTextDropshadow(0, 0, 0, 0, 255)
+	SetTextEdge(2, 0, 0, 0, 150)
+	SetTextDropShadow()
+	SetTextOutline()
 	SetTextEntry("STRING")
 	SetTextCentre(1)
 	AddTextComponentString(text)
-	DrawText(_x,_y)
-	local factor = (string.len(text))/370
-	DrawRect(_x,_y+0.0125,0.01+factor,0.03,0,0,0,80)
+	DrawText(0.0, 0.0)
+	ClearDrawOrigin()
 end
 
 function LoadAnimDict(dict)

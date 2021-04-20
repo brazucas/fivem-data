@@ -20,7 +20,7 @@ RegisterCommand('placa',function(source,args,rawCommand)
 	local user_id = vRP.getUserId(source)
 	if vRP.hasPermission(user_id,"administrador.permissao") or vRP.hasPermission(user_id,"policia.permissao") then
 		if args[1] then
-			local user_id = vRP.getUserByRegistration(args[1])
+			local user_id = vRP.getUserByPublicPlate(args[1])
 			if user_id then
 				local identity = vRP.getUserIdentity(user_id)
 				if identity then
@@ -32,7 +32,7 @@ RegisterCommand('placa',function(source,args,rawCommand)
 			end
 		else
 			local vehicle,vnetid,placa,vname,lock,banned = vRPclient.vehList(source,7)
-			local placa_user = vRP.getUserByRegistration(placa)
+			local placa_user = vRP.getUserByPublicPlate(placa)
 			if placa then
 				if placa_user then
 					local identity = vRP.getUserIdentity(placa_user)
@@ -156,7 +156,7 @@ RegisterCommand('detido',function(source,args,rawCommand)
 		end
 		local oficialid = vRP.getUserIdentity(user_id)
         if vehicle then
-            local puser_id = vRP.getUserByRegistration(placa)
+            local puser_id = vRP.getUserByPublicPlate(placa)
             local rows = vRP.getUserVehicles(parseInt(puser_id), vname)
             if rows[1] then
                 if parseInt(rows[1].detido) == 1 then

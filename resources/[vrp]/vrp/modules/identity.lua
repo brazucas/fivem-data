@@ -51,6 +51,24 @@ function vRP.getUserByPhone(phone, cbr)
     end
 end
 
+function vRP.getUserByPublicPlate(public_plate, cbr)
+    local p = promise.new()
+    exports.mongodb:findOne({ collection = "vrp_user_identities", query = { public_plate = public_plate or "" } }, function(success, results)
+        if success then
+            p:resolve(results or {})
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
+            return
+        end
+    end)
+
+    local registration = Citizen.Await(p)
+
+    if registration and #registration > 0 then
+        return registration[1].user_id
+    end
+end
+
 function vRP.generateStringNumber(format)
     local abyte = string.byte("A")
     local zbyte = string.byte("0")
@@ -88,6 +106,19 @@ function vRP.generatePhoneNumber(cbr)
     return phone
 end
 
+function vRP.generatePublicPlateNumber(cbr)
+    local user_id = nil
+    local public_plate = ""
+
+    repeat
+        public_plate = vRP.generateStringNumber("DDDDD")
+        public_plate = 'BRZ' .. public_plate
+        user_id = vRP.getUserByPublicPlate(public_plate)
+    until not user_id
+
+    return public_plate
+end
+
 function vRP.checkCrimeRecord(user_id)
     local identity = vRP.getUserIdentity(user_id)
     return identity.crimerecord
@@ -97,6 +128,7 @@ AddEventHandler("vRP:playerJoin", function(user_id, source, name)
     if not vRP.getUserIdentity(user_id) then
         local registration = vRP.generateRegistrationNumber()
         local phone = vRP.generatePhoneNumber()
+        local public_plate = vRP.generatePublicPlate()
 
         local p = promise.new()
         exports.mongodb:insertOne({
@@ -105,6 +137,7 @@ AddEventHandler("vRP:playerJoin", function(user_id, source, name)
                 user_id = user_id,
                 registration = registration,
                 phone = phone,
+                public_plate = public_plate,
                 firstname = "Indigente",
                 name = "Individuo",
                 age = 21
@@ -124,5 +157,6 @@ AddEventHandler("vRP:playerSpawn", function(user_id, source, first_spawn)
     local identity = vRP.getUserIdentity(user_id)
     if identity then
         vRPclient._setRegistrationNumber(source, identity.registration or "AA000AAA")
+        vRPclient._setPublicPlateNumber(source, identity.public_plate or "BRZ00000")
     end
 end)

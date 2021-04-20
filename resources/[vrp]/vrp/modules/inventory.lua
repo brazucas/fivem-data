@@ -189,6 +189,10 @@ local itemlist = {
 
 	["saco-lixo"] = {index = "saco-lixo", nome = "Saco de Lixo", type = "usar" },
 
+	--[ Emprego ][ Pizzaboy ]------------------------------------------------------------------------------------------
+
+	["caixa-pizza"] = {index = "caixa-pizza", nome = "Pizza para Entrega", type = "usar" },
+
 	--[ Emprego ][ Carteiro ]------------------------------------------------------------------------------------------
 
 	["encomenda"] = { index = "encomenda", nome = "Encomenda", type = "usar" },

@@ -2,11 +2,11 @@ local Tunnel = module("vrp","lib/Tunnel")
 local Proxy = module("vrp","lib/Proxy")
 vRP = Proxy.getInterface("vRP")
 vRPclient = Tunnel.getInterface("vRP")
-
 --[ CONNECTION ]----------------------------------------------------------------------------------------------------------------
 
-motoristaPub = {}
-Tunnel.bindInterface("prof_motoristaPub",motoristaPub)
+motoristaPub = {} -- Empty Array
+Tunnel.bindInterface("prof_motoristaPub",motoristaPub) -- Binds Server-Side Interface
+Proxy.addInterface("prof_motoristaPub",motoristaPub) -- Adds Client Proxy Interface
 
 RegisterNetEvent('blarglebus:finishRoute')
 AddEventHandler('blarglebus:finishRoute', function(amount)
@@ -46,4 +46,19 @@ function motoristaPub.payment(amount)
 		vRP.giveDinheirama(user_id,payment)
 		TriggerClientEvent("Notify",source,"sucesso","Ganhos: <b>R$"..base.."</b>.",2000)
 	end
+end
+
+function motoristaPub.menuInteracao(lines)
+    local selectedIndex = 0
+	local source = source
+	local user_id = vRP.getUserId(source)
+	local principal = { name = "Motorista" }
+    for i = 1, #lines do
+        principal[lines[i].Name] = {function(source, choice)
+            selectedIndex = i
+            TriggerClientEvent("prof_motoristaPub:selectedIndex", source, selectedIndex)
+            vRP.closeMenu(source, principal)
+        end}vRP.openMenu(source, principal)
+    end
+    --return 0
 end

@@ -1,9 +1,17 @@
 local Tunnel = module("vrp","lib/Tunnel")
 local Proxy = module("vrp","lib/Proxy")
 vRP = Proxy.getInterface("vRP")
+vRPclient = Proxy.getInterface("vRP")
 
 --[ CONNECTION ]----------------------------------------------------------------------------------------------------------------
-motoristaPub = Tunnel.getInterface("prof_motoristaPub")
+--[[motoristaPub = Tunnel.getInterface("prof_motoristaPub")
+motoristaPubClient = {}
+Proxy.addInterface("prof_motoristaPub",motoristaPub)]]
+
+motoristaPubClient = {} -- Empty Array
+Tunnel.bindInterface("prof_motoristaPub",motoristaPubClient) -- Binds Server-Side Interface
+Proxy.addInterface("prof_motoristaPub",motoristaPubClient) -- Adds Client Proxy Interface
+motoristaPub = Tunnel.getInterface("prof_motoristaPub") -- Define Client to Server Interface for this script
 
 local E_KEY = 38
 
@@ -18,6 +26,7 @@ local isRouteJustAborted = false
 
 local activeRoute = nil
 local activeRouteLine = nil
+local selectedIndexLine = nil
 local busType = nil
 local stopNumber = 1
 local lastStopCoords = {}
@@ -68,6 +77,12 @@ function _U(str, ...) -- Translate string first char uppercase
 	return tostring(_(str, ...):gsub("^%l", string.upper))
 end
 
+function Notify(texto)
+    SetNotificationTextEntry("STRING")
+	AddTextComponentString(texto)
+    DrawNotification(true, false)
+end
+
 function startAbortRouteThread()
     Citizen.CreateThread(function()
         while true do
@@ -93,7 +108,7 @@ function startMainLoop()
                 end
                 Citizen.Wait(5)
             elseif isPlayerNotInBus() then
-                --ESX.ShowHelpNotification(_('get_back_in_bus'))
+                Notify(_('get_back_in_bus'))
                 Citizen.Wait(5)
             else
                 handleActiveRoute()
@@ -151,7 +166,7 @@ function handleSpawnPoint(locationIndex)
     local coords = route.SpawnPoint;
     
     if playerDistanceFromCoords(coords) < Config.Markers.Size then
-        --ESX.ShowHelpNotification(_U('start_route', _(route.Name)))
+        Notify(_U(Overlay.Locales['start_route'], _(route.Name)))
 
         if IsControlJustPressed(1, E_KEY) then
             startRoute(locationIndex)
@@ -162,7 +177,7 @@ end
 function startRoute(route)
     activeRouteLine = selectStartingLine(Config.Routes[route])
     if activeRouteLine == nil then
-        --ESX.ShowNotification(_U('route_selection_cancel'))
+        Notify(_U('route_selection_cancel'))
         return
     end
 
@@ -172,7 +187,7 @@ function startRoute(route)
     activeRoute = Config.Routes[route]
     busType = getBusType(activeRoute, activeRouteLine)
     totalMoneyPaidThisRoute = 0
-    --ESX.ShowNotification(_U('route_assigned', _U(activeRouteLine.Name)))
+    Notify(_U('route_assigned', _U(activeRouteLine.Name)))
     Events.RouteStarted(activeRouteLine.Name)
     Bus.CreateBus(activeRoute.SpawnPoint, busType.BusModel, activeRouteLine.BusColor)
     Blips.StartAbortBlip(activeRoute.Name, activeRoute.SpawnPoint)
@@ -184,7 +199,7 @@ function startRoute(route)
     stopNumber = 1
 
     local firstStopName = _U(activeRouteLine.Stops[1].name)
-    --ESX.ShowNotification(_U('drive_to_first_marker', firstStopName))
+    Notify(_U('drive_to_first_marker', firstStopName))
     updateOverlay(firstStopName)
 end
 
@@ -199,6 +214,8 @@ end
 function handleMultiLineRouteSelection(selectedRoute)
     local selectedIndex = nil
 
+    motoristaPub.menuInteracao(selectedRoute.Lines)
+    Citizen.Wait(50)
     --[[ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'line_selector', {
         title = _U('route_selection_title', _U(selectedRoute.Name)),
         align = 'top-left', 
@@ -211,11 +228,16 @@ function handleMultiLineRouteSelection(selectedRoute)
         selectedIndex = -1
     end)]]
 
-    selectedIndex = 0
+    --selectedIndex = 0
 
-    while selectedIndex == nil do
-       Citizen.Wait(1) 
+    local menu_state = vRPclient.getMenuState()
+    while menu_state.opened do
+        menu_state = vRPclient.getMenuState()
+        Citizen.Wait(1)
     end
+    --Citizen.Trace(tostring(menu_state.opened) .. "\n")
+    selectedIndex = selectedIndexLine
+    selectedIndexLine = nil
 
     if selectedIndex == -1 then
         return nil
@@ -226,13 +248,19 @@ function handleMultiLineRouteSelection(selectedRoute)
     return selectedRoute.Lines[selectedIndex]
 end
 
-function buildStartingLineMenuElements(selectedRoute)
+RegisterNetEvent("prof_motoristaPub:selectedIndex")
+AddEventHandler("prof_motoristaPub:selectedIndex", function(selectedIndex)
+	selectedIndexLine = selectedIndex
+    --Citizen.Trace(selectedIndex .. "\n")
+end)
+
+--[[function buildStartingLineMenuElements(selectedRoute)
     local elements = {{label = _U('route_selection_random'), value = 0}}
     for i = 1, #selectedRoute.Lines do
         table.insert(elements, {label = _U(selectedRoute.Lines[i].Name), value = i})
     end
     return elements
-end
+end]]
 
 function getBusType(route, line)
     return line.BusOverride or route.Bus or getBackwardsCompatibleBusType(route)
@@ -298,9 +326,9 @@ function handleNormalStop()
             Markers.SetMarkers({coords})
             Blips.SetBlipAndWaypoint(activeRoute.Name, coords.x, coords.y, coords.z)
             Blips.StopAbortBlip()
-            --ESX.ShowNotification(_U('return_to_terminal'))
+            Notify(_U('return_to_terminal'))
         else
-            --ESX.ShowNotification(_U('drive_to_next_marker', nextStopName))
+            Notify(_U('drive_to_next_marker', nextStopName))
             setUpNextStop()
             stopNumber = stopNumber + 1
         end
@@ -380,6 +408,7 @@ function handleLoading()
     local freeSeats = Bus.FindFreeSeats(busType.FirstSeat, busType.Capacity)
 
     for i = 1, #pedsAtNextStop do
+        --Citizen.Trace(tostring(IsPedInAnyVehicle(pedsAtNextStop[i], false)) .. "\n")
         Peds.EnterVehicle(pedsAtNextStop[i], Bus.bus, freeSeats[i])
         table.insert(pedsOnBus, pedsAtNextStop[i])
     end
@@ -418,7 +447,7 @@ function payForEachPedLoaded(numberOfPeds)
 
     if amountToPay > 0 then
         TriggerServerEvent('blarglebus:passengersLoaded', amountToPay)
-        --ESX.ShowNotification(_U('passengers_loaded', numberOfPeds, amountToPay))
+        Notify(_U('passengers_loaded', numberOfPeds, amountToPay))
         totalMoneyPaidThisRoute = totalMoneyPaidThisRoute + amountToPay
     end
 end
@@ -495,7 +524,7 @@ end
 
 function handleAbortRoute()
     if playerDistanceFromCoords(activeRoute.SpawnPoint) < Config.Markers.Size then
-        --ESX.ShowHelpNotification(_U('abort_route_help', totalMoneyPaidThisRoute))
+        Notify(_U('abort_route_help', totalMoneyPaidThisRoute))
 
         if IsControlJustPressed(1, E_KEY) then
             handleSettingRouteJustAbortedAsync()

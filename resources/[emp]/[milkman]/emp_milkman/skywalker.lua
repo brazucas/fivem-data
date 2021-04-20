@@ -28,7 +28,7 @@ function emp.checkPlate(modelo)
 	local user_id = vRP.getUserId(source)
 	local veh,vhash,vplaca,vname = vRPclient.vehListHash(source,4)
 	if veh and vhash == modelo then
-		local placa_user_id = vRP.getUserByRegistration(vplaca)
+		local placa_user_id = vRP.getUserByPublicPlate(vplaca)
 		if user_id == placa_user_id then
 			return true
 		else

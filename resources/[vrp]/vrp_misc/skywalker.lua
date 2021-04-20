@@ -654,6 +654,8 @@ local damageItens = {
 
 	{ item = "saco-lixo", damageItem = nil },
 
+	{ item = "caixa-pizza", damageItem = nil },
+
 	{ item = "encomenda", damageItem = nil },
 	{ item = "caixa-vazia", damageItem = nil },
 

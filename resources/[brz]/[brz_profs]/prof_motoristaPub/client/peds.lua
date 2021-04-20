@@ -9,6 +9,12 @@ function Peds.CreateRandomPedInArea(coords)
     local heading = math.random() * 360
 
     local ped = CreatePed(4, modelName, x, y, coords.z, heading, true == Config.OnlyShowPedsOnClient, false)
+
+    SetEntityInvincible(ped, true)
+    SetBlockingOfNonTemporaryEvents(ped, true)
+    SetPedCanRagdoll(ped, false)
+    SetPedCanRagdollFromPlayerImpact(ped, false)
+
     Peds.WanderInArea(ped, coords)
     Peds.incrementModelsHashUsedByPedCount(modelName)
     return ped
@@ -19,7 +25,7 @@ function Peds.LeaveVehicle(ped, vehicle)
         RemovePedElegantly(ped)
     else
         ClearPedTasksImmediately(ped, true)
-        TaskLeaveVehicle(ped, vehicle, 64)
+        TaskLeaveVehicle(ped, vehicle, 0)
     end
 end
 
@@ -96,7 +102,7 @@ end
 
 function Peds.WalkPedsToLocation(peds, coords)
     for i = 1, #peds do
-        TaskWanderStandard(peds[i])
+        TaskWanderStandard(peds[i], 10.0, 10)
     end
 end
 

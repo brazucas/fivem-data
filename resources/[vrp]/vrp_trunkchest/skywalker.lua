@@ -36,7 +36,7 @@ function vRPN.Inventories()
 	if user_id then
 		local vehicle,vnetid,placa,vname,lock,banned = vRPclient.vehList(source,7)
 		if vehicle then
-			local placa_user_id = vRP.getUserByRegistration(placa)
+			local placa_user_id = vRP.getUserByPublicPlate(placa)
 			if placa_user_id then
 				local myinventory = {}
 				local myvehicle = {}
@@ -132,7 +132,7 @@ RegisterCommand('vrp_trunkchest:trunk',function(source,args,rawCommand)
 				if banned then
 					return
 				end
-				local placa_user_id = vRP.getUserByRegistration(placa)
+				local placa_user_id = vRP.getUserByPublicPlate(placa)
 				if placa_user_id then
 					TriggerClientEvent("trunkchest:Open",source)
 				end

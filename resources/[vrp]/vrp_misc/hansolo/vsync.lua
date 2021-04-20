@@ -40,14 +40,14 @@ Citizen.CreateThread(function()
 			SetWeatherTypePersist(weatherZone[2])
 			SetWeatherTypeNow(weatherZone[2])
 			SetWeatherTypeNowPersist(weatherZone[2])
-			TriggerEvent("chatMessage", "^1Clima atual: "..weatherZone[2])
+			--TriggerEvent("chatMessage", "^1Clima atual: "..weatherZone[2])
 			lastZone = zone
 		  end
 		end
 	end
 end)
 
-RegisterCommand("SetZoneWeather", function(source, args, rawCommand)
+--[[RegisterCommand("SetZoneWeather", function(source, args, rawCommand)
 	if args[1] == nil then
 	  TriggerEvent("chatMessage", "^1Você não especificou o clima.")
 	else
@@ -62,7 +62,7 @@ RegisterCommand("SetZoneWeather", function(source, args, rawCommand)
 	  TriggerEvent("chatMessage", "^3O tipo de clima que você escreveu não existe!")
 	end
 end, false)
-
+]]
 --[ PLAYERSPAWNED ]----------------------------------------------------------------------------------------------------------------------
 
 AddEventHandler("playerSpawned",function()

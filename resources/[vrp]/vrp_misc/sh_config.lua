@@ -50,7 +50,7 @@ WeatherConfig.weatherTypes = {
   "BLIZZARD"
 }
 
-WeatherConfig.randomizeTime = 300000 -- 1 Hour (TIME TO RANDOMIZE WEATHER SYSTEMS IN MILLISECONDS) 2880000 - 48horas
+WeatherConfig.randomizeTime = 1920000 -- 1 Hour (TIME TO RANDOMIZE WEATHER SYSTEMS IN MILLISECONDS) 2880000 - 48minutos 1920000 - 32minutos
 
 WeatherConfig.weatherSystems = {
   {

@@ -1043,7 +1043,10 @@ function vRPN.useItem(itemName,type,ramount)
 				local identity = vRP.getUserIdentity(user_id)
 				local nameweapon = string.gsub(itemName,"wbody|","")
 				weapons[string.gsub(itemName,"wbody|","")] = { ammo = 0 }
-				vRPclient._giveWeapons(source,weapons)
+				--print(json.encode(weapons,{indent = true}) .. '\n')
+				--print(itemName .. ' ' .. string.gsub(itemName,"wbody|","") .. '\n')
+				--vRP.giveWeapons(source,weapons,false)
+				TriggerEvent("vRP:giveWeapons", source,weapons,false)
 				PerformHttpRequest(config.webhookEquip, function(err, text, headers) end, 'POST', json.encode({embeds = {{title = "REGISTRO DE ITEM EQUIPADO:\n⠀",thumbnail = {url = config.webhookIcon}, fields = {{name = "**QUEM EQUIPOU:**", value = "**"..identity.name.." "..identity.firstname.."** [**"..user_id.."**]"}, {name = "**ITEM EQUIPADO:**", value = "[ **Item: "..vRP.itemNameList(itemName).."** ]"}}, footer = {text = config.webhookBottom..os.date("%d/%m/%Y | %H:%M:%S"), icon_url = config.webhookIcon}, color = config.webhookColor}}}), { ['Content-Type'] = 'application/json' })
 				TriggerClientEvent("itensNotify",source,"usar","Equipou",""..vRP.itemNameList(itemName).."")
 				TriggerClientEvent('vrp_inventory:Update',source,'updateMochila')
@@ -1068,7 +1071,8 @@ function vRPN.useItem(itemName,type,ramount)
 							local weapons = {}
 							weapons[weaponuse] = { ammo = v.amount }
 							itemAmount = v.amount
-							vRPclient._giveWeapons(source,weapons,false)
+							--vRP.giveWeapons(source,weapons,false)
+							TriggerEvent("vRP:giveWeapons", source,weapons,false)
 							PerformHttpRequest(config.webhookEquip, function(err, text, headers) end, 'POST', json.encode({embeds = {{title = "REGISTRO DE ITEM EQUIPADO:\n⠀", thumbnail = {url = config.webhookIcon}, fields = {{ name = "**QUEM EQUIPOU:**", value = "**"..identity.name.." "..identity.firstname.."** [**"..user_id.."**]"}, { name = "**ITEM EQUIPADO:**", value = "[ **Item: "..vRP.itemNameList(itemName).."** ][ **Quantidade: "..vRP.format(parseInt(v.amount)).."** ]"}}, footer = {text = config.webhookBottom..os.date("%d/%m/%Y | %H:%M:%S"), icon_url = config.webhookIcon},color = config.webhookColor}}}), { ['Content-Type'] = 'application/json' })
 							TriggerClientEvent("itensNotify",source,"usar","Recarregou",""..vRP.itemNameList(itemName).."")
 							TriggerClientEvent('vrp_inventory:Update',source,'updateMochila')
@@ -1098,6 +1102,7 @@ RegisterCommand('garmas',function(source,args,rawCommand)
 		if user_id then
 			local weapons = vRPclient.replaceWeapons(source,{})
 			for k,v in pairs(weapons) do
+				vRP.remove_weapon_table(user_id,k)
 				vRP.giveInventoryItem(user_id,"wbody|"..k,1)
 				PerformHttpRequest(config.webhookUnEquip, function(err, text, headers) end, 'POST', json.encode({embeds = {{title = "REGISTRO DE ITEM DESEQUIPADO:\n⠀", thumbnail = {url = config.webhookIcon}, fields = {{ name = "**QUEM DESEQUIPOU:**", value = "**"..identity.name.." "..identity.firstname.."** [**"..user_id.."**]"},{ name = "**ITEM EQUIPADO:**", value = "[ **Item: "..k.."** ][ **Quantidade: 1** ]"}}, footer = { text = config.webhookBottom..os.date("%d/%m/%Y | %H:%M:%S"), icon_url = config.webhookIcon}, color = config.webhookColor}}}), { ['Content-Type'] = 'application/json' })
 				if v.ammo > 0 then

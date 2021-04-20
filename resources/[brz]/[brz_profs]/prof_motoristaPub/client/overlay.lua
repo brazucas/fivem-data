@@ -1,7 +1,7 @@
 Overlay = {}
 Overlay.isVisible = false
 Overlay.wasPaused = false
-Locales = {
+Overlay.Locales = {
     ['route_assigned']                      = 'You have been assigned ~g~%s~s~.',
     ['drive_to_first_marker']               = 'Get in bus and drive to first stop at ~g~%s~.',
     ['drive_to_next_marker']                = 'Continue to next stop at ~g~%s~.',

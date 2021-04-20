@@ -439,6 +439,15 @@ function vRP.getUserSource(user_id)
     return source
 end
 
+vRP.remove_weapon_table = function(user_id,index)
+    if vRP.user_tables[user_id].weapons then
+        for k,v in pairs(vRP.user_tables[user_id].weapons) do
+            vRP.user_tables[user_id].weapons[index] = nil
+        end
+        vRP.setUData(user_id,"vRP:datatable",json.encode(vRP.getUserDataTable(user_id)))
+    end
+end
+
 function vRP.kick(source, reason)
     DropPlayer(source, reason)
 end

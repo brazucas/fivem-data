@@ -42,7 +42,7 @@ Citizen.CreateThread(function()
 						if not process then
 							CalculateTimeToDisplay()
 							if parseInt(time) >= 06 and parseInt(time) <= 20 then
-								if emp.checkCrimeRecord() and emp.checkWeight() then
+								if --[[emp.checkCrimeRecord() and ]]emp.checkWeight() then
 									process = true
 									TriggerEvent('cancelando',true)
 									TriggerEvent("progress",8000,"Coletando")
@@ -70,18 +70,19 @@ end)
 
 --[ TEXT | FUNCTION ]-----------------------------------------------------------------------------------------------------------
 
-function DrawText3D(x,y,z, text)
-    local onScreen,_x,_y=World3dToScreen2d(x,y,z)
-    local px,py,pz=table.unpack(GetGameplayCamCoords())
-    
-    SetTextScale(0.28, 0.28)
-    SetTextFont(4)
-    SetTextProportional(1)
-    SetTextColour(255, 255, 255, 215)
-    SetTextEntry("STRING")
-    SetTextCentre(1)
-    AddTextComponentString(text)
-    DrawText(_x,_y)
-    local factor = (string.len(text)) / 370
-    DrawRect(_x,_y+0.0125, 0.005+ factor, 0.03, 41, 11, 41, 68)
+function DrawText3D(x,y,z, text) -- some useful function, use it if you want! 
+	SetDrawOrigin(x, y, z, 0)
+	SetTextFont(4)
+	SetTextProportional(1)
+	SetTextScale(0.28, 0.28)
+	SetTextColour(255, 255, 255, 215)
+	SetTextDropshadow(0, 0, 0, 0, 255)
+	SetTextEdge(2, 0, 0, 0, 150)
+	SetTextDropShadow()
+	SetTextOutline()
+	SetTextEntry("STRING")
+	SetTextCentre(1)
+	AddTextComponentString(text)
+	DrawText(0.0, 0.0)
+	ClearDrawOrigin()
 end

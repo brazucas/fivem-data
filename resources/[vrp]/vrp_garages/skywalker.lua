@@ -428,20 +428,31 @@ local workgarage = {
 
 --[ MYVEHICLES ]-------------------------------------------------------------------------------------------------------------------------
 
-function vRP.getUserVehicle(user_id)
-    local p = promise.new()
-    exports.mongodb:findOne({ collection = "vrp_user_vehicles", query = { user_id = user_id } }, function(success, results)
-        if success then
-            p:resolve(results or {})
+function vRP.getUserVehicle(user_id, publico)
+    if not publico then
+        local p = promise.new()
+        exports.mongodb:findOne({ collection = "vrp_user_vehicles", query = { user_id = user_id } }, function(success, results)
+            if success then
+                p:resolve(results or {})
+            else
+                p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
+                return
+            end
+        end)
+
+        local vehicles = Citizen.Await(p)
+
+        return vehicles
+    else
+        local data = vRP.getUData(user_id, "veiculoPublico")
+        local vehParams = json.decode(data) or nil
+        --if data and date ~= nil then
+        if data and vehParams ~= nil then
+            return vehParams
         else
-            p:reject("[vRP.getUserAddress] ERROR " .. tostring(results))
-            return
+            return false
         end
-    end)
-
-    local vehicles = Citizen.Await(p)
-
-    return vehicles
+    end
 end
 
 function vRP.getUserVehicles(user_id, vehicle)
@@ -468,17 +479,28 @@ function src.myVehicles(work)
     local status = ""
     if user_id then
         if workgarage[work] then
+            local vehicleParams = vRP.getUserVehicle(user_id, true)
             for k, v in pairs(workgarage) do
                 if k == work then
                     for k2, v2 in pairs(v) do
                         if k == "Aluguel" then
                             status = "Veículo de aluguel"
                             ipva = "<span class=\"green\">N/A</span>"
-                            table.insert(myvehicles, { name = v2, name2 = vRP.vehicleName(v2), engine = 100, body = 100, fuel = 100, status = status, ipva = ipva })
+                            if not vehicleParams then
+                                table.insert(myvehicles,{ name = v2, name2 = vRP.vehicleName(v2), engine = 100, body = 100, fuel = 100, status = status, ipva = ipva })
+                            else
+                                table.insert(myvehicles, { name = v2, name2 = vRP.vehicleName(v2), engine = parseInt(vehicleParams.eng * 0.1),
+                                body = parseInt(vehicleParams.bod * 0.1), fuel = 100, status = status, ipva = ipva })
+                            end
                         else
                             status = "<span class=\"green\">" .. k .. "</span>"
                             ipva = "<span class=\"green\">Pago</span>"
-                            table.insert(myvehicles, { name = v2, name2 = vRP.vehicleName(v2), engine = 100, body = 100, fuel = 100, status = status, ipva = ipva })
+                            if not vehicleParams then
+                                table.insert(myvehicles,{ name = v2, name2 = vRP.vehicleName(v2), engine = 100, body = 100, fuel = 100, status = status, ipva = ipva })
+                            else
+                                table.insert(myvehicles, { name = v2, name2 = vRP.vehicleName(v2), engine = parseInt(vehicleParams.eng * 0.1),
+                                body = parseInt(vehicleParams.bod * 0.1), fuel = 100, status = status, ipva = ipva })
+                            end
                         end
                     end
                 end
@@ -604,14 +626,14 @@ function src.spawnVehicles(name, use)
                                 if vRP.vehicleType(tostring(name)) == "exclusive" or vRP.vehicleType(tostring(name)) == "rental" then
                                     local spawnveh, vehid = vCLIENT.spawnVehicle(source, name, vehicle[1].engine, vehicle[1].body, vehicle[1].fuel, custom)
                                     vehlist[vehid] = { parseInt(user_id), name }
-                                    TriggerEvent("setPlateEveryone", identity.registration)
+                                    TriggerEvent("setPlateEveryone", identity.public_plate)
                                     TriggerClientEvent("Notify", source, "sucesso", "Veículo <b>Exclusivo ou Alugado</b>, Não será cobrado a taxa de liberação.", 10000)
                                 end
                                 if (vRP.getBankMoney(user_id) + vRP.getMoney(user_id)) >= parseInt(vRP.vehiclePrice(name) * 0.005 and not vRP.vehicleType(tostring(name)) == "exclusive" or vRP.vehicleType(tostring(name)) == "rental") then
                                     local spawnveh, vehid = vCLIENT.spawnVehicle(source, name, vehicle[1].engine, vehicle[1].body, vehicle[1].fuel, custom)
                                     if spawnveh and vRP.tryFullPayment(user_id, parseInt(vRP.vehiclePrice(name) * 0.005)) then
                                         vehlist[vehid] = { parseInt(user_id), name }
-                                        TriggerEvent("setPlateEveryone", identity.registration)
+                                        TriggerEvent("setPlateEveryone", identity.public_plate)
                                     end
                                 else
                                     TriggerClientEvent("Notify", source, "negado", "Dinheiro insuficiente.", 10000)
@@ -620,7 +642,7 @@ function src.spawnVehicles(name, use)
                                 local spawnveh, vehid = vCLIENT.spawnVehicle(source, name, vehicle[1].engine, vehicle[1].body, vehicle[1].fuel, custom, parseInt(vehicle[1].colorR), parseInt(vehicle[1].colorG), parseInt(vehicle[1].colorB), parseInt(vehicle[1].color2R), parseInt(vehicle[1].color2G), parseInt(vehicle[1].color2B), false)
                                 if spawnveh then
                                     vehlist[vehid] = { user_id, name }
-                                    TriggerEvent("setPlateEveryone", identity.registration)
+                                    TriggerEvent("setPlateEveryone", identity.public_plate)
                                 end
                             end
                         else
@@ -665,20 +687,32 @@ function src.spawnVehicles(name, use)
                         local pagamento = parseInt(vRP.vehiclePrice(name) * 1 / 100)
 
                         if vRP.tryFullPayment(user_id, pagamento) then
-                            local spawnveh, vehid = vCLIENT.spawnVehicle(source, name, 1000, 1000, 100, custom, 0, 0, 0, 0, 0, 0, true)
+                            local spawnveh, vehid = vCLIENT.spawnVehicle(source, name, 1000, 1000, 1000, 0, 1000, 0, 0, 0, 0, 0, 100, custom, 0, 0, 0, 0, 0, 0, true)
                             if spawnveh then
                                 vehlist[vehid] = { user_id, name }
-                                TriggerEvent("setPlateEveryone", identity.registration)
+                                TriggerEvent("setPlateEveryone", identity.public_plate)
                             end
                             TriggerClientEvent("Notify", source, "sucesso", "Você pagou <b>$" .. pagamento .. " dólares</b> no aluguel do veículo.")
                         else
                             TriggerClientEvent("Notify", source, "negado", "Dinheiro insuficiente.")
                         end
                     else
-                        local spawnveh, vehid = vCLIENT.spawnVehicle(source, name, 1000, 1000, 100, custom, 0, 0, 0, 0, 0, 0, true)
-                        if spawnveh then
-                            vehlist[vehid] = { user_id, name }
-                            TriggerEvent("setPlateEveryone", identity.registration)
+                        local vehicleParams = vRP.getUserVehicle(user_id, true)
+                        if not vehicleParams then
+                            local spawnveh, vehid = vCLIENT.spawnVehicle(source, name, 1000, 1000, 1000, 0, 1000, 0, 0, 0, 0, 0, 100, custom, 0, 0, 0, 0, 0, 0, true)
+                            if spawnveh then
+                                vehlist[vehid] = { user_id, name }
+                                TriggerEvent("setPlateEveryone", identity.public_plate)
+                            end
+                        else
+                            local spawnveh, vehid = vCLIENT.spawnVehicle(source, name, vehicleParams.eng, vehicleParams.bod, vehicleParams.tnk, vehicleParams.drt,
+                            vehicleParams.oil, vehicleParams.drvlyt, vehicleParams.wheel, vehicleParams.dor, vehicleParams.win, vehicleParams.tyr, vehicleParams.fuel,
+                            custom, 0, 0, 0, 0, 0, 0, true)
+
+                            if spawnveh then
+                                vehlist[vehid] = { user_id, name }
+                                TriggerEvent("setPlateEveryone", identity.public_plate)
+                            end
                         end
                     end
                 end
@@ -688,6 +722,58 @@ function src.spawnVehicles(name, use)
         end
     end
 end
+
+--[ SPAWNVEHICLES OUTSIDE ]----------------------------------------------------------------------------------------------------------------------
+function src.spawnVehiclesOutside(name, plate, pos)
+--RegisterServerEvent("brz:spawnVehiclesOutside")
+--AddEventHandler("brz:spawnVehiclesOutside", function(name, plate, pos)
+    local source = source
+    local user_id = vRP.getUserId(source)
+    if name then
+        local owner_id = vRP.getUserByPublicPlate(plate)
+        if owner_id then
+            local identity = vRP.getUserIdentity(owner_id)
+            local vehicleParams = vRP.getUserVehicle(owner_id, true)
+            local owner_source = false
+            if vRP.getUserSource(owner_id) then
+                owner_source = true
+            end
+            if not vehicleParams then
+                local tuning = vRP.getSData("custom:u" .. owner_id .. "veh_" .. name) or {}
+                local custom = json.decode(tuning) or {}
+                local spawnveh, vehid = vCLIENT.spawnVehicleOutside(source, name, 1000, 1000, 1000, 0, 1000, 0, 0, 0, 0, 0, 100, custom, pos, owner_source)
+                if spawnveh then
+                    vehlist[vehid] = { owner_id, name }
+                    TriggerClientEvent("PV:vehicleID",source,vehid)
+                    TriggerEvent("setPlateEveryone", identity.public_plate)
+                end
+            else
+                local tuning = vRP.getSData("custom:u" .. owner_id .. "veh_" .. name) or {}
+                local custom = json.decode(tuning) or {}
+                local spawnveh, vehid = vCLIENT.spawnVehicleOutside(source, name, vehicleParams.eng, vehicleParams.bod, vehicleParams.tnk, vehicleParams.drt,
+                vehicleParams.oil, vehicleParams.drvlyt, vehicleParams.wheel, vehicleParams.dor, vehicleParams.win, vehicleParams.tyr, vehicleParams.fuel,
+                custom, pos, owner_source)
+
+                if spawnveh then
+                    vehlist[vehid] = { owner_id, name }
+                    TriggerClientEvent("PV:vehicleID",source,vehid)
+                    TriggerEvent("setPlateEveryone", identity.public_plate)
+                end
+            end
+        end
+    end
+end
+
+--[[AddEventHandler("vRP:playerSpawn", function(user_id, source, first_spawn)
+    if user_id then
+        for k, v in pairs(vehlist) do
+            if user_id == v[1] then
+                vCLIENT.setBlipsOwner(source, k, v[2])
+                Citizen.Wait(10)
+            end
+        end
+    end
+end)]]
 
 --[ DELETEVEHICLES ]---------------------------------------------------------------------------------------------------------------------
 
@@ -711,7 +797,7 @@ AddEventHandler("desmancheVehicles", function()
     if user_id then
         local vehicle, vnetid, placa, vname, lock, banned = vRPclient.vehList(source, 7)
         if vehicle and placa then
-            local puser_id = vRP.getUserByRegistration(placa)
+            local puser_id = vRP.getUserByPublicPlate(placa)
             if puser_id then
                 exports.mongodb:updateOne({
                     collection = "vrp_user_vehicles",
@@ -772,7 +858,7 @@ function src.vehicleLock()
     if user_id then
         local vehicle, vnetid, placa, vname, lock, banned = vRPclient.vehList(source, 7)
         if vehicle and placa then
-            local placa_user_id = vRP.getUserByRegistration(placa)
+            local placa_user_id = vRP.getUserByPublicPlate(placa)
             if user_id == placa_user_id then
                 vCLIENT.vehicleClientLock(-1, vnetid, lock)
                 TriggerClientEvent("vrp_sound:source", source, 'lock', 0.5)
@@ -789,11 +875,14 @@ end
 
 --[ TRYDELETE ]--------------------------------------------------------------------------------------------------------------------------
 
-function src.tryDelete(vehid, vehengine, vehbody, vehfuel)
+function src.tryDelete(vehid, vehengine, vehbody, vehtank, vehdirt, vehoil, vehdrvlyt, vehwheel, vehdor, vehwin, vehtyr, vehfuel)
     if vehlist[vehid] and vehid ~= 0 then
         local user_id = vehlist[vehid][1]
         local vehname = vehlist[vehid][2]
         local player = vRP.getUserSource(user_id)
+
+        print(vehengine, vehbody, vehtank, vehdirt, vehoil, vehdrvlyt, vehwheel, vehdor, vehwin, vehtyr, vehfuel)
+
         if player then
             vCLIENT.syncNameDelete(player, vehname)
         end
@@ -817,6 +906,21 @@ function src.tryDelete(vehid, vehengine, vehbody, vehfuel)
                 query = { user_id = parseInt(user_id), vehicle = name },
                 update = { ["$set"] = { engine = parseInt(vehengine), body = parseInt(vehbody), fuel = parseInt(vehfuel) } }
             })
+        else
+            local vehParams = {
+                eng = vehengine,
+                bod = vehbody,
+                tnk = vehtank,
+                drt = vehdirt,
+                oil = vehoil,
+                drvlyt = vehdrvlyt,
+                wheel = vehwheel,
+                dor = vehdor,
+                win = vehwin,
+                tyr = vehtyr,
+                fuel = vehfuel
+            }
+            vRP.setUData(user_id, "veiculoPublico", json.encode(vehParams))
         end
     end
     vCLIENT.syncVehicle(-1, vehid)
@@ -967,7 +1071,7 @@ RegisterCommand('car', function(source, args, rawCommand)
                 }), { ['Content-Type'] = 'application/json' })
 
                 TriggerClientEvent('spawnarveiculo', source, args[1])
-                TriggerEvent("setPlateEveryone", identity.registration)
+                TriggerEvent("setPlateEveryone", identity.public_plate)
             end
         end
     end
@@ -1080,7 +1184,7 @@ RegisterCommand('savelivery', function(source, args, rawCommand)
     if vRP.hasPermission(user_id, "manager.permissao") or vRP.hasPermission(user_id, "administrador.permissao") then
         local vehicle, vnetid, placa, vname = vRPclient.vehList(source, 7)
         if vehicle and placa then
-            local puser_id = vRP.getUserByRegistration(placa)
+            local puser_id = vRP.getUserByPublicPlate(placa)
             if puser_id then
                 local custom = json.decode(vRP.getSData("custom:u" .. parseInt(puser_id) .. "veh_" .. vname))
                 local livery = vCLIENT.returnlivery(source, livery)

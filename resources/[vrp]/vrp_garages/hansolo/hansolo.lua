@@ -1126,13 +1126,14 @@ function src.vehicleMods(veh,custom)
 			ToggleVehicleMod(veh,22,tonumber(custom.headlights))
 			ToggleVehicleMod(veh,18,tonumber(custom.turbo))
 		end
+		TriggerEvent('persistent-vehicles/update-vehicle', veh)
 	end
 end
 
 --[ SPAWNVEHICLE ]-----------------------------------------------------------------------------------------------------------------------
 
 local gps = {}
-function src.spawnVehicle(vehname,vehengine,vehbody,vehfuel,custom)
+function src.spawnVehicle(vehname,vehengine,vehbody,vehtank,vehdirt,vehoil,vehdrvlyt,vehwheel,vehdor,vehwin,vehtyr,vehfuel,custom)
 	if vehicle[vehname] == nil then
 		local checkslot = 1
 		local mhash = GetHashKey(vehname)
@@ -1160,16 +1161,49 @@ function src.spawnVehicle(vehname,vehengine,vehbody,vehfuel,custom)
 			if checkslot ~= -1 then
 				local nveh = CreateVehicle(mhash,spawn[pointspawn][checkslot].x,spawn[pointspawn][checkslot].y,spawn[pointspawn][checkslot].z+0.5,spawn[pointspawn][checkslot].h,true,false)
 
+				TriggerEvent('persistent-vehicles/register-vehicle', nveh)
+
 				SetVehicleIsStolen(nveh,false)
 				SetVehicleNeedsToBeHotwired(nveh,false)
 				SetVehicleOnGroundProperly(nveh)
-				SetVehicleNumberPlateText(nveh,vRP.getRegistrationNumber())
+				SetVehicleNumberPlateText(nveh,vRP.getPublicPlateNumber())
 				SetEntityAsMissionEntity(nveh,true,true)
 				SetVehRadioStation(nveh,"OFF")
 
 				SetVehicleEngineHealth(nveh,vehengine+0.0)
 				SetVehicleBodyHealth(nveh,vehbody+0.0)
 				SetVehicleFuelLevel(nveh,vehfuel+0.0)
+
+				--vehdrvlyt,vehpaslyt,vehdor,vehwin,vehtyr
+				SetVehiclePetrolTankHealth(nveh, vehtank+0.0)
+				SetVehicleDirtLevel(nveh, vehdirt+0.0)
+				SetVehicleOilLevel(nveh, vehoil+0.0)
+
+				if vehdor ~= 0 then
+					for i = 0,4,1 do
+						if vehdor[tostring(i)] then
+							SetVehicleDoorBroken(nveh, i, true)
+						end
+					end
+				end
+				if vehwin ~= 0 then
+					for i = 0,12,1 do
+						if vehwin[tostring(i)] then
+							SmashVehicleWindow(nveh, i)
+						end
+					end
+				end
+				if vehtyr ~= 0 then
+					Citizen.Trace(tostring(vehtyr['0']).. "\n")
+					for i = 0,6,1 do
+						Citizen.Trace(tostring(vehtyr[tostring(i)]).. "\n")
+						if vehtyr[tostring(i)] == 'popped' then
+							SetVehicleTyreBurst(nveh, i, 0, 100.0)
+						elseif vehtyr[tostring(i)] == 'gone' then
+							SetVehicleTyreBurst(nveh, i, true, 1000.0)
+						end
+					end
+				end
 
 				src.vehicleMods(nveh,custom)
 				src.syncBlips(nveh,vehname)
@@ -1183,6 +1217,81 @@ function src.spawnVehicle(vehname,vehengine,vehbody,vehfuel,custom)
 			end
 		end
 	end
+	return false
+end
+
+function src.spawnVehicleOutside(vehname,vehengine,vehbody,vehtank,vehdirt,vehoil,vehdrvlyt,vehwheel,vehdor,vehwin,vehtyr,vehfuel,custom,pos,owner)
+	--if vehicle[vehname] == nil then
+	local mhash = GetHashKey(vehname)
+	while not HasModelLoaded(mhash) do
+		RequestModel(mhash)
+		Citizen.Wait(1)
+	end
+
+	if HasModelLoaded(mhash) then
+		local nveh = CreateVehicle(mhash,pos.x, pos.y, pos.z, pos.h,true,false)
+		if pos.r then
+			SetEntityRotation(nveh, pos.r.x, pos.r.y, pos.r.z, 1, true)
+		end
+
+		TriggerEvent('persistent-vehicles/register-vehicle', nveh)
+
+		SetVehicleIsStolen(nveh,false)
+		SetVehicleNeedsToBeHotwired(nveh,false)
+		SetVehicleOnGroundProperly(nveh)
+		SetVehicleNumberPlateText(nveh,vRP.getPublicPlateNumber())
+		SetEntityAsMissionEntity(nveh,true,true)
+		SetVehRadioStation(nveh,"OFF")
+
+		SetVehicleEngineHealth(nveh,vehengine+0.0)
+		SetVehicleBodyHealth(nveh,vehbody+0.0)
+		SetVehicleFuelLevel(nveh,vehfuel+0.0)
+
+		--vehdrvlyt,vehpaslyt,vehdor,vehwin,vehtyr
+		SetVehiclePetrolTankHealth(nveh, vehtank+0.0)
+		SetVehicleDirtLevel(nveh, vehdirt+0.0)
+		SetVehicleOilLevel(nveh, vehoil+0.0)
+
+		if vehdor ~= 0 then
+			for i = 0,4,1 do
+				if vehdor[tostring(i)] then
+					SetVehicleDoorBroken(nveh, i, true)
+				end
+			end
+		end
+		if vehwin ~= 0 then
+			for i = 0,12,1 do
+				if vehwin[tostring(i)] then
+					SmashVehicleWindow(nveh, i)
+				end
+			end
+		end
+		if vehtyr ~= 0 then
+			Citizen.Trace(tostring(vehtyr['0']).. "\n")
+			for i = 0,6,1 do
+				Citizen.Trace(tostring(vehtyr[tostring(i)]).. "\n")
+				if vehtyr[tostring(i)] == 'popped' then
+					SetVehicleTyreBurst(nveh, i, 0, 100.0)
+				elseif vehtyr[tostring(i)] == 'gone' then
+					SetVehicleTyreBurst(nveh, i, true, 1000.0)
+				end
+			end
+		end
+
+		src.vehicleMods(nveh,custom)
+
+		if owner == true then
+			src.syncBlips(nveh,vehname)
+
+			vehicle[vehname] = true
+			gps[vehname] = true
+		end
+
+		SetModelAsNoLongerNeeded(mhash)
+
+		return true,VehToNet(nveh)
+	end
+	--end
 	return false
 end
 
@@ -1206,11 +1315,79 @@ function src.syncBlips(nveh,vehname)
 	end)
 end
 
+function src.syncBlipsOwner(nveh,vehname,pos)
+	Citizen.CreateThread(function()
+		vehname = GetDisplayNameFromVehicleModel(GetHashKey(vehname))
+		nveh = NetToVeh(nveh)
+		vehicle[vehname] = true
+		gps[vehname] = true
+		if not pos then
+			if DoesBlipExist(vehblips[vehname]) then RemoveBlip(vehblips[vehname]) end
+			vehblips[vehname] = AddBlipForEntity(nveh)
+			SetBlipSprite(vehblips[vehname],1)
+			SetBlipAsShortRange(vehblips[vehname],false)
+			SetBlipColour(vehblips[vehname],80)
+			SetBlipScale(vehblips[vehname],0.4)
+			BeginTextCommandSetBlipName("STRING")
+			AddTextComponentString("~b~Rastreador: ~g~"..GetDisplayNameFromVehicleModel(GetEntityModel(nveh)))
+			EndTextCommandSetBlipName(vehblips[vehname])
+		else
+			if DoesBlipExist(vehblips[vehname]) then RemoveBlip(vehblips[vehname]) end
+			vehblips[vehname] = AddBlipForCoord(pos.x, pos.y, pos.z)
+			SetBlipSprite(vehblips[vehname],1)
+			SetBlipAsShortRange(vehblips[vehname],false)
+			SetBlipColour(vehblips[vehname],80)
+			SetBlipScale(vehblips[vehname],0.4)
+			BeginTextCommandSetBlipName("STRING")
+			AddTextComponentString("~b~Rastreador: ~g~"..GetDisplayNameFromVehicleModel(GetHashKey(vehname)))
+			EndTextCommandSetBlipName(vehblips[vehname])
+		end
+	end)
+end
+
 --[ DELETEVEHICLE -----------------------------------------------------------------------------------------------------------------------
 
 function src.deleteVehicle(vehicle)
 	if IsEntityAVehicle(vehicle) then
-		vSERVER.tryDelete(VehToNet(vehicle),GetVehicleEngineHealth(vehicle),GetVehicleBodyHealth(vehicle),GetVehicleFuelLevel(vehicle))
+		local damages = {
+			eng = GetVehicleEngineHealth(vehicle),
+			bod = GetVehicleBodyHealth(vehicle),
+			tnk = GetVehiclePetrolTankHealth(vehicle),
+			drt = GetVehicleDirtLevel(vehicle),
+			oil = GetVehicleOilLevel(vehicle),
+			drvlyt = GetIsLeftVehicleHeadlightDamaged(vehicle),
+			wheel = {},
+			dor = {},
+			win = {},
+			tyr = {}
+		}
+
+		for i = 0,4,1 do
+			table.insert(damages.dor, i)
+			damages.dor[i] = false
+			if not DoesVehicleHaveDoor(vehicle, i) then
+				damages.dor[i] = true
+			end
+		end
+		for i = 0,12,1 do
+			table.insert(damages.win, i)
+			damages.win[i] = false
+			if not IsVehicleWindowIntact(vehicle, i) then
+				damages.win[i] = true
+			end
+		end
+		for i = 0,6,1 do
+			table.insert(damages.tyr, i)
+			damages.tyr[i] = false
+			if IsVehicleTyreBurst(vehicle, i, true) then
+				damages.tyr[i] = 'gone'
+			elseif IsVehicleTyreBurst(vehicle, i, false) then
+				damages.tyr[i] = 'popped'
+			end
+		end
+
+		vSERVER.tryDelete(VehToNet(vehicle),damages.eng,damages.bod,damages.tnk,damages.drt,damages.oil,damages.drvlyt,damages.wheel,
+		damages.dor,damages.win,damages.tyr,GetVehicleFuelLevel(vehicle))
 	end
 end
 
@@ -1248,6 +1425,9 @@ function src.syncVehicle(vehicle)
 	if NetworkDoesNetworkIdExist(vehicle) then
 		local v = NetToVeh(vehicle)
 		if DoesEntityExist(v) and IsEntityAVehicle(v) then
+
+			TriggerEvent('persistent-vehicles/forget-vehicle', v)
+
 			Citizen.InvokeNative(0xAD738C3085FE7E11,v,true,true)
 			SetEntityAsMissionEntity(v,true,true)
 			SetVehicleHasBeenOwnedByPlayer(v,true)
@@ -1556,18 +1736,19 @@ end
 
 --[ FUNÇÃO DE TEXTO ]--------------------------------------------------------------------------------------------------------------------
 
-function DrawText3D(x,y,z, text)
-    local onScreen,_x,_y=World3dToScreen2d(x,y,z)
-    local px,py,pz=table.unpack(GetGameplayCamCoords())
-    
-    SetTextScale(0.28, 0.28)
-    SetTextFont(4)
-    SetTextProportional(1)
-    SetTextColour(255, 255, 255, 215)
-    SetTextEntry("STRING")
-    SetTextCentre(1)
-    AddTextComponentString(text)
-    DrawText(_x,_y)
-    local factor = (string.len(text)) / 370
-    DrawRect(_x,_y+0.0125, 0.005+ factor, 0.03, 41, 11, 41, 68)
+function DrawText3D(x,y,z, text) -- some useful function, use it if you want! 
+	SetDrawOrigin(x, y, z, 0)
+	SetTextFont(4)
+	SetTextProportional(1)
+	SetTextScale(0.28, 0.28)
+	SetTextColour(255, 255, 255, 215)
+	SetTextDropshadow(0, 0, 0, 0, 255)
+	SetTextEdge(2, 0, 0, 0, 150)
+	SetTextDropShadow()
+	SetTextOutline()
+	SetTextEntry("STRING")
+	SetTextCentre(1)
+	AddTextComponentString(text)
+	DrawText(0.0, 0.0)
+	ClearDrawOrigin()
 end

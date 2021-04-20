@@ -30,7 +30,7 @@ function Bus.CreateBus(coords, model, color)
             SetPedIntoVehicle(ped,Bus.bus,-1)
             SetVehicleNeedsToBeHotwired(Bus.bus,false)
             SetEntityInvincible(Bus.bus,false)
-            --SetVehicleNumberPlateText(Bus.bus,vRP.getRegistrationNumber())
+            --SetVehicleNumberPlateText(Bus.bus,vRP.getPublicPlateNumber())
             Citizen.InvokeNative(0xAD738C3085FE7E11,Bus.bus,true,true)
             SetVehicleHasBeenOwnedByPlayer(Bus.bus,true)
             SetVehRadioStation(Bus.bus,"OFF")
@@ -39,7 +39,8 @@ function Bus.CreateBus(coords, model, color)
         end
         Log.debug('Error calling exports['..GetHashKey(model)..' '..coords.x..']:SetFuel.')
         --Bus.plate = string.format('BLARG%03d', math.random(0, 999))
-        Bus.plate = vRP.getRegistrationNumber()
+        Bus.plate = vRP.getPublicPlateNumber()
+        Citizen.Trace(tostring(Bus.plate) .. "\n")
         SetVehicleNumberPlateText(Bus.bus, Bus.plate)
         SetVehicleColours(Bus.bus, color, color)
         Bus.PutPlayerInBusIfNeeded()
@@ -107,6 +108,9 @@ end
 function Bus.DisplayMessageAndWaitUntilBusStopped(notificationMessage)
     while not IsVehicleStopped(Bus.bus) do
         --ESX.ShowNotification(notificationMessage)
+        SetNotificationTextEntry("STRING")
+        AddTextComponentString(notificationMessage)
+        DrawNotification(true, false)
         Citizen.Wait(500)
     end
 end
