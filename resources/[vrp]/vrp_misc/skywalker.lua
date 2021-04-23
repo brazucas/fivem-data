@@ -145,6 +145,10 @@ RegisterCommand('tempo', function(source, args, rawCommand)
 				day = 0;
 			end
 
+			if minutes == nil then
+				minutes = 0;
+			end
+
 			local dia = parseInt(args[1])
 			if dia >= 0 and dia <= misc.GetDaysInCurrentMonth() then
 				local horas = parseInt(args[2])
