@@ -89,6 +89,11 @@ Citizen.CreateThread(function()
 	while true do
 		--Citizen.Wait(10000)
 		Citizen.Wait(2000)
+
+		if minutes == nil then
+			minutes = 0;
+		end
+
 		minutes = minutes + 1
 		
 		if minutes >= 60 then
