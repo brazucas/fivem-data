@@ -3,7 +3,7 @@
 --- Created by Dylan Malandain.
 --- DateTime: 20/12/2019 22:32
 ---
-fx_version 'adamant'
+fx_version 'cerulean'
 games { 'gta5' };
 
 name 'NativeUILua-Reloaded'

@@ -1,4 +1,4 @@
-fx_version 'adamant'
+fx_version 'cerulean'
 game 'gta5'
 
 author 'ZIRAFLIX'
@@ -13,6 +13,7 @@ client_scripts {
 
 server_scripts {
 	'@vrp/lib/utils.lua',
+	'config/garagens.lua',
 	'skywalker.lua'
 }
 

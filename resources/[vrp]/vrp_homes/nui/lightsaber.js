@@ -60,7 +60,7 @@ $(document).ready(function(){
 
 	document.onkeyup = function(data){
 		if (data.which == 27){
-			$.post("http://vrp_homes/chestClose");
+			$.post("https://vrp_homes/chestClose");
 		}
 	};
 });
@@ -126,7 +126,7 @@ const updateDrag = () => {
 
 			disableInventory(500);
 
-			$.post("http://vrp_homes/takeItem", JSON.stringify({
+			$.post("https://vrp_homes/takeItem", JSON.stringify({
 				item: itemData.key,
 				amount: Number($("#amount").val())
 			}))
@@ -145,7 +145,7 @@ const updateDrag = () => {
 
 			disableInventory(500);
 
-			$.post("http://vrp_homes/storeItem", JSON.stringify({
+			$.post("https://vrp_homes/storeItem", JSON.stringify({
 				item: itemData.key,
 				amount: Number($("#amount").val())
 			}))
@@ -169,7 +169,7 @@ const formatarNumero = (n) => {
 }
 
 const updateVault = () => {
-	$.post("http://vrp_homes/requestVault",JSON.stringify({}),(data) => {
+	$.post("https://vrp_homes/requestVault",JSON.stringify({}),(data) => {
 		const nameList = data.inventario.sort((a,b) => (a.name > b.name) ? 1: -1);
 		const nameList2 = data.inventario2.sort((a,b) => (a.name > b.name) ? 1: -1);
 		$('#inventory').html(`

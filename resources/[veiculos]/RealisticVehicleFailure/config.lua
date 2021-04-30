@@ -85,7 +85,6 @@
 
 	-- Alternate configuration values provided by ImDylan93 - Vehicles can take more damage before failure, and the balance between vehicles has been tweaked.
 	-- To use: comment out the settings above, and uncomment this section.
-
 cfg = {
 
 	deformationMultiplier = -1,					-- How much should the vehicle visually deform from a collision. Range 0.0 to 10.0 Where 0.0 is no deformation and 10.0 is 10x deformation. -1 = Don't touch
@@ -158,7 +157,6 @@ cfg = {
 -- Configure Repair system
 
 -- id=446 for wrench icon, id=72 for spraycan icon
-
 repairCfg = {
 	mechanics = {
 		{name="Mechanic", id=446, r=25.0, x=-337.0,  y=-135.0,  z=39.0},	-- LSC Burton

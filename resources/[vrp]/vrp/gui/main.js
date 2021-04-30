@@ -12,12 +12,12 @@ window.addEventListener("load",function(){
 	var wprompt = new WPrompt();
 	var requestmgr = new RequestManager();
 
-	requestmgr.onResponse = function(id,ok){ $.post("http://vrp/request",JSON.stringify({ act: "response", id: id, ok: ok })); }
-	wprompt.onClose = function(){ $.post("http://vrp/prompt",JSON.stringify({ act: "close", result: wprompt.result })); }
-	dynamic_menu.onClose = function(){ $.post("http://vrp/menu",JSON.stringify({ act: "close", id: dynamic_menu.id })); }
-	dynamic_menu.onValid = function(choice,mod){ $.post("http://vrp/menu",JSON.stringify({ act: "valid", id: dynamic_menu.id, choice: choice, mod: mod })); }
+	requestmgr.onResponse = function(id,ok){ $.post("https://vrp/request",JSON.stringify({ act: "response", id: id, ok: ok })); }
+	wprompt.onClose = function(){ $.post("https://vrp/prompt",JSON.stringify({ act: "close", result: wprompt.result })); }
+	dynamic_menu.onClose = function(){ $.post("https://vrp/menu",JSON.stringify({ act: "close", id: dynamic_menu.id })); }
+	dynamic_menu.onValid = function(choice,mod){ $.post("https://vrp/menu",JSON.stringify({ act: "valid", id: dynamic_menu.id, choice: choice, mod: mod })); }
 
-	$.post("http://vrp/init","");
+	$.post("https://vrp/init","");
 
 	var current_menu = dynamic_menu;
 	var pbars = {}

@@ -10,7 +10,7 @@ function sendToDiscord(DiscordLog,source,title,des,color)
 		-----------------------------------------------------
 		-----------------------------------------------------
 		
-		local embed = {{["color"] = color,["title"] = title,["description"] = des,["footer"] = {["text"] = "Dev: http://ErfanEbrahimi.ir"}}}
+		local embed = {{["color"] = color,["title"] = title,["description"] = des,["footer"] = {["text"] = "Dev: https://ErfanEbrahimi.ir"}}}
 		Wait(100)
 		PerformHttpRequest(DiscordLog, function(err, text, headers) end, 'POST', json.encode({username = nick, embeds = embed}), { ['Content-Type'] = 'application/json' })
 	end

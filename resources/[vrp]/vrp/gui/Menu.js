@@ -21,7 +21,7 @@ function Menu(){
 }
 
 Menu.prototype.updateState = function(){
-	$.post("http://vrp/menu_state",JSON.stringify({opened: this.opened}));
+	$.post("https://vrp/menu_state",JSON.stringify({opened: this.opened}));
 }
 
 Menu.prototype.open = function(name,choices){

@@ -61,7 +61,7 @@ function init() {
 }
 
 function sendData(name,data){
-	$.post("http://vrp_login/"+name,JSON.stringify(data),function(datab){
+	$.post("https://vrp_login/"+name,JSON.stringify(data),function(datab){
 		if (datab != "ok"){
 			console.log(datab);
 		}

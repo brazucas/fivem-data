@@ -10,7 +10,7 @@ Proxy.addInterface("vrp_inventory",vRPN)
 
 vRPCclient = Tunnel.getInterface("vrp_inventory")
 local idgens = Tools.newIDGenerator()
-vGARAGE = Tunnel.getInterface("vrp_garages")
+vGARAGE = Proxy.getInterface("vrp_garages")
 
 --[ VARIÁVEIS ]--------------------------------------------------------------------------------------------------------------------------
 
@@ -269,7 +269,7 @@ function vRPN.useItem(itemName,type,ramount)
 
 				if vRP.hasPermission(user_id,"policia.permissao") then
 					TriggerEvent("setPlateEveryone",placa)
-					vGARAGE.vehicleClientLock(-1,vnetid,lock)
+					vGARAGE.vehicleLock(vnetid,lock)
 					TriggerClientEvent("vrp_sound:source",source,'lock',0.5)
 					return
 				end
@@ -280,7 +280,7 @@ function vRPN.useItem(itemName,type,ramount)
 					if vRP.hasPermission(user_id,"mec.permissao") then
 						actived[user_id] = nil
 						TriggerEvent("setPlateEveryone",placa)
-						vGARAGE.vehicleClientLock(-1,vnetid,lock)
+						vGARAGE.vehicleLock(-1,vnetid,lock)
 						return
 					end
 
@@ -296,7 +296,7 @@ function vRPN.useItem(itemName,type,ramount)
 
 						if math.random(100) >= 50 then
 							TriggerEvent("setPlateEveryone",placa)
-							vGARAGE.vehicleClientLock(-1,vnetid,lock)
+							vGARAGE.vehicleLock(vnetid,lock)
 							TriggerClientEvent("vrp_sound:source",source,'lock',0.5)
 						else
 							TriggerClientEvent("Notify",source,"negado","Roubo do veículo falhou e as autoridades foram acionadas.",8000)

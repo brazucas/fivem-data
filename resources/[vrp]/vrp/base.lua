@@ -391,6 +391,51 @@ function vRP.getSData(key, cbr)
     end
 end
 
+function vRP.setVData(key, value)
+    local p = promise.new()
+    local uData = vRP.getVData(key)
+
+    if uData ~= nil then
+        exports.mongodb:updateOne({ collection = "brz_vehicles", query = { placa = key }, update = { ["$set"] =  value  } }, function(success, result)
+            p:resolve(success)
+        end)
+    else
+        exports.mongodb:insertOne({ collection = "brz_vehicles", document = value }, function(success, result, insertedIds)
+            if success then
+                p:resolve(insertedIds[1])
+            else
+                p:reject("[MongoDB][vRP.setVData] Error in insertOne: " .. tostring(result))
+            end
+        end)
+    end
+
+    return Citizen.Await(p)
+end
+
+function vRP.getVData(key, cbr)
+    local p = promise.new()
+    exports.mongodb:findOne({ collection = "brz_vehicles", query = { placa = key } }, function(success, result)
+        if success then
+            if #result > 0 then
+                p:resolve(result[1])
+            else
+                p:resolve()
+            end
+        else
+            p:reject("[vRP.getVData] ERROR " .. tostring(result))
+            return
+        end
+    end)
+
+    local uData = Citizen.Await(p);
+
+    if uData ~= nil then
+        return uData
+    else
+        return nil
+    end
+end
+
 function vRP.getUserDataTable(user_id)
     return vRP.user_tables[user_id]
 end
@@ -852,5 +897,16 @@ function vRP.getMinSecs(seconds)
         return string.format("<b>%d Minutos</b> e <b>%d Segundos</b>", minutes, seconds)
     else
         return string.format("<b>%d Segundos</b>", seconds)
+    end
+end
+
+function vRP.DistanceBetweenCoords(coordsA, coordsB, useZ)
+    -- language faster equivalent:
+    local firstVec = vector3(coordsA.x, coordsA.y, coordsA.z)
+    local secondVec = vector3(coordsB.x, coordsB.y, coordsB.z)
+    if useZ then
+        return #(firstVec - secondVec)
+    else 
+        return #(firstVec.xy - secondVec.xy)
     end
 end

@@ -45,8 +45,8 @@ math.randomseed(GetGameTimer());
 local tireBurstMaxNumber = cfg.randomTireBurstInterval * 1200; 												-- the tire burst lottery runs roughly 1200 times per minute
 if cfg.randomTireBurstInterval ~= 0 then tireBurstLuckyNumber = math.random(tireBurstMaxNumber) end			-- If we hit this number again randomly, a tire will burst.
 
-local fixMessagePos = math.random(repairCfg.fixMessageCount)
-local noFixMessagePos = math.random(repairCfg.noFixMessageCount)
+local fixMessagePos = math.random(#repairCfg.fixMessages)
+local noFixMessagePos = math.random(#repairCfg.noFixMessages)
 
 -- Display blips on map
 Citizen.CreateThread(function()
@@ -188,7 +188,7 @@ AddEventHandler('iens:repair', function()
 				SetVehiclePetrolTankHealth(vehicle, 750.0)
 				healthEngineLast=cfg.cascadingFailureThreshold +5
 				healthPetrolTankLast=750.0
-					SetVehicleEngineOn(vehicle, true, false )
+				SetVehicleEngineOn(vehicle, true, false )
 				SetVehicleOilLevel(vehicle,(GetVehicleOilLevel(vehicle)/3)-0.5)
 				notification("~g~" .. repairCfg.fixMessages[fixMessagePos] .. ", now get to a mechanic!")
 				fixMessagePos = fixMessagePos + 1

@@ -221,7 +221,7 @@
     		$('.btn-sair').click(function(){
 	            $('#general, #waiting, #transferirUI, #sacarUI, #depositarUI, #pagarUI').hide();
 	            $('body').removeClass("active");
-	            $.post('http://vrp_banco/NUIFocusOff', JSON.stringify({}));
+	            $.post('https://vrp_banco/NUIFocusOff', JSON.stringify({}));
 	        })
 	        $('#back').click(function(){
 	            $('#depositarUI, #sacarUI, #transferirUI, #pagarUI').hide();
@@ -264,7 +264,7 @@
 	        })
 	        $("#depositar1").submit(function(e) {
 		        e.preventDefault();
-		        $.post('http://vrp_banco/depositar', JSON.stringify({
+		        $.post('https://vrp_banco/depositar', JSON.stringify({
 		            amount: $("#amount").val()
 		        }));
 				$('#depositarUI').hide();
@@ -273,7 +273,7 @@
 			});
 			$("#sacar1").submit(function(e) {
 				e.preventDefault();
-		        $.post('http://vrp_banco/sacar', JSON.stringify({
+		        $.post('https://vrp_banco/sacar', JSON.stringify({
 		            amounts: $("#amounts").val()
 		        }));
 				$('#sacarUI').hide();
@@ -282,7 +282,7 @@
 			});
 			$("#transferir1").submit(function(e) {
 		        e.preventDefault();
-		        $.post('http://vrp_banco/transferir', JSON.stringify({
+		        $.post('https://vrp_banco/transferir', JSON.stringify({
 					to: $("#to").val(),
 		            amountt: $("#amountt").val()
 		        }));
@@ -292,7 +292,7 @@
 			});
 			$("#pagar1").submit(function(e) {
 				e.preventDefault();
-		        $.post('http://vrp_banco/pagar', JSON.stringify({
+		        $.post('https://vrp_banco/pagar', JSON.stringify({
 		            amountp: $("#amountp").val()
 		        }));
 				$('#pagarUI').hide();
@@ -303,7 +303,7 @@
 		        if (data.which == 27){
 		            $('#general, #waiting, #transferirUI, #sacarUI, #depositarUI, #pagarUI').hide();
 		            $('body').removeClass("active");
-		            $.post('http://vrp_banco/NUIFocusOff', JSON.stringify({}));
+		            $.post('https://vrp_banco/NUIFocusOff', JSON.stringify({}));
 		        }
 		    }
 		</script>	

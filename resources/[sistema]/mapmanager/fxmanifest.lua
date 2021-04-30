@@ -8,7 +8,7 @@ server_scripts {
     "mapmanager_server.lua"
 }
 
-fx_version 'adamant'
+fx_version 'cerulean'
 games { 'gta5', 'rdr3' }
 
 server_export "getCurrentGameType"

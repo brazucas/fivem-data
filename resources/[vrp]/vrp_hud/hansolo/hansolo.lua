@@ -161,9 +161,9 @@ Citizen.CreateThread(function()
 				farol = 0
       end
 
-      DisplayRadar(true)
+      DisplayRadar(true) 
     else
-			if on_gps then
+			if on_gps then --n precisaria estar em loop
 			  DisplayRadar(true)
       else
         DisplayRadar(false)

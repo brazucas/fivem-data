@@ -514,7 +514,7 @@ const app = new Vue({
 				skinColor: this.skinColor,
 				shapeMix: this.shapeMix,
 			};
-			$.post('http://character-creator/UpdateSkinOptions', JSON.stringify(arr1));
+			$.post('https://character-creator/UpdateSkinOptions', JSON.stringify(arr1));
 			
 			const arr2 = {
 				eyesColor: this.eyesColor,
@@ -541,7 +541,7 @@ const app = new Vue({
 				chinShape: this.chinShape,
 				neckWidth: this.neckWidth,
 			};
-			$.post('http://character-creator/UpdateFaceOptions', JSON.stringify(arr2));
+			$.post('https://character-creator/UpdateFaceOptions', JSON.stringify(arr2));
 			
 			const arr3 = {
 				hairModel: this.hairModel,
@@ -565,15 +565,15 @@ const app = new Vue({
 				makeupModel: this.makeupModel,
 				makeupColor: this.makeupColor,
 			};
-			$.post('http://character-creator/UpdateHeadOptions', JSON.stringify(arr3));
+			$.post('https://character-creator/UpdateHeadOptions', JSON.stringify(arr3));
 		},
 		changeGender: function(newGender) {
 			this.gender = newGender;
-			$.post('http://character-creator/ChangeGender', JSON.stringify({ gender: this.gender }));
+			$.post('https://character-creator/ChangeGender', JSON.stringify({ gender: this.gender }));
 			this.changeAppearance();
 		},
         changeCamRotation: function() {
-            $.post('http://character-creator/cChangeHeading', JSON.stringify({ camRotation: this.camRotation }));
+            $.post('https://character-creator/cChangeHeading', JSON.stringify({ camRotation: this.camRotation }));
         },
 		done: function() {
             app.changeAppearance();
@@ -592,7 +592,7 @@ const app = new Vue({
 			if (checkName(this.characterNome.trim())) return;
 			if (checkName(this.characterSobrenome.trim())) return;
 
-			$.post('http://character-creator/cDoneSave');
+			$.post('https://character-creator/cDoneSave');
 		}
 	}
 });

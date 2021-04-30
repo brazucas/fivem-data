@@ -69,7 +69,7 @@ function init() {
 }
 
 function sendData(name,data){
-	$.post("http://nav_ponto-taxista/"+name,JSON.stringify(data),function(datab){
+	$.post("https://nav_ponto-taxista/"+name,JSON.stringify(data),function(datab){
 		if (datab != "ok"){
 			console.log(datab);
 		}

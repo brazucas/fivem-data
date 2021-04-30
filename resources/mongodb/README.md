@@ -39,7 +39,7 @@ Returns true if database connection is established.
 * `params<Object>` - params object
 * `params.collection<string>` - collection name
 * `params.documents<Object>` - an array of documents to insert
-* `params.options<Object>` - optional settings object. See [collection.insertMany in docs](http://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#insertMany)
+* `params.options<Object>` - optional settings object. See [collection.insertMany in docs](https://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#insertMany)
 * `callback(success<boolean>, insertedCount<number>, insertedIds<Array>)` - callback (optional)
 Inserts an array of documents into MongoDB.
 
@@ -47,7 +47,7 @@ Inserts an array of documents into MongoDB.
 * `params<Object>` - params object
 * `params.collection<string>` - collection name
 * `params.document<Object>` - document object
-* `params.options<Object>` - optional settings object. See [collection.insertMany in docs](http://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#insertMany)
+* `params.options<Object>` - optional settings object. See [collection.insertMany in docs](https://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#insertMany)
 * `callback(success<boolean>, insertedCount<number>, insertedIds<Array>)` - callback (optional)
 
 Inserts a single document into MongoDB.
@@ -56,7 +56,7 @@ Inserts a single document into MongoDB.
 * `params<Object>` - params object
 * `params.collection<string>` - collection name
 * `params.query<Object>` - filter query object
-* `params.options<Object>` - optional settings object. See [collection.find in docs](http://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#find)
+* `params.options<Object>` - optional settings object. See [collection.find in docs](https://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#find)
 * `params.limit<number>` - limit documents count
 * `callback(success<boolean>, documents<Array>)` - callback (optional)
 
@@ -66,7 +66,7 @@ Performs a find query.
 * `params<Object>` - params object
 * `params.collection<string>` - collection name
 * `params.query<Object>` - filter query object
-* `params.options<Object>` - optional settings object. See [collection.find in docs](http://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#find)
+* `params.options<Object>` - optional settings object. See [collection.find in docs](https://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#find)
 * `callback(success<boolean>, documents<Array>)` - callback (optional)
 
 Performns a find query with `limit = 1`.
@@ -76,7 +76,7 @@ Performns a find query with `limit = 1`.
 * `params.collection<string>` - collection name
 * `params.query<Object>` - filter query object
 * `params.update<Object>` - update query object
-* `params.options<Object>` - optional settings object. See [collection.updateMany in docs](http://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#updateMany)
+* `params.options<Object>` - optional settings object. See [collection.updateMany in docs](https://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#updateMany)
 * `callback(success<boolean>, updatedCount<number>)` - callback (optional)
 
 Update multiple documents on MongoDB.
@@ -86,7 +86,7 @@ Update multiple documents on MongoDB.
 * `params.collection<string>` - collection name
 * `params.query<Object>` - filter query object
 * `params.update<Object>` - update query object
-* `params.options<Object>` - optional settings object. See [collection.updateMany in docs](http://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#updateMany)
+* `params.options<Object>` - optional settings object. See [collection.updateMany in docs](https://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#updateMany)
 * `callback(success<boolean>, updatedCount<number>)` - callback (optional)
 
 Update a single document on MongoDB.
@@ -95,7 +95,7 @@ Update a single document on MongoDB.
 * `params<Object>` - params object
 * `params.collection<string>` - collection name
 * `params.query<Object>` - filter query object
-* `params.options<Object>` - optional settings object. See [collection.countDocuments in docs](http://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#countDocuments)
+* `params.options<Object>` - optional settings object. See [collection.countDocuments in docs](https://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#countDocuments)
 * `callback(success<boolean>, count<number>)` - callback (optional)
 
 Gets the number of documents matching the filter.
@@ -104,7 +104,7 @@ Gets the number of documents matching the filter.
 * `params<Object>` - params object
 * `params.collection<string>` - collection name
 * `params.query<Object>` - filter query object
-* `params.options<Object>` - optional settings object. See [collection.deleteMany in docs](http://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#deleteMany)
+* `params.options<Object>` - optional settings object. See [collection.deleteMany in docs](https://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#deleteMany)
 * `callback(success<boolean>, deletedCount<number>)` - callback (optional)
 
 Delete multiple documents on MongoDB.
@@ -113,7 +113,7 @@ Delete multiple documents on MongoDB.
 * `params<Object>` - params object
 * `params.collection<string>` - collection name
 * `params.query<Object>` - filter query object
-* `params.options<Object>` - optional settings object. See [collection.deleteMany in docs](http://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#deleteOne)
+* `params.options<Object>` - optional settings object. See [collection.deleteMany in docs](https://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html#deleteOne)
 * `callback(success<boolean>, deletedCount<number>)` - callback (optional)
 
 Delete a document on MongoDB.

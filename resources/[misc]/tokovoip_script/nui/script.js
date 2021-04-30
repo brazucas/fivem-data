@@ -67,10 +67,10 @@ function init() {
 
 		// Handle talking states
 		if (evt.data == 'startedtalking') {
-			$.post('http://tokovoip_script/setPlayerTalking', JSON.stringify({state: 1}));
+			$.post('https://tokovoip_script/setPlayerTalking', JSON.stringify({state: 1}));
 		}
 		if (evt.data == 'stoppedtalking') {
-			$.post('http://tokovoip_script/setPlayerTalking', JSON.stringify({state: 0}));
+			$.post('https://tokovoip_script/setPlayerTalking', JSON.stringify({state: 0}));
 		}
 	};
 
@@ -97,7 +97,7 @@ function init() {
 		else if(event.code == 1006)
 		   reason = 'The connection was closed abnormally, e.g., without sending or receiving a Close control frame';
 		else if(event.code == 1007)
-		    reason = 'An endpoint is terminating the connection because it has received data within a message that was not consistent with the type of the message (e.g., non-UTF-8 [http://tools.ietf.org/html/rfc3629] data within a text message).';
+		    reason = 'An endpoint is terminating the connection because it has received data within a message that was not consistent with the type of the message (e.g., non-UTF-8 [https://tools.ietf.org/html/rfc3629] data within a text message).';
 		else if(event.code == 1008)
 		    reason = 'An endpoint is terminating the connection because it has received a message that \'violates its policy\'. This reason is given either if there is no other sutible reason, or if there is a need to hide specific details about the policy.';
 		else if(event.code == 1009)
@@ -266,7 +266,7 @@ function updatePlugin() {
 
 function updateScriptData(key, data) {
 	if (voip[key] === data) return;
-	$.post(`http://tokovoip_script/updatePluginData`, JSON.stringify({
+	$.post(`https://tokovoip_script/updatePluginData`, JSON.stringify({
 		payload: {
 			key,
 			data,

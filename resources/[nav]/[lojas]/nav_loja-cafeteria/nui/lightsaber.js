@@ -66,7 +66,7 @@ $(function() {
   }
   
   function sendData(name, data) {
-	$.post("http://nav_loja-cafeteria/" + name, JSON.stringify(data), function(
+	$.post("https://nav_loja-cafeteria/" + name, JSON.stringify(data), function(
 	  datab
 	) {
 	  if (datab != "ok") {

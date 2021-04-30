@@ -9,27 +9,27 @@ $(document).ready(function() {
             $(".loja-de-roupa").fadeOut();
             $('#total').html('0');
             change = {};
-            $.post('http://vrp_skinshop/reset', JSON.stringify({}))
-            $.post('http://ph-hud/fechar', JSON.stringify({ id: false }))
+            $.post('https://vrp_skinshop/reset', JSON.stringify({}))
+            $.post('https://ph-hud/fechar', JSON.stringify({ id: false }))
         }
     }
 
     $("#leftHeading").click(function() {
-        $.post('http://vrp_skinshop/leftHeading', JSON.stringify({ value: 10 }));
+        $.post('https://vrp_skinshop/leftHeading', JSON.stringify({ value: 10 }));
     })
 
     $("#handsUp").click(function() {
-        $.post('http://vrp_skinshop/handsUp', JSON.stringify({}));
+        $.post('https://vrp_skinshop/handsUp', JSON.stringify({}));
     })
 
     $("#rightHeading").click(function() {
-        $.post('http://vrp_skinshop/rightHeading', JSON.stringify({ value: 10 }));
+        $.post('https://vrp_skinshop/rightHeading', JSON.stringify({ value: 10 }));
     })
 
     $("#payament").click(function() {
         $(".loja-de-roupa").fadeOut()
-        $.post('http://ph-hud/fechar', JSON.stringify({ id: false }));
-        $.post('http://vrp_skinshop/payament', JSON.stringify({ price: $('#total').text() }));
+        $.post('https://ph-hud/fechar', JSON.stringify({ id: false }));
+        $.post('https://vrp_skinshop/payament', JSON.stringify({ price: $('#total').text() }));
         $('#total').html('0');
         change = {};
     })
@@ -49,7 +49,7 @@ $(document).ready(function() {
         if (item.openLojaRoupa) {
             change = {};
             $(".loja-de-roupa").fadeIn()
-            $.post('http://ph-hud/fechar', JSON.stringify({ id: true }))
+            $.post('https://ph-hud/fechar', JSON.stringify({ id: true }))
             dataPart = item.category
             for (var i = 0; i <= item.drawa; i++) {
                 $("footer").append(`
@@ -96,7 +96,7 @@ function selectPart(element) {
     $('.submenu-item').removeClass('subActive')
     $(element).addClass('subActive')
     $(element).find('img').css('filter', 'brightness(0%)')
-    $.post('http://vrp_skinshop/changePart', JSON.stringify({ part: dataPart }))
+    $.post('https://vrp_skinshop/changePart', JSON.stringify({ part: dataPart }))
 }
 
 function select(element) {
@@ -105,15 +105,15 @@ function select(element) {
     $('footer div').find('.overlay').css("background-color", "rgba(0, 0, 0, 0.507)");
     $(element).css("border", "1px solid #85a016");
     $(element).find('.overlay').css("background-color", "#85a016");
-    $.post('http://vrp_skinshop/changeCustom', JSON.stringify({ type: dataPart, id: roupaID }));
+    $.post('https://vrp_skinshop/changeCustom', JSON.stringify({ type: dataPart, id: roupaID }));
 }
 
 $(".fa-angle-right").click(function() {
-    $.post('http://vrp_skinshop/changeColor', JSON.stringify({ type: dataPart, id: roupaID, action: "mais" }));
+    $.post('https://vrp_skinshop/changeColor', JSON.stringify({ type: dataPart, id: roupaID, action: "mais" }));
 })
 
 $(".fa-angle-left").click(function() {
-    $.post('http://vrp_skinshop/changeColor', JSON.stringify({ type: dataPart, id: roupaID, action: "menos" }));
+    $.post('https://vrp_skinshop/changeColor', JSON.stringify({ type: dataPart, id: roupaID, action: "menos" }));
 })
 
 

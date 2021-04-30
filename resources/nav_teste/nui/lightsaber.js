@@ -83,7 +83,7 @@ $(document).on('click','button',function(){
 })
 
 const sendData = (name, data, item) => {
-	$.post("http://nav_teste/"+name,JSON.stringify(data),JSON.stringify(item),function(datab){});
+	$.post("https://nav_teste/"+name,JSON.stringify(data),JSON.stringify(item),function(datab){});
 }
 
 $('.category_item').click(function() {
@@ -124,7 +124,7 @@ const formatarNumero = (n) => {
 }
 
 const updateChest = () => {
-	$.post("http://nav_teste/requestChest",JSON.stringify({}),(data) => {
+	$.post("https://nav_teste/requestChest",JSON.stringify({}),(data) => {
 		const nameList = data.itens.sort((a,b) => (a.name > b.name) ? 1: -1);
 		const nameListTwo = data.itensTwo.sort((a,b) => (a.name > b.name) ? 1: -1);
 		$('.conteudoItens').html(`

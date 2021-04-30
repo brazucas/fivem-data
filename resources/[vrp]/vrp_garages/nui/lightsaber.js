@@ -39,11 +39,11 @@ const formatarNumero = (n) => {
 }
 
 const sendData = (name,data) => {
-	$.post("http://vrp_garages/"+name,JSON.stringify(data),function(datab){});
+	$.post("https://vrp_garages/"+name,JSON.stringify(data),function(datab){});
 }
 
 const updateGarages = () => {
-    $.post('http://vrp_garages/myVehicles',JSON.stringify({}),(data) => {
+    $.post('https://vrp_garages/myVehicles',JSON.stringify({}),(data) => {
 		const nameList = data.vehicles.sort((a,b) => (a.name2 > b.name2) ? 1: -1);
 
         $('#carros').html(`
@@ -97,12 +97,12 @@ $(document).on('click','.carro',function(){
 $(document).on('click','.retirar',function(){
 	let $el = $('.carro.active');
 	if($el) {
-		$.post('http://vrp_garages/spawnVehicles',JSON.stringify({
+		$.post('https://vrp_garages/spawnVehicles',JSON.stringify({
 			name: $el.attr('data-carro-name')
 		}));
 	}
 })
 
 $(document).on('click','.guardar',function(){
-	$.post('http://vrp_garages/deleteVehicles',JSON.stringify({}));
+	$.post('https://vrp_garages/deleteVehicles',JSON.stringify({}));
 })

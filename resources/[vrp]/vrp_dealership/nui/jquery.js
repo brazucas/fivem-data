@@ -37,13 +37,13 @@ $(document).ready(function(){
 
 	document.onkeyup = function(data){
 		if (data.which == 27){
-			$.post("http://vrp_dealership/dealerClose",JSON.stringify({}),function(datab){});
+			$.post("https://vrp_dealership/dealerClose",JSON.stringify({}),function(datab){});
 		}
 	};
 });
 
 $('#actionbutton').click(function(e){
-	$.post("http://vrp_dealership/dealerClose",JSON.stringify({}),function(datab){});
+	$.post("https://vrp_dealership/dealerClose",JSON.stringify({}),function(datab){});
 });
 
 const formatarNumero = (n) => {
@@ -68,7 +68,7 @@ const carregarMenu = (name) => {
 }
 
 const updateCarros = () => {
-	$.post("http://vrp_dealership/requestCarros",JSON.stringify({}),(data) => {
+	$.post("https://vrp_dealership/requestCarros",JSON.stringify({}),(data) => {
 		let i = 0;
 		const nameList = data.veiculos.sort((a,b) => (a.nome > b.nome) ? 1: -1);
 		$('#inicio').html(`
@@ -90,7 +90,7 @@ const updateCarros = () => {
 }
 
 const updateMotos = () => {
-	$.post("http://vrp_dealership/requestMotos",JSON.stringify({}),(data) => {
+	$.post("https://vrp_dealership/requestMotos",JSON.stringify({}),(data) => {
 		let i = 0;
 		const nameList = data.veiculos.sort((a,b) => (a.nome > b.nome) ? 1: -1);
 		$('#inicio').html(`
@@ -112,7 +112,7 @@ const updateMotos = () => {
 }
 
 const updateImport = () => {
-	$.post("http://vrp_dealership/requestImport",JSON.stringify({}),(data) => {
+	$.post("https://vrp_dealership/requestImport",JSON.stringify({}),(data) => {
 		let i = 0;
 		const nameList = data.veiculos.sort((a,b) => (a.nome > b.nome) ? 1: -1);
 		$('#inicio').html(`
@@ -134,7 +134,7 @@ const updateImport = () => {
 }
 
 const updatePossuidos = () => {
-	$.post("http://vrp_dealership/requestPossuidos",JSON.stringify({}),(data) => {
+	$.post("https://vrp_dealership/requestPossuidos",JSON.stringify({}),(data) => {
 		let i = 0;
 		const nameList = data.veiculos.sort((a,b) => (a.nome > b.nome) ? 1: -1);
 		$('#inicio').html(`
@@ -164,7 +164,7 @@ $(document).on("click",".model",function(){
 $(document).on("click",".comprar",function(){
 	let $el = $('.model.active');
 	if($el){
-		$.post("http://vrp_dealership/buyDealer",JSON.stringify({
+		$.post("https://vrp_dealership/buyDealer",JSON.stringify({
 			name: $el.attr('data-name-key')
 		}));
 	}
@@ -173,7 +173,7 @@ $(document).on("click",".comprar",function(){
 $(document).on("click",".vender",function(){
 	let $el = $('.model.active');
 	if($el){
-		$.post("http://vrp_dealership/sellDealer",JSON.stringify({
+		$.post("https://vrp_dealership/sellDealer",JSON.stringify({
 			name: $el.attr('data-name-key')
 		}));
 	}

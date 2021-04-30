@@ -59,7 +59,7 @@ function copyTbl(tbl)
   return ret
 end
 
--- Winding Number Algorithm - http://geomalgorithms.com/a03-_inclusion.html
+-- Winding Number Algorithm - https://geomalgorithms.com/a03-_inclusion.html
 local function _windingNumber(point, poly)
   local wn = 0 -- winding number counter
 

@@ -5,7 +5,7 @@ Citizen.CreateThread(function()
 		print("[^1"..GetCurrentResourceName().."^7] !!^3WARNING^7!! Please rename the resource from "..GetCurrentResourceName().." to 'gang'")
     end
     print("[^1"..GetCurrentResourceName().."^7] Performing version check...")
-    PerformHttpRequest("http://erfanebrahimi.ir/fivem/resources/checkupdates.php", function(status,result,c)
+    PerformHttpRequest("https://erfanebrahimi.ir/fivem/resources/checkupdates.php", function(status,result,c)
         if status~=200 then
             print("[^1"..GetCurrentResourceName().."^7] Version check failed!")
         else

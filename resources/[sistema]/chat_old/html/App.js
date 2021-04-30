@@ -21,7 +21,7 @@ window.APP = {
     window.removeEventListener('message', this.listener);
   },
   mounted() {
-    post('http://chat/loaded', JSON.stringify({}));
+    post('https://chat/loaded', JSON.stringify({}));
     this.listener = window.addEventListener('message', (event) => {
       const item = event.data || event.detail;
       if (this[item.type]) {
@@ -206,7 +206,7 @@ window.APP = {
     },
     send(e) {
       if(this.message !== '') {
-        post('http://chat/chatResult', JSON.stringify({
+        post('https://chat/chatResult', JSON.stringify({
           message: this.message,
         }));
         this.oldMessages.unshift(this.message);
@@ -218,7 +218,7 @@ window.APP = {
     },
     hideInput(canceled = false) {
       if (canceled) {
-        post('http://chat/chatResult', JSON.stringify({ canceled }));
+        post('https://chat/chatResult', JSON.stringify({ canceled }));
       }
       this.message = '';
       this.showInput = false;

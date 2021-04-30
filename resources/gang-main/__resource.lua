@@ -3,7 +3,7 @@ resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
 description 'stand a lone gang system'
 version '0.0.3.3'
 author 'Erfan Ebrahimi'
-url 'http://erfanebrahimi.ir'
+url 'https://erfanebrahimi.ir'
 
 server_scripts {
 	'shared/locale.lua',

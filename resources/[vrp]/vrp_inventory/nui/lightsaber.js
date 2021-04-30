@@ -18,7 +18,7 @@ $(document).ready(function(){
 
 	document.onkeyup = function(data){
 		if (data.which == 27){
-			$.post("http://vrp_inventory/invClose");
+			$.post("https://vrp_inventory/invClose");
 		}
 	};
 });
@@ -54,7 +54,7 @@ const updateDrag = () => {
 
 			if (itemData.key === undefined || itemData.type === undefined) return;
 
-			$.post("http://vrp_inventory/usarItem", JSON.stringify({
+			$.post("https://vrp_inventory/usarItem", JSON.stringify({
 				item: itemData.key,
 				type: itemData.type,
 				amount: Number($("#amount").val())
@@ -71,7 +71,7 @@ const updateDrag = () => {
 
 			if (itemData.key === undefined || itemData.type === undefined) return;
 
-			$.post("http://vrp_inventory/droparItem", JSON.stringify({
+			$.post("https://vrp_inventory/droparItem", JSON.stringify({
 				item: itemData.key,
 				type: itemData.type,
 				amount: Number($("#amount").val())
@@ -88,7 +88,7 @@ const updateDrag = () => {
 
 			if (itemData.key === undefined || itemData.type === undefined) return;
 
-			$.post("http://vrp_inventory/enviarItem", JSON.stringify({
+			$.post("https://vrp_inventory/enviarItem", JSON.stringify({
 				item: itemData.key,
 				type: itemData.type,
 				amount: Number($("#amount").val())
@@ -114,7 +114,7 @@ const formatarNumero = (n) => {
 
 const updateMochila = () => {
 	document.getElementById("amount").value = "";
-	$.post("http://vrp_inventory/requestMochila",JSON.stringify({}),(data) => {
+	$.post("https://vrp_inventory/requestMochila",JSON.stringify({}),(data) => {
 		const nameList = data.inventario.sort((a,b) => (a.name > b.name) ? 1: -1);
 		$('#inventario-items').html(`
 			${nameList.map((item) => (`

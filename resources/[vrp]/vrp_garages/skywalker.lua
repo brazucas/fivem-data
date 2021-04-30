@@ -33,6 +33,8 @@ local logAdminDv = ""
 
 --[ VARIAVEIS ]--------------------------------------------------------------------------------------------------------------------------
 
+local brzVehs = {}
+
 local police = {}
 local vehlist = {}
 local trydoors = {}
@@ -54,377 +56,86 @@ end)
 
 --[ GARAGENS ]---------------------------------------------------------------------------------------------------------------------------
 
-local garages = {
-    [1] = { ['name'] = "Garagem", ['payment'] = false, ['public'] = true },
-    [2] = { ['name'] = "Garagem", ['payment'] = false, ['public'] = true },
-    [3] = { ['name'] = "Garagem", ['payment'] = false, ['public'] = true },
-
-    --[ DEPARTAMENTO DE POLÍCIA ]------------------------------------------------------------------------------------------------------------
-
-    [16] = { ['name'] = "DPLA", ['payment'] = false, ['perm'] = "policia.permissao" },
-    [17] = { ['name'] = "DPLA", ['payment'] = false, ['perm'] = "policia.permissao" },
-    [18] = { ['name'] = "DPLAH", ['payment'] = false, ['perm'] = "policia.permissao" },
-
-    --[ DEPARTAMENTO MÉDICO ]----------------------------------------------------------------------------------------------------------------
-
-    [19] = { ['name'] = "dmla", ['payment'] = false, ['perm'] = "ems.permissao" },
-
-    --- [ FORTHILLS ]-------------------------------------------------------------------------------------------------------------------------
-
-    [145] = { ['name'] = "FH01", ['payment'] = false, ['public'] = false },
-    [148] = { ['name'] = "FH04", ['payment'] = false, ['public'] = false },
-    [155] = { ['name'] = "FH11", ['payment'] = false, ['public'] = false },
-    [159] = { ['name'] = "FH15", ['payment'] = false, ['public'] = false },
-    [163] = { ['name'] = "FH19", ['payment'] = false, ['public'] = false },
-    [167] = { ['name'] = "FH23", ['payment'] = false, ['public'] = false },
-    [168] = { ['name'] = "FH24", ['payment'] = false, ['public'] = false },
-    [170] = { ['name'] = "FH26", ['payment'] = false, ['public'] = false },
-    [173] = { ['name'] = "FH29", ['payment'] = false, ['public'] = false },
-    [175] = { ['name'] = "FH31", ['payment'] = false, ['public'] = false },
-    [176] = { ['name'] = "FH32", ['payment'] = false, ['public'] = false },
-    [189] = { ['name'] = "FH45", ['payment'] = false, ['public'] = false },
-    [192] = { ['name'] = "FH48", ['payment'] = false, ['public'] = false },
-    [193] = { ['name'] = "FH49", ['payment'] = false, ['public'] = false },
-    [196] = { ['name'] = "FH52", ['payment'] = false, ['public'] = false },
-    [198] = { ['name'] = "FH54", ['payment'] = false, ['public'] = false },
-    [199] = { ['name'] = "FH55", ['payment'] = false, ['public'] = false },
-    [202] = { ['name'] = "FH58", ['payment'] = false, ['public'] = false },
-    [203] = { ['name'] = "FH59", ['payment'] = false, ['public'] = false },
-    [212] = { ['name'] = "FH68", ['payment'] = false, ['public'] = false },
-    [225] = { ['name'] = "FH81", ['payment'] = false, ['public'] = false },
-    [235] = { ['name'] = "FH91", ['payment'] = false, ['public'] = false },
-    [236] = { ['name'] = "FH92", ['payment'] = false, ['public'] = false },
-    [237] = { ['name'] = "FH93", ['payment'] = false, ['public'] = false },
-    [238] = { ['name'] = "FH94", ['payment'] = false, ['public'] = false },
-
-    --[ LUXURY ]-----------------------------------------------------------------------------------------------------------------------------
-
-    [245] = { ['name'] = "LX01", ['payment'] = false, ['public'] = false },
-    [246] = { ['name'] = "LX02", ['payment'] = false, ['public'] = false },
-    [247] = { ['name'] = "LX03", ['payment'] = false, ['public'] = false },
-    [248] = { ['name'] = "LX04", ['payment'] = false, ['public'] = false },
-    [249] = { ['name'] = "LX05", ['payment'] = false, ['public'] = false },
-    [250] = { ['name'] = "LX06", ['payment'] = false, ['public'] = false },
-    [251] = { ['name'] = "LX07", ['payment'] = false, ['public'] = false },
-    [252] = { ['name'] = "LX08", ['payment'] = false, ['public'] = false },
-    [253] = { ['name'] = "LX09", ['payment'] = false, ['public'] = false },
-    [254] = { ['name'] = "LX10", ['payment'] = false, ['public'] = false },
-    [255] = { ['name'] = "LX11", ['payment'] = false, ['public'] = false },
-    [256] = { ['name'] = "LX12", ['payment'] = false, ['public'] = false },
-    [257] = { ['name'] = "LX13", ['payment'] = false, ['public'] = false },
-    [258] = { ['name'] = "LX14", ['payment'] = false, ['public'] = false },
-    [259] = { ['name'] = "LX15", ['payment'] = false, ['public'] = false },
-    [260] = { ['name'] = "LX16", ['payment'] = false, ['public'] = false },
-    [261] = { ['name'] = "LX17", ['payment'] = false, ['public'] = false },
-    [262] = { ['name'] = "LX18", ['payment'] = false, ['public'] = false },
-    [263] = { ['name'] = "LX19", ['payment'] = false, ['public'] = false },
-    [264] = { ['name'] = "LX20", ['payment'] = false, ['public'] = false },
-    [265] = { ['name'] = "LX21", ['payment'] = false, ['public'] = false },
-    [266] = { ['name'] = "LX22", ['payment'] = false, ['public'] = false },
-    [267] = { ['name'] = "LX23", ['payment'] = false, ['public'] = false },
-    [268] = { ['name'] = "LX24", ['payment'] = false, ['public'] = false },
-    [269] = { ['name'] = "LX25", ['payment'] = false, ['public'] = false },
-    [270] = { ['name'] = "LX26", ['payment'] = false, ['public'] = false },
-    [271] = { ['name'] = "LX27", ['payment'] = false, ['public'] = false },
-    [272] = { ['name'] = "LX28", ['payment'] = false, ['public'] = false },
-    [273] = { ['name'] = "LX29", ['payment'] = false, ['public'] = false },
-    [276] = { ['name'] = "LX32", ['payment'] = false, ['public'] = false },
-    [278] = { ['name'] = "LX34", ['payment'] = false, ['public'] = false },
-    [279] = { ['name'] = "LX35", ['payment'] = false, ['public'] = false },
-    [280] = { ['name'] = "LX36", ['payment'] = false, ['public'] = false },
-    [281] = { ['name'] = "LX37", ['payment'] = false, ['public'] = false },
-    [282] = { ['name'] = "LX38", ['payment'] = false, ['public'] = false },
-    [283] = { ['name'] = "LX39", ['payment'] = false, ['public'] = false },
-    [284] = { ['name'] = "LX40", ['payment'] = false, ['public'] = false },
-    [285] = { ['name'] = "LX41", ['payment'] = false, ['public'] = false },
-    [286] = { ['name'] = "LX42", ['payment'] = false, ['public'] = false },
-    [287] = { ['name'] = "LX43", ['payment'] = false, ['public'] = false },
-    [288] = { ['name'] = "LX44", ['payment'] = false, ['public'] = false },
-    [289] = { ['name'] = "LX45", ['payment'] = false, ['public'] = false },
-    [290] = { ['name'] = "LX46", ['payment'] = false, ['public'] = false },
-    [291] = { ['name'] = "LX47", ['payment'] = false, ['public'] = false },
-    [292] = { ['name'] = "LX48", ['payment'] = false, ['public'] = false },
-    [294] = { ['name'] = "LX50", ['payment'] = false, ['public'] = false },
-    [295] = { ['name'] = "LX51", ['payment'] = false, ['public'] = false },
-    [296] = { ['name'] = "LX52", ['payment'] = false, ['public'] = false },
-    [297] = { ['name'] = "LX53", ['payment'] = false, ['public'] = false },
-    [298] = { ['name'] = "LX54", ['payment'] = false, ['public'] = false },
-    [299] = { ['name'] = "LX55", ['payment'] = false, ['public'] = false },
-    [302] = { ['name'] = "LX58", ['payment'] = false, ['public'] = false },
-    [303] = { ['name'] = "LX59", ['payment'] = false, ['public'] = false },
-    [304] = { ['name'] = "LX60", ['payment'] = false, ['public'] = false },
-    [305] = { ['name'] = "LX61", ['payment'] = false, ['public'] = false },
-    [306] = { ['name'] = "LX62", ['payment'] = false, ['public'] = false },
-    [307] = { ['name'] = "LX63", ['payment'] = false, ['public'] = false },
-    [308] = { ['name'] = "LX64", ['payment'] = false, ['public'] = false },
-    [309] = { ['name'] = "LX65", ['payment'] = false, ['public'] = false },
-    [310] = { ['name'] = "LX66", ['payment'] = false, ['public'] = false },
-    [311] = { ['name'] = "LX67", ['payment'] = false, ['public'] = false },
-    [312] = { ['name'] = "LX68", ['payment'] = false, ['public'] = false },
-    [313] = { ['name'] = "LX69", ['payment'] = false, ['public'] = false },
-    [314] = { ['name'] = "LX70", ['payment'] = false, ['public'] = false },
-
-    --- [ SAMIR ]-----------------------------------------------------------------------------------------------------------------------------
-
-    [315] = { ['name'] = "LS01", ['payment'] = false, ['public'] = false },
-    [316] = { ['name'] = "LS02", ['payment'] = false, ['public'] = false },
-    [317] = { ['name'] = "LS03", ['payment'] = false, ['public'] = false },
-    [318] = { ['name'] = "LS04", ['payment'] = false, ['public'] = false },
-    [319] = { ['name'] = "LS05", ['payment'] = false, ['public'] = false },
-    [320] = { ['name'] = "LS06", ['payment'] = false, ['public'] = false },
-    [321] = { ['name'] = "LS07", ['payment'] = false, ['public'] = false },
-    [322] = { ['name'] = "LS08", ['payment'] = false, ['public'] = false },
-    [323] = { ['name'] = "LS09", ['payment'] = false, ['public'] = false },
-    [324] = { ['name'] = "LS10", ['payment'] = false, ['public'] = false },
-    [325] = { ['name'] = "LS11", ['payment'] = false, ['public'] = false },
-    [326] = { ['name'] = "LS12", ['payment'] = false, ['public'] = false },
-    [327] = { ['name'] = "LS13", ['payment'] = false, ['public'] = false },
-    [328] = { ['name'] = "LS14", ['payment'] = false, ['public'] = false },
-    [329] = { ['name'] = "LS15", ['payment'] = false, ['public'] = false },
-    [330] = { ['name'] = "LS16", ['payment'] = false, ['public'] = false },
-    [331] = { ['name'] = "LS17", ['payment'] = false, ['public'] = false },
-    [332] = { ['name'] = "LS18", ['payment'] = false, ['public'] = false },
-    [333] = { ['name'] = "LS19", ['payment'] = false, ['public'] = false },
-    [334] = { ['name'] = "LS20", ['payment'] = false, ['public'] = false },
-    [335] = { ['name'] = "LS21", ['payment'] = false, ['public'] = false },
-    [336] = { ['name'] = "LS22", ['payment'] = false, ['public'] = false },
-    [337] = { ['name'] = "LS23", ['payment'] = false, ['public'] = false },
-    [338] = { ['name'] = "LS24", ['payment'] = false, ['public'] = false },
-    [339] = { ['name'] = "LS25", ['payment'] = false, ['public'] = false },
-    [340] = { ['name'] = "LS26", ['payment'] = false, ['public'] = false },
-    [341] = { ['name'] = "LS27", ['payment'] = false, ['public'] = false },
-    [342] = { ['name'] = "LS28", ['payment'] = false, ['public'] = false },
-    [343] = { ['name'] = "LS29", ['payment'] = false, ['public'] = false },
-    [344] = { ['name'] = "LS30", ['payment'] = false, ['public'] = false },
-    [345] = { ['name'] = "LS31", ['payment'] = false, ['public'] = false },
-    [346] = { ['name'] = "LS32", ['payment'] = false, ['public'] = false },
-    [347] = { ['name'] = "LS33", ['payment'] = false, ['public'] = false },
-    [348] = { ['name'] = "LS34", ['payment'] = false, ['public'] = false },
-    [349] = { ['name'] = "LS35", ['payment'] = false, ['public'] = false },
-    [350] = { ['name'] = "LS36", ['payment'] = false, ['public'] = false },
-    [351] = { ['name'] = "LS37", ['payment'] = false, ['public'] = false },
-    [352] = { ['name'] = "LS38", ['payment'] = false, ['public'] = false },
-    [353] = { ['name'] = "LS39", ['payment'] = false, ['public'] = false },
-    [354] = { ['name'] = "LS40", ['payment'] = false, ['public'] = false },
-    [355] = { ['name'] = "LS41", ['payment'] = false, ['public'] = false },
-    [356] = { ['name'] = "LS42", ['payment'] = false, ['public'] = false },
-    [357] = { ['name'] = "LS43", ['payment'] = false, ['public'] = false },
-    [358] = { ['name'] = "LS44", ['payment'] = false, ['public'] = false },
-    [359] = { ['name'] = "LS45", ['payment'] = false, ['public'] = false },
-    [360] = { ['name'] = "LS46", ['payment'] = false, ['public'] = false },
-    [361] = { ['name'] = "LS47", ['payment'] = false, ['public'] = false },
-    [362] = { ['name'] = "LS48", ['payment'] = false, ['public'] = false },
-    [363] = { ['name'] = "LS49", ['payment'] = false, ['public'] = false },
-    [364] = { ['name'] = "LS50", ['payment'] = false, ['public'] = false },
-    [365] = { ['name'] = "LS51", ['payment'] = false, ['public'] = false },
-    [366] = { ['name'] = "LS52", ['payment'] = false, ['public'] = false },
-    [367] = { ['name'] = "LS53", ['payment'] = false, ['public'] = false },
-    [368] = { ['name'] = "LS54", ['payment'] = false, ['public'] = false },
-    [369] = { ['name'] = "LS55", ['payment'] = false, ['public'] = false },
-    [370] = { ['name'] = "LS56", ['payment'] = false, ['public'] = false },
-    [371] = { ['name'] = "LS57", ['payment'] = false, ['public'] = false },
-    [372] = { ['name'] = "LS58", ['payment'] = false, ['public'] = false },
-    [373] = { ['name'] = "LS59", ['payment'] = false, ['public'] = false },
-    [374] = { ['name'] = "LS60", ['payment'] = false, ['public'] = false },
-    [375] = { ['name'] = "LS61", ['payment'] = false, ['public'] = false },
-    [376] = { ['name'] = "LS62", ['payment'] = false, ['public'] = false },
-    [377] = { ['name'] = "LS63", ['payment'] = false, ['public'] = false },
-    [378] = { ['name'] = "LS64", ['payment'] = false, ['public'] = false },
-    [379] = { ['name'] = "LS65", ['payment'] = false, ['public'] = false },
-    [380] = { ['name'] = "LS66", ['payment'] = false, ['public'] = false },
-    [381] = { ['name'] = "LS67", ['payment'] = false, ['public'] = false },
-    [382] = { ['name'] = "LS68", ['payment'] = false, ['public'] = false },
-    [383] = { ['name'] = "LS69", ['payment'] = false, ['public'] = false },
-    [384] = { ['name'] = "LS70", ['payment'] = false, ['public'] = false },
-    [385] = { ['name'] = "LS71", ['payment'] = false, ['public'] = false },
-    [386] = { ['name'] = "LS72", ['payment'] = false, ['public'] = false },
-
-    --[ KRONDORS ]---------------------------------------------------------------------------------------------------------------------------
-
-    [387] = { ['name'] = "KR01", ['payment'] = false, ['public'] = false },
-    [388] = { ['name'] = "KR02", ['payment'] = false, ['public'] = false },
-    [389] = { ['name'] = "KR03", ['payment'] = false, ['public'] = false },
-    [390] = { ['name'] = "KR04", ['payment'] = false, ['public'] = false },
-    [391] = { ['name'] = "KR05", ['payment'] = false, ['public'] = false },
-    [392] = { ['name'] = "KR06", ['payment'] = false, ['public'] = false },
-    [393] = { ['name'] = "KR07", ['payment'] = false, ['public'] = false },
-    [394] = { ['name'] = "KR08", ['payment'] = false, ['public'] = false },
-    [395] = { ['name'] = "KR09", ['payment'] = false, ['public'] = false },
-    [396] = { ['name'] = "KR10", ['payment'] = false, ['public'] = false },
-    [397] = { ['name'] = "KR11", ['payment'] = false, ['public'] = false },
-    [398] = { ['name'] = "KR12", ['payment'] = false, ['public'] = false },
-    [399] = { ['name'] = "KR13", ['payment'] = false, ['public'] = false },
-    [400] = { ['name'] = "KR14", ['payment'] = false, ['public'] = false },
-    [401] = { ['name'] = "KR15", ['payment'] = false, ['public'] = false },
-    [402] = { ['name'] = "KR16", ['payment'] = false, ['public'] = false },
-    [403] = { ['name'] = "KR17", ['payment'] = false, ['public'] = false },
-    [404] = { ['name'] = "KR18", ['payment'] = false, ['public'] = false },
-    [405] = { ['name'] = "KR19", ['payment'] = false, ['public'] = false },
-    [406] = { ['name'] = "KR20", ['payment'] = false, ['public'] = false },
-    [407] = { ['name'] = "KR21", ['payment'] = false, ['public'] = false },
-    [408] = { ['name'] = "KR22", ['payment'] = false, ['public'] = false },
-    [409] = { ['name'] = "KR23", ['payment'] = false, ['public'] = false },
-    [410] = { ['name'] = "KR24", ['payment'] = false, ['public'] = false },
-    [411] = { ['name'] = "KR25", ['payment'] = false, ['public'] = false },
-    [412] = { ['name'] = "KR26", ['payment'] = false, ['public'] = false },
-    [413] = { ['name'] = "KR27", ['payment'] = false, ['public'] = false },
-    [414] = { ['name'] = "KR28", ['payment'] = false, ['public'] = false },
-    [415] = { ['name'] = "KR29", ['payment'] = false, ['public'] = false },
-    [416] = { ['name'] = "KR30", ['payment'] = false, ['public'] = false },
-    [417] = { ['name'] = "KR31", ['payment'] = false, ['public'] = false },
-    [418] = { ['name'] = "KR32", ['payment'] = false, ['public'] = false },
-    [419] = { ['name'] = "KR33", ['payment'] = false, ['public'] = false },
-    [420] = { ['name'] = "KR34", ['payment'] = false, ['public'] = false },
-    [421] = { ['name'] = "KR35", ['payment'] = false, ['public'] = false },
-    [422] = { ['name'] = "KR36", ['payment'] = false, ['public'] = false },
-    [423] = { ['name'] = "KR37", ['payment'] = false, ['public'] = false },
-    [424] = { ['name'] = "KR38", ['payment'] = false, ['public'] = false },
-    [425] = { ['name'] = "KR39", ['payment'] = false, ['public'] = false },
-    [426] = { ['name'] = "KR40", ['payment'] = false, ['public'] = false },
-    [427] = { ['name'] = "KR41", ['payment'] = false, ['public'] = false },
-
-    --[ LOSVAGOS ]---------------------------------------------------------------------------------------------------------------------------
-
-    [428] = { ['name'] = "LV01", ['payment'] = false, ['public'] = false },
-    [429] = { ['name'] = "LV02", ['payment'] = false, ['public'] = false },
-    [430] = { ['name'] = "LV03", ['payment'] = false, ['public'] = false },
-    [431] = { ['name'] = "LV04", ['payment'] = false, ['public'] = false },
-    [432] = { ['name'] = "LV05", ['payment'] = false, ['public'] = false },
-    [433] = { ['name'] = "LV06", ['payment'] = false, ['public'] = false },
-    [434] = { ['name'] = "LV07", ['payment'] = false, ['public'] = false },
-    [435] = { ['name'] = "LV08", ['payment'] = false, ['public'] = false },
-    [436] = { ['name'] = "LV09", ['payment'] = false, ['public'] = false },
-    [437] = { ['name'] = "LV10", ['payment'] = false, ['public'] = false },
-    [438] = { ['name'] = "LV11", ['payment'] = false, ['public'] = false },
-    [439] = { ['name'] = "LV12", ['payment'] = false, ['public'] = false },
-    [440] = { ['name'] = "LV13", ['payment'] = false, ['public'] = false },
-    [441] = { ['name'] = "LV14", ['payment'] = false, ['public'] = false },
-    [442] = { ['name'] = "LV15", ['payment'] = false, ['public'] = false },
-    [443] = { ['name'] = "LV16", ['payment'] = false, ['public'] = false },
-    [444] = { ['name'] = "LV17", ['payment'] = false, ['public'] = false },
-    [445] = { ['name'] = "LV18", ['payment'] = false, ['public'] = false },
-    [446] = { ['name'] = "LV19", ['payment'] = false, ['public'] = false },
-    [447] = { ['name'] = "LV20", ['payment'] = false, ['public'] = false },
-    [448] = { ['name'] = "LV21", ['payment'] = false, ['public'] = false },
-    [449] = { ['name'] = "LV22", ['payment'] = false, ['public'] = false },
-    [450] = { ['name'] = "LV23", ['payment'] = false, ['public'] = false },
-    [451] = { ['name'] = "LV24", ['payment'] = false, ['public'] = false },
-    [452] = { ['name'] = "LV25", ['payment'] = false, ['public'] = false },
-    [453] = { ['name'] = "LV26", ['payment'] = false, ['public'] = false },
-    [454] = { ['name'] = "LV27", ['payment'] = false, ['public'] = false },
-    [455] = { ['name'] = "LV28", ['payment'] = false, ['public'] = false },
-    [456] = { ['name'] = "LV29", ['payment'] = false, ['public'] = false },
-    [457] = { ['name'] = "LV30", ['payment'] = false, ['public'] = false },
-    [458] = { ['name'] = "LV31", ['payment'] = false, ['public'] = false },
-    [459] = { ['name'] = "LV32", ['payment'] = false, ['public'] = false },
-    [460] = { ['name'] = "LV33", ['payment'] = false, ['public'] = false },
-    [461] = { ['name'] = "LV34", ['payment'] = false, ['public'] = false },
-    [462] = { ['name'] = "LV35", ['payment'] = false, ['public'] = false },
-
-    --[ PALETOBAY ]--------------------------------------------------------------------------------------------------------------------------
-
-    [463] = { ['name'] = "PB01", ['payment'] = false, ['public'] = false },
-    [464] = { ['name'] = "PB02", ['payment'] = false, ['public'] = false },
-    [465] = { ['name'] = "PB03", ['payment'] = false, ['public'] = false },
-    [466] = { ['name'] = "PB04", ['payment'] = false, ['public'] = false },
-    [467] = { ['name'] = "PB05", ['payment'] = false, ['public'] = false },
-    [468] = { ['name'] = "PB06", ['payment'] = false, ['public'] = false },
-    [469] = { ['name'] = "PB07", ['payment'] = false, ['public'] = false },
-    [470] = { ['name'] = "PB08", ['payment'] = false, ['public'] = false },
-    [471] = { ['name'] = "PB09", ['payment'] = false, ['public'] = false },
-    [472] = { ['name'] = "PB10", ['payment'] = false, ['public'] = false },
-    [473] = { ['name'] = "PB11", ['payment'] = false, ['public'] = false },
-    [474] = { ['name'] = "PB12", ['payment'] = false, ['public'] = false },
-    [475] = { ['name'] = "PB13", ['payment'] = false, ['public'] = false },
-    [476] = { ['name'] = "PB14", ['payment'] = false, ['public'] = false },
-    [477] = { ['name'] = "PB15", ['payment'] = false, ['public'] = false },
-    [478] = { ['name'] = "PB16", ['payment'] = false, ['public'] = false },
-    [479] = { ['name'] = "PB17", ['payment'] = false, ['public'] = false },
-    [480] = { ['name'] = "PB18", ['payment'] = false, ['public'] = false },
-    [481] = { ['name'] = "PB19", ['payment'] = false, ['public'] = false },
-    [482] = { ['name'] = "PB20", ['payment'] = false, ['public'] = false },
-    [483] = { ['name'] = "PB21", ['payment'] = false, ['public'] = false },
-    [484] = { ['name'] = "PB22", ['payment'] = false, ['public'] = false },
-    [485] = { ['name'] = "PB23", ['payment'] = false, ['public'] = false },
-    [486] = { ['name'] = "PB24", ['payment'] = false, ['public'] = false },
-    [487] = { ['name'] = "PB25", ['payment'] = false, ['public'] = false },
-    [488] = { ['name'] = "PB26", ['payment'] = false, ['public'] = false },
-    [489] = { ['name'] = "PB27", ['payment'] = false, ['public'] = false },
-    [490] = { ['name'] = "PB28", ['payment'] = false, ['public'] = false },
-    [491] = { ['name'] = "PB29", ['payment'] = false, ['public'] = false },
-    [492] = { ['name'] = "PB30", ['payment'] = false, ['public'] = false },
-    [493] = { ['name'] = "PB31", ['payment'] = false, ['public'] = false },
-
-    --[ MANSAO ]-----------------------------------------------------------------------------------------------------------------------------
-
-    [600] = { ['name'] = "MS01", ['payment'] = false, ['public'] = false },
-    [601] = { ['name'] = "MS02", ['payment'] = false, ['public'] = false },
-    [602] = { ['name'] = "MS03", ['payment'] = false, ['public'] = false },
-    [603] = { ['name'] = "MS04", ['payment'] = false, ['public'] = false },
-    [604] = { ['name'] = "MS05", ['payment'] = false, ['public'] = false },
-    [605] = { ['name'] = "MS09", ['payment'] = false, ['public'] = false },
-    [606] = { ['name'] = "SS01", ['payment'] = false, ['public'] = false },
-    [607] = { ['name'] = "MS08", ['payment'] = false, ['public'] = false },
-    [608] = { ['name'] = "FZ01", ['payment'] = false, ['public'] = false },
-    [610] = { ['name'] = "Taxista", ['payment'] = false, ['perm'] = "taxista.permissao" },
-    [612] = { ['name'] = "Mecanico", ['payment'] = false, ['perm'] = "mecanico.permissao" },
-    [613] = { ['name'] = "GoPostal", ['payment'] = false, ['public'] = true },
-    [614] = { ['name'] = "Minerador", ['payment'] = false, ['public'] = true },
-    [615] = { ['name'] = "Lixeiro", ['payment'] = false, ['public'] = true },
-    [616] = { ['name'] = "Leiteiro", ['payment'] = false, ['public'] = true },
-    [617] = { ['name'] = "Aluguel", ['payment'] = true, ['public'] = true },
-    [618] = { ['name'] = "Pizzaboy", ['payment'] = false, ['public'] = true },
-    [619] = { ['name'] = "Pizzaboy", ['payment'] = false, ['public'] = true },
-    [620] = { ['name'] = "Pizzaboy", ['payment'] = false, ['public'] = true },
-    [621] = { ['name'] = "Pizzaboy", ['payment'] = false, ['public'] = true },
-    [622] = { ['name'] = "Pizzaboy", ['payment'] = false, ['public'] = true },
-    [623] = { ['name'] = "Pizzaboy", ['payment'] = false, ['public'] = true },
-    [624] = { ['name'] = "Pizzaboy", ['payment'] = false, ['public'] = true },
-    [625] = { ['name'] = "Pizzaboy", ['payment'] = false, ['public'] = true }
-}
+local garages = ConfigGaragens.garages
 
 --[ GARAGEMS ]---------------------------------------------------------------------------------------------------------------------------
 
-local workgarage = {
-    ["DPLA"] = {
-        "policiacharger2018",
-        "policiasilverado",
-        "policiatahoe",
-        "policiataurus",
-        "policiabmwr1200",
-        "policiabearcat"
-    },
-    ["DPLAH"] = {
-        "policiaheli"
-    },
-    ["Pizzaboy"] = {
-        "faggio2"
-    },
-    ["Taxista"] = {
-        "taxi"
-    },
-    ["Mecanico"] = {
-        "flatbed3"
-    },
-    ["Lixeiro"] = {
-        "trash2"
-    },
-    ["Leiteiro"] = {
-        "youga2"
-    },
-    ["Minerador"] = {
-        "tiptruck"
-    },
-    ["GoPostal"] = {
-        "boxville2"
-    },
-    ["dmla"] = {
-        "ambulance"
-    },
-    ["Aluguel"] = {
-        "washington"
-    }
-}
+local workgarage = ConfigGaragens.workgarage
+
+--[ SPAWNS ]------------------------------------------------------------------------------------------------------------------------------
+
+local spawn = ConfigGaragens.spawn
+
+--[ INIT SETUP ]----------------------------------------------------------------------------------------------------------------------------
+
+AddEventHandler("onResourceStart", function(resName)
+	if GetCurrentResourceName() ~= resName then
+		return
+	end
+
+    SetTimeout(1000, function()
+        TriggerClientEvent('brz:sendVehicleSpawns', -1, spawn)
+    end)
+
+    while not exports.mongodb:isConnected() do
+        Wait(1)
+    end
+    local p = promise.new()
+    exports.mongodb:find({ collection = "brz_vehicles", query = {}}, function(success, results)
+        if success then
+            p:resolve(results or {})
+        else
+            p:reject("[vRP.getUserAddress] ERROR " .. tostring(result))
+            return
+        end
+    end)
+    local vehs = Citizen.Await(p)
+
+    if vehs then
+        local vehCriado = 0
+        print('mongo vehicles result: '..#vehs)
+        for k, state in pairs(vehs) do
+            if state.position ~= 'garagem' then
+                local vehParams = {}
+                vehParams.dono = state.dono
+                vehParams.placa = state.placa
+                vehParams.name = state.name
+                local spawnveh = true
+                print(json.encode(state.position,{indent = true}))
+                local vehid = CriarVeiculo(GetHashKey(state.name),state.position,vehParams)
+                print(vehParams.name)
+                if brzVehs[vehid] ~= nil then
+                    local vehnet = brzVehs[vehid].networkId
+                    if spawnveh then
+                        vehlist[vehnet] = { state.dono, state.name }
+                        TriggerEvent("setPlateEveryone", state.placa)
+                    end
+                    vehCriado = vehCriado + 1
+                end
+            end
+        end
+        print(vehCriado .. ' veículos criados pelo servidor.')
+    end
+end)
+
+AddEventHandler("onResourceStop", function(resource)
+    print(resource)
+    if GetCurrentResourceName() ~= resource then
+		return
+	end
+    print(GetCurrentResourceName())
+    for vehid, state in pairs(brzVehs) do
+        print(vehid)
+        if brzVehs[vehid].networkId then
+            print(brzVehs[vehid].networkId)
+            --src.tryDelete(brzVehs[vehid].networkId)
+            SalvarVeiculo(vehid, true)
+            brzVehs[vehid] = nil
+            DeleteEntity(vehid)
+
+        end
+    end
+end)
 
 --[ MYVEHICLES ]-------------------------------------------------------------------------------------------------------------------------
 
@@ -469,6 +180,16 @@ function vRP.getUserVehicles(user_id, vehicle)
     local vehicles = Citizen.Await(p)
 
     return vehicles
+end
+
+function vRP.modeloVehForaDaGaragem(user_id, name)
+    for vehid, state in pairs(brzVehs) do
+        if state.dono == user_id and state.name == name then
+            return true
+        end
+    end
+
+    return false
 end
 
 function src.myVehicles(work)
@@ -586,7 +307,7 @@ function src.spawnVehicles(name, use)
                 TriggerClientEvent("Notify", source, "negado", "Você tem multas pendentes.", 10000)
                 return true
             end
-            if not vCLIENT.returnVehicle(source, name) then
+            if not vRP.modeloVehForaDaGaragem(user_id, name) then
                 local vehicle = vRP.getUserVehicles(parseInt(user_id), name)
                 local tuning = vRP.getSData("custom:u" .. user_id .. "veh_" .. name) or {}
                 local custom = json.decode(tuning) or {}
@@ -697,22 +418,23 @@ function src.spawnVehicles(name, use)
                             TriggerClientEvent("Notify", source, "negado", "Dinheiro insuficiente.")
                         end
                     else
-                        local vehicleParams = vRP.getUserVehicle(user_id, true)
-                        if not vehicleParams then
-                            local spawnveh, vehid = vCLIENT.spawnVehicle(source, name, 1000, 1000, 1000, 0, 1000, 0, 0, 0, 0, 0, 100, custom, 0, 0, 0, 0, 0, 0, true)
-                            if spawnveh then
-                                vehlist[vehid] = { user_id, name }
-                                TriggerEvent("setPlateEveryone", identity.public_plate)
+                        local spawnID = ChecarCriarVeiculo(use)
+                        if spawnID ~= -1 then
+                            local vehParams = {}
+                            vehParams.dono = user_id
+                            vehParams.placa = identity.public_plate
+                            vehParams.name = name
+                            local spawnveh = true
+                            local vehid = CriarVeiculo(GetHashKey(name),spawn[use][spawnID],vehParams)
+                            if brzVehs[vehid] ~= nil then
+                                local vehnet = brzVehs[vehid].networkId
+                                if spawnveh then
+                                    vehlist[vehnet] = { user_id, name }
+                                    TriggerEvent("setPlateEveryone", identity.public_plate)
+                                end
                             end
                         else
-                            local spawnveh, vehid = vCLIENT.spawnVehicle(source, name, vehicleParams.eng, vehicleParams.bod, vehicleParams.tnk, vehicleParams.drt,
-                            vehicleParams.oil, vehicleParams.drvlyt, vehicleParams.wheel, vehicleParams.dor, vehicleParams.win, vehicleParams.tyr, vehicleParams.fuel,
-                            custom, 0, 0, 0, 0, 0, 0, true)
-
-                            if spawnveh then
-                                vehlist[vehid] = { user_id, name }
-                                TriggerEvent("setPlateEveryone", identity.public_plate)
-                            end
+                            TriggerClientEvent("Notify", source, "negado", "Erro ao retirar veículo da garagem.")
                         end
                     end
                 end
@@ -723,57 +445,376 @@ function src.spawnVehicles(name, use)
     end
 end
 
---[ SPAWNVEHICLES OUTSIDE ]----------------------------------------------------------------------------------------------------------------------
-function src.spawnVehiclesOutside(name, plate, pos)
---RegisterServerEvent("brz:spawnVehiclesOutside")
---AddEventHandler("brz:spawnVehiclesOutside", function(name, plate, pos)
-    local source = source
-    local user_id = vRP.getUserId(source)
-    if name then
-        local owner_id = vRP.getUserByPublicPlate(plate)
-        if owner_id then
-            local identity = vRP.getUserIdentity(owner_id)
-            local vehicleParams = vRP.getUserVehicle(owner_id, true)
-            local owner_source = false
-            if vRP.getUserSource(owner_id) then
-                owner_source = true
-            end
-            if not vehicleParams then
-                local tuning = vRP.getSData("custom:u" .. owner_id .. "veh_" .. name) or {}
-                local custom = json.decode(tuning) or {}
-                local spawnveh, vehid = vCLIENT.spawnVehicleOutside(source, name, 1000, 1000, 1000, 0, 1000, 0, 0, 0, 0, 0, 100, custom, pos, owner_source)
-                if spawnveh then
-                    vehlist[vehid] = { owner_id, name }
-                    TriggerClientEvent("PV:vehicleID",source,vehid)
-                    TriggerEvent("setPlateEveryone", identity.public_plate)
-                end
-            else
-                local tuning = vRP.getSData("custom:u" .. owner_id .. "veh_" .. name) or {}
-                local custom = json.decode(tuning) or {}
-                local spawnveh, vehid = vCLIENT.spawnVehicleOutside(source, name, vehicleParams.eng, vehicleParams.bod, vehicleParams.tnk, vehicleParams.drt,
-                vehicleParams.oil, vehicleParams.drvlyt, vehicleParams.wheel, vehicleParams.dor, vehicleParams.win, vehicleParams.tyr, vehicleParams.fuel,
-                custom, pos, owner_source)
+--[ SPAWNVEHICLES SERVERSIDE ]----------------------------------------------------------------------------------------------------------------------
+function src.getVehicleState(placa)
+    local state = vRP.getVData(placa) or nil
+	--local state = json.decode(data) or nil
+	if state ~= nil then
+        return state
+    else
+        state = nil
+    end
+    return state
+end
 
-                if spawnveh then
-                    vehlist[vehid] = { owner_id, name }
-                    TriggerClientEvent("PV:vehicleID",source,vehid)
-                    TriggerEvent("setPlateEveryone", identity.public_plate)
-                end
+function SalvarVeiculo(veh, guardou)
+    print('salvando veh')
+    if not DoesEntityExist(veh) then
+        brzVehs[veh] = nil
+        return
+    end
+    local owner = NetworkGetEntityOwner(veh)
+    print('owner: ' .. owner)
+    if owner ~= -1 then
+        local state = vCLIENT.getVehicleStates(owner, brzVehs[veh].networkId)
+
+        --state = VerificarVeiculo(veh, owner, state)
+
+        state.placa = brzVehs[veh].placa
+        state.dono = brzVehs[veh].dono
+        state.name = brzVehs[veh].name
+
+        --if brzVehs[veh].networkOwner ~= owner then
+            --brzVehs[veh].networkOwner = owner
+            local src = vRP.getUserSource(brzVehs[veh].dono)
+            if src then
+                --if not vCLIENT.hasBlip(src, state.name) then
+                    vCLIENT.syncBlips(src, brzVehs[veh].networkId, state.name, state.position)
+                --end
             end
+        --end
+
+        if guardou then
+            state.position = 'garagem'
+            state.rotation = 'garagem'
+        else
+            state.position = {}
+            state.position.x, state.position.y, state.position.z = table.unpack(GetEntityCoords(veh))
         end
+
+        brzVehs[veh].state = state
+        vRP.setVData(brzVehs[veh].placa,brzVehs[veh].state)
+    else
+        --if brzVehs[veh].networkOwner ~= owner then
+            --brzVehs[veh].networkOwner = owner
+
+            local src = vRP.getUserSource(brzVehs[veh].dono)
+            if src then
+                --if not vCLIENT.hasBlip(src, brzVehs[veh].name) then
+                local position = {}
+                position.x, position.y, position.z = table.unpack(GetEntityCoords(veh))
+                    vCLIENT.syncBlips(src, brzVehs[veh].networkId, ConfigGaragens.vehicleHashesToString[GetEntityModel(veh)], position)
+                --end
+            end
+        --end
     end
 end
 
---[[AddEventHandler("vRP:playerSpawn", function(user_id, source, first_spawn)
+function VerificarVeiculo(veh, owner, state)
+    if state ~= nil then
+        if state.condition then
+            if state.condition.health > brzVehs[veh].state.condition.health then
+                state.condition.health = brzVehs[veh].state.condition.health
+            end
+
+            if state.condition.body_health > brzVehs[veh].state.condition.body_health  then
+                state.condition.body_health = brzVehs[veh].state.condition.body_health
+                SetVehicleBodyHealth(veh, state.condition.body_health)
+            end
+
+            if state.condition.dirt_level > brzVehs[veh].state.condition.dirt_level then
+                state.condition.dirt_level = brzVehs[veh].state.condition.dirt_level
+                SetVehicleDirtLevel(veh, state.condition.dirt_level)
+            end
+
+            --[[if state.condition.doors then
+                for i, door_state in pairs(state.condition.doors) do
+                    if door_state ~= brzVehs[veh].state.condition.doors[i] then
+                        state.condition.doors[i] = brzVehs[veh].state.condition.doors[i]
+                        if state.condition.doors[i] then
+                            SetVehicleDoorBroken(veh, parseInt(i), true)
+                        end
+                    end
+                end
+            end]]
+
+            if state.condition.engine_health > brzVehs[veh].state.condition.engine_health then
+                state.condition.engine_health = brzVehs[veh].state.condition.engine_health
+            end
+
+            if state.condition.fuel_level > brzVehs[veh].state.condition.fuel_level then
+                state.condition.fuel_level = brzVehs[veh].state.condition.fuel_level
+            end
+
+            if state.condition.oil_level > brzVehs[veh].state.condition.oil_level then
+                state.condition.oil_level = brzVehs[veh].state.condition.oil_level
+            end
+
+            if state.condition.petrol_tank_health > brzVehs[veh].state.condition.petrol_tank_health then
+                state.condition.petrol_tank_health = brzVehs[veh].state.condition.petrol_tank_health
+            end
+
+            if state.condition.tyres then
+                for i, tyre_state in pairs(state.condition.tyres) do
+                    if tyre_state and brzVehs[veh].state.condition.tyres[i] then
+                        if tyre_state > brzVehs[veh].state.condition.tyres[i] then
+                            state.condition.tyres[i] = brzVehs[veh].state.condition.tyres[i]
+                        end
+                    end
+                end
+            end
+        end
+
+        if state.customization.colours then
+            local changedColors = false
+            for i, colours in pairs(state.customization.colours) do
+                if colours ~= brzVehs[veh].state.customization.colours[i] then
+                    state.customization.colours[i] = brzVehs[veh].state.customization.colours[i]
+                    changedColors = true
+                end
+            end
+            if changedColors then SetVehicleColours(veh, table.unpack(state.customization.colours)) end
+        end
+
+        if state.customization.extra_colours then
+            for i, extra_colours in pairs(state.customization.extra_colours) do
+                if extra_colours ~= brzVehs[veh].state.customization.extra_colours[i] then
+                    state.customization.extra_colours[i] = brzVehs[veh].state.customization.extra_colours[i]
+                end
+            end
+        end
+
+        if state.customization.plate_index then
+            if state.customization.plate_index ~= brzVehs[veh].state.customization.plate_index then
+                state.customization.plate_index = brzVehs[veh].state.customization.plate_index
+            end
+        end
+
+        if state.customization.wheel_type then
+            if state.customization.wheel_type ~= brzVehs[veh].state.customization.wheel_type then
+                state.customization.wheel_type = brzVehs[veh].state.customization.wheel_type
+            end
+        end
+
+        if state.customization.tyre_armor then
+            if state.customization.tyre_armor ~= brzVehs[veh].state.customization.tyre_armor then
+                state.customization.tyre_armor = brzVehs[veh].state.customization.tyre_armor
+            end
+        end
+
+        if state.customization.window_tint then
+            if state.customization.window_tint ~= brzVehs[veh].state.customization.window_tint then
+                state.customization.window_tint = brzVehs[veh].state.customization.window_tint
+            end
+        end
+
+        if state.customization.livery then
+            if state.customization.livery ~= brzVehs[veh].state.customization.livery then
+                state.customization.livery = brzVehs[veh].state.customization.livery
+            end
+        end
+
+        if state.customization.neons then
+            for i=0,3 do
+                if state.customization.neons[i] ~= brzVehs[veh].state.customization.neons[i] then
+                    state.customization.neons[i] = brzVehs[veh].state.customization.neons[i]
+                end
+            end
+        end
+
+        if state.customization.neon_colour then
+            for i, neon_colour in pairs(state.customization.neon_colour) do
+                if neon_colour ~= brzVehs[veh].state.customization.neon_colour[i] then
+                    state.customization.neon_colour[i] = brzVehs[veh].state.customization.neon_colour[i]
+                end
+            end
+        end
+
+        if state.customization.tyre_smoke_color then
+            for i, tyre_smoke_color in pairs(state.customization.tyre_smoke_color) do
+                if tyre_smoke_color ~= brzVehs[veh].state.customization.tyre_smoke_color[i] then
+                    state.customization.tyre_smoke_color[i] = brzVehs[veh].state.customization.tyre_smoke_color[i]
+                end
+            end
+        end
+
+        if state.customization.mods then
+            for i, mod in pairs(state.customization.mods) do
+                if mod ~= brzVehs[veh].state.customization.mods[i] then
+                    state.customization.mods[i] = brzVehs[veh].state.customization.mods[i]
+                end
+            end
+        end
+
+        if state.customization.turbo_enabled ~= nil then
+            if state.customization.turbo_enabled ~= brzVehs[veh].state.customization.turbo_enabled then
+                state.customization.turbo_enabled = brzVehs[veh].state.customization.turbo_enabled
+            end
+        end
+
+        if state.customization.smoke_enabled ~= nil then
+            if state.customization.smoke_enabled ~= brzVehs[veh].state.customization.smoke_enabled then
+                state.customization.smoke_enabled = brzVehs[veh].state.customization.smoke_enabled
+            end
+        end
+
+        if state.customization.xenon_enabled ~= nil then
+            if state.customization.xenon_enabled ~= brzVehs[veh].state.customization.xenon_enabled then
+                state.customization.xenon_enabled = brzVehs[veh].state.customization.xenon_enabled
+            end
+        end
+
+        if NetworkGetEntityOwner(veh) ~= -1 then TriggerClientEvent('applyMissingVehicleCustomizations', NetworkGetEntityOwner(veh), NetworkGetNetworkIdFromEntity(veh), state) end
+        return state
+    end
+end
+
+function ChecarCriarVeiculo(idG)
+    local checkslot = 1
+    for veh, state in pairs(brzVehs) do
+        if DoesEntityExist(veh) then
+            if vRP.DistanceBetweenCoords(spawn[idG][checkslot], GetEntityCoords(veh)) < 0.5 and checkslot > #spawn[idG] then
+                checkslot = -1
+                TriggerEvent("Notify","importante","Todas as vagas estão ocupadas no momento.",10000)
+                break
+            end
+            checkslot = checkslot + 1
+        end
+    end
+    return checkslot
+end
+
+function CriarVeiculo(modelHashed, position, vehParams)
+    local state = src.getVehicleState(vehParams.placa)
+    local rotation = nil
+    if state ~= nil then
+        if state.position ~= 'garagem' then
+            position = state.position
+        end
+        if state.rotation ~= 'garagem' then
+            rotation = state.rotation
+        end
+    end
+    local vehicleHnd = Citizen.InvokeNative(`CREATE_AUTOMOBILE`,modelHashed, position.x, position.y, position.z, position.h or 0.0, true)
+
+    SetVehicleNumberPlateText(vehicleHnd, vehParams.placa)
+    if rotation ~= nil then
+        SetEntityRotation(vehicleHnd, rotation.x, rotation.y, rotation.z)
+    end
+
+    local networkId = NetworkGetNetworkIdFromEntity(vehicleHnd)
+
+    brzVehs[vehicleHnd] = {}
+    brzVehs[vehicleHnd].networkId = networkId
+    brzVehs[vehicleHnd].modelo = modelHashed
+    brzVehs[vehicleHnd].placa = vehParams.placa
+    brzVehs[vehicleHnd].dono = vehParams.dono
+    brzVehs[vehicleHnd].name = ConfigGaragens.vehicleHashesToString[GetEntityModel(vehicleHnd)]
+    brzVehs[vehicleHnd].state = state
+
+    --print(json.encode(brzVehs[vehicleHnd].state,{indent = true}))
+
+    Citizen.CreateThread(function()
+        while brzVehs[vehicleHnd] ~= nil do
+            if not DoesEntityExist(vehicleHnd) then
+                brzVehs[vehicleHnd] = nil
+                break
+            end
+            if NetworkGetEntityOwner(vehicleHnd) ~= -1 then SalvarVeiculo(vehicleHnd) end
+            Citizen.Wait(5000) --salvar status do veiculo a cada 5s
+        end
+    end)
+
+    Citizen.CreateThread(function()
+        while true do
+            if DoesEntityExist(vehicleHnd) and NetworkGetEntityOwner(vehicleHnd) ~= -1 then
+                SetVehicleState(vehicleHnd, brzVehs[vehicleHnd].state)
+                break
+            end
+            Citizen.Wait(500)
+        end
+    end)
+
+    return vehicleHnd
+end
+
+-- partial update per property
+function SetVehicleState(veh, state)
+    if state ~= nil then
+        -- apply state
+        if state.customization.colours then
+            SetVehicleColours(veh, table.unpack(state.customization.colours))
+        end
+
+        if state.condition then
+
+            if state.condition.body_health then
+                SetVehicleBodyHealth(veh, state.condition.body_health)
+            end
+
+            if state.condition.dirt_level then
+                SetVehicleDirtLevel(veh, state.condition.dirt_level)
+            end
+
+            if state.condition.doors then
+                for i, door_state in pairs(state.condition.doors) do
+                    if not door_state then
+                        SetVehicleDoorBroken(veh, parseInt(i), true)
+                    end
+                end
+            end
+        end
+
+        --[[if state.locked ~= nil then
+            if state.locked then -- lock
+                SetVehicleDoorsLocked(veh,2)
+            else -- unlock
+                SetVehicleDoorsLocked(veh,1)
+            end
+        end]]
+    end
+
+    --Citizen.CreateThread(function()
+        local owner = NetworkGetEntityOwner(veh)
+        local pos = GetEntityCoords(veh)
+        --[[while owner == -1 do
+            owner = NetworkGetEntityOwner(veh)
+            vCLIENT.syncBlips(owner, brzVehs[veh].networkId, brzVehs[veh].name, pos)
+            Citizen.Wait(100)
+        end]]
+    if brzVehs[veh] ~= nil then
+        
+
+        --print(veh)
+        --print(NetworkGetNetworkIdFromEntity(veh))
+        vCLIENT.syncBlips(owner, brzVehs[veh].networkId, brzVehs[veh].name, brzVehs[veh].state.position)
+        TriggerClientEvent('applyMissingVehicleCustomizations', owner, NetworkGetNetworkIdFromEntity(veh), brzVehs[veh].state, true)
+        SalvarVeiculo(veh)
+    end
+    --end)
+end
+
+AddEventHandler("vRP:playerSpawn", function(user_id, source, first_spawn)
     if user_id then
+        TriggerClientEvent('brz:sendVehicleSpawns', source, spawn)
+
+        for vehid, state in pairs(brzVehs) do
+            if state.dono == user_id then
+                print(state.name)
+                print(json.encode(GetEntityCoords(vehid),{indent = true}))
+                vCLIENT.syncBlips(source, state.networkId, state.name, GetEntityCoords(vehid))
+            end
+        end
+    end
+    --[[if user_id then
         for k, v in pairs(vehlist) do
             if user_id == v[1] then
                 vCLIENT.setBlipsOwner(source, k, v[2])
                 Citizen.Wait(10)
             end
         end
-    end
-end)]]
+    end]]
+end)
 
 --[ DELETEVEHICLES ]---------------------------------------------------------------------------------------------------------------------
 
@@ -860,6 +901,15 @@ function src.vehicleLock()
         if vehicle and placa then
             local placa_user_id = vRP.getUserByPublicPlate(placa)
             if user_id == placa_user_id then
+                print(vnetid)
+                print(lock)
+                print(NetworkGetEntityFromNetworkId(vnetid))
+
+                --[[if lock then -- lock
+                    brzVehs[NetworkGetEntityFromNetworkId(vnetid)].locked = true
+                else -- unlock
+                    brzVehs[NetworkGetEntityFromNetworkId(vnetid)].locked = false
+                end]]
                 vCLIENT.vehicleClientLock(-1, vnetid, lock)
                 TriggerClientEvent("vrp_sound:source", source, 'lock', 0.5)
                 vRPclient.playAnim(source, true, { "anim@mp_player_intmenu@key_fob@", "fob_click" }, false)
@@ -875,62 +925,48 @@ end
 
 --[ TRYDELETE ]--------------------------------------------------------------------------------------------------------------------------
 
-function src.tryDelete(vehid, vehengine, vehbody, vehtank, vehdirt, vehoil, vehdrvlyt, vehwheel, vehdor, vehwin, vehtyr, vehfuel)
-    if vehlist[vehid] and vehid ~= 0 then
-        local user_id = vehlist[vehid][1]
-        local vehname = vehlist[vehid][2]
-        local player = vRP.getUserSource(user_id)
+function src.tryDelete(vehid)
+    local veh = NetworkGetEntityFromNetworkId(vehid)
+    if brzVehs[veh] ~= nil and vehid ~= 0 then
+        if vehlist[vehid] then
+            local user_id = brzVehs[veh].dono
+            local vehname = brzVehs[veh].name
+            local player = vRP.getUserSource(user_id)
 
-        print(vehengine, vehbody, vehtank, vehdirt, vehoil, vehdrvlyt, vehwheel, vehdor, vehwin, vehtyr, vehfuel)
-
-        if player then
-            vCLIENT.syncNameDelete(player, vehname)
+            if player then
+                vCLIENT.syncNameDelete(player, vehname)
+            end
         end
+        SalvarVeiculo(veh, true)
+        brzVehs[veh] = nil
+        DeleteEntity(veh)
+    else
+        if vehlist[vehid] then
+            local user_id = vehlist[vehid][1]
+            local vehname = vehlist[vehid][2]
+            local player = vRP.getUserSource(user_id)
 
-        if vehengine <= 100 then
-            vehengine = 100
+            if player then
+                vCLIENT.syncNameDelete(player, vehname)
+            end
         end
-
-        if vehbody <= 100 then
-            vehbody = 100
-        end
-
-        if vehfuel >= 100 then
-            vehfuel = 100
-        end
-
-        local vehicle = vRP.getUserVehicles(parseInt(user_id), vehname)
-        if vehicle[1] ~= nil then
-            exports.mongodb:updateOne({
-                collection = "vrp_user_vehicles",
-                query = { user_id = parseInt(user_id), vehicle = name },
-                update = { ["$set"] = { engine = parseInt(vehengine), body = parseInt(vehbody), fuel = parseInt(vehfuel) } }
-            })
-        else
-            local vehParams = {
-                eng = vehengine,
-                bod = vehbody,
-                tnk = vehtank,
-                drt = vehdirt,
-                oil = vehoil,
-                drvlyt = vehdrvlyt,
-                wheel = vehwheel,
-                dor = vehdor,
-                win = vehwin,
-                tyr = vehtyr,
-                fuel = vehfuel
-            }
-            vRP.setUData(user_id, "veiculoPublico", json.encode(vehParams))
-        end
+        vCLIENT.syncVehicle(-1, vehid)
     end
-    vCLIENT.syncVehicle(-1, vehid)
 end
 
 --[ TRYDELETEVEH ]-----------------------------------------------------------------------------------------------------------------------
 
 RegisterServerEvent("trydeleteveh")
 AddEventHandler("trydeleteveh", function(vehid)
-    vCLIENT.syncVehicle(-1, vehid)
+    --vCLIENT.syncVehicle(-1, vehid)
+    local veh = NetworkGetEntityFromNetworkId(vehid)
+    if brzVehs[veh] ~= nil and DoesEntityExist(veh) then
+        SalvarVeiculo(veh, true)
+        brzVehs[veh] = nil
+        DeleteEntity(veh)
+    else
+        vCLIENT.syncVehicle(-1, vehid)
+    end
 end)
 
 --[ RETURNHOUSES ]-----------------------------------------------------------------------------------------------------------------------

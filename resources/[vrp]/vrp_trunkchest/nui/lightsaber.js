@@ -61,7 +61,7 @@ $(document).ready(function(){
 
 	document.onkeyup = function(data){
 		if (data.which == 27){
-			$.post("http://vrp_trunkchest/invClose");
+			$.post("https://vrp_trunkchest/invClose");
 		}
 	};
 });
@@ -127,7 +127,7 @@ const updateDrag = () => {
 
 			disableInventory(500);
 
-			$.post("http://vrp_trunkchest/takeItem", JSON.stringify({
+			$.post("https://vrp_trunkchest/takeItem", JSON.stringify({
 				item: itemData.key,
 				amount: Number($("#amount").val())
 			}))
@@ -146,7 +146,7 @@ const updateDrag = () => {
 
 			disableInventory(500);
 
-			$.post("http://vrp_trunkchest/storeItem", JSON.stringify({
+			$.post("https://vrp_trunkchest/storeItem", JSON.stringify({
 				item: itemData.key,
 				vehname: itemData.vehname,
 				amount: Number($("#amount").val())
@@ -171,7 +171,7 @@ const formatarNumero = (n) => {
 }
 
 const updateMochila = () => {
-	$.post("http://vrp_trunkchest/requestInventories",JSON.stringify({}),(data) => {
+	$.post("https://vrp_trunkchest/requestInventories",JSON.stringify({}),(data) => {
 		const nameList = data.inventory.sort((a,b) => (a.name > b.name) ? 1: -1);
 		const nameList2 = data.trunkinventory.sort((a,b) => (a.name > b.name) ? 1: -1);
 		$('#inventory').html(`

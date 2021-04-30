@@ -163,7 +163,7 @@ Citizen.CreateThread(function()
 end)
 
 Citizen.CreateThread(function()
-	while true do
+	while true do --testar se os taskupdate funcionam sem precisar do loop
 		local idle = 1000
 		if canStartTread then
 			idle = 1000
