@@ -143,7 +143,14 @@ function getCurrentSeason()
   for i, timeOfYear in ipairs(WeatherConfig.timesOfYear) do
     for k, month in ipairs(WeatherConfig.timesOfYear[i]) do
       --if month == os.date("*t").month then
-      if month == misc.GetCurrentMonth()+1 then
+      local currentMonth = misc.GetCurrentMonth()
+      if currentMonth == nil then
+        currentMonth = 0
+      end
+      if month == nil then
+        month = 0
+      end
+      if month == currentMonth+1 then
         return i
       end
     end
@@ -176,9 +183,15 @@ function randomizeSystems()
     local currentSeason = getCurrentSeason()
     local availableWeathers = weatherSystem[currentSeason + 1]
     local pickedWeather = availableWeathers[math.random(1, #availableWeathers)]
+
+    local currentMonth = misc.GetCurrentMonth()
+    if currentMonth == nil then
+      currentMonth = 0
+    end
+
     for _, weatherZone in ipairs(weatherSystem[1]) do
       --if os.date("*t").month == 12 and isSnowDay() and WeatherConfig.snowEnabled then
-      if misc.GetCurrentMonth()+1 == 12 and isSnowDay() and WeatherConfig.snowEnabled then
+      if currentMonth+1 == 12 and isSnowDay() and WeatherConfig.snowEnabled then
         table.insert(activeWeatherSystems, {weatherZone, "XMAS"})
       else
         table.insert(activeWeatherSystems, {weatherZone, pickedWeather})

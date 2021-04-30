@@ -89,6 +89,11 @@ Citizen.CreateThread(function()
 	while true do
 		--Citizen.Wait(10000)
 		Citizen.Wait(2000)
+
+		if minutes == nil then
+			minutes = 0;
+		end
+
 		minutes = minutes + 1
 		
 		if minutes >= 60 then
@@ -132,6 +137,18 @@ RegisterCommand('tempo', function(source, args, rawCommand)
 		if args[1] == nil then
 			--msg de erro
 		else
+			if hours == nil then
+				hours = 0;
+			end
+
+			if day == nil then
+				day = 0;
+			end
+
+			if minutes == nil then
+				minutes = 0;
+			end
+
 			local dia = parseInt(args[1])
 			if dia >= 0 and dia <= misc.GetDaysInCurrentMonth() then
 				local horas = parseInt(args[2])
