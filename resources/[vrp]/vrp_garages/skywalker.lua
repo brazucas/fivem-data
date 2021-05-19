@@ -103,6 +103,7 @@ AddEventHandler("onResourceStart", function(resName)
                 local spawnveh = true
                 print(json.encode(state.position,{indent = true}))
                 local vehid = CriarVeiculo(GetHashKey(state.name),state.position,vehParams)
+                print('vehid: ' .. vehid)
                 print(vehParams.name)
                 if brzVehs[vehid] ~= nil then
                     local vehnet = brzVehs[vehid].networkId
@@ -127,12 +128,11 @@ AddEventHandler("onResourceStop", function(resource)
     for vehid, state in pairs(brzVehs) do
         print(vehid)
         if brzVehs[vehid].networkId then
-            print(brzVehs[vehid].networkId)
+            print('deletando:' .. brzVehs[vehid].networkId)
             --src.tryDelete(brzVehs[vehid].networkId)
-            SalvarVeiculo(vehid, true)
+            --SalvarVeiculo(vehid, true)
             brzVehs[vehid] = nil
             DeleteEntity(vehid)
-
         end
     end
 end)
@@ -715,23 +715,33 @@ function CriarVeiculo(modelHashed, position, vehParams)
     --print(json.encode(brzVehs[vehicleHnd].state,{indent = true}))
 
     Citizen.CreateThread(function()
+        while true do
+            if DoesEntityExist(vehicleHnd) and NetworkGetEntityOwner(vehicleHnd) ~= -1 and brzVehs[vehicleHnd].state ~= nil then
+                SetVehicleState(vehicleHnd, brzVehs[vehicleHnd].state)
+                break
+            end
+            Citizen.Wait(500)
+        end
+    end)
+
+    Citizen.CreateThread(function()
+        local oldpos = {}
         while brzVehs[vehicleHnd] ~= nil do
             if not DoesEntityExist(vehicleHnd) then
                 brzVehs[vehicleHnd] = nil
                 break
             end
-            if NetworkGetEntityOwner(vehicleHnd) ~= -1 then SalvarVeiculo(vehicleHnd) end
-            Citizen.Wait(5000) --salvar status do veiculo a cada 5s
-        end
-    end)
-
-    Citizen.CreateThread(function()
-        while true do
-            if DoesEntityExist(vehicleHnd) and NetworkGetEntityOwner(vehicleHnd) ~= -1 then
-                SetVehicleState(vehicleHnd, brzVehs[vehicleHnd].state)
-                break
+            local owner = NetworkGetEntityOwner(vehicleHnd)
+            if owner ~= -1 then
+                SalvarVeiculo(vehicleHnd)
+            else
+                local pos = GetEntityCoords(vehicleHnd)
+                if pos ~= oldpos then
+                    oldpos = pos
+                    vCLIENT.syncBlips(owner, brzVehs[vehicleHnd].networkId, brzVehs[vehicleHnd].name, pos)
+                end
             end
-            Citizen.Wait(500)
+            Citizen.Wait(5000) --salvar status do veiculo a cada 5s
         end
     end)
 
@@ -776,20 +786,19 @@ function SetVehicleState(veh, state)
 
     --Citizen.CreateThread(function()
         local owner = NetworkGetEntityOwner(veh)
-        local pos = GetEntityCoords(veh)
         --[[while owner == -1 do
             owner = NetworkGetEntityOwner(veh)
             vCLIENT.syncBlips(owner, brzVehs[veh].networkId, brzVehs[veh].name, pos)
             Citizen.Wait(100)
         end]]
     if brzVehs[veh] ~= nil then
-        
-
+        print('owner set: ' .. NetworkGetNetworkIdFromEntity(veh))
+        print(json.encode(brzVehs[veh].state,{indent = true}))
         --print(veh)
         --print(NetworkGetNetworkIdFromEntity(veh))
         vCLIENT.syncBlips(owner, brzVehs[veh].networkId, brzVehs[veh].name, brzVehs[veh].state.position)
         TriggerClientEvent('applyMissingVehicleCustomizations', owner, NetworkGetNetworkIdFromEntity(veh), brzVehs[veh].state, true)
-        SalvarVeiculo(veh)
+        --SalvarVeiculo(veh)
     end
     --end)
 end

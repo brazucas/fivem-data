@@ -238,15 +238,15 @@ end
 function src.syncBlips(nveh,vehname,pos)
 	--Citizen.CreateThread(function()
 		gps[vehname] = true
-		
+		nveh = NetToVeh(nveh)
 		--[[if not DoesEntityExist(nveh) then
-			nveh = NetToVeh(nveh)
+			
 		end]]
 		print(json.encode(pos,{indent = true}))
 		--while true do
 			print('test ' .. tostring(DoesEntityExist(nveh)))
 			if GetBlipFromEntity(nveh) == 0 and gps[vehname] ~= nil and DoesEntityExist(nveh) then
-				--if DoesBlipExist(vehblips[vehname]) then RemoveBlip(vehblips[vehname]) end
+				if DoesBlipExist(vehblips[vehname]) then RemoveBlip(vehblips[vehname]) end
 				print('vapo')
 				vehblips[vehname] = AddBlipForEntity(nveh)
 				SetBlipSprite(vehblips[vehname],1)
@@ -254,7 +254,7 @@ function src.syncBlips(nveh,vehname,pos)
 				SetBlipColour(vehblips[vehname],80)
 				SetBlipScale(vehblips[vehname],0.4)
 				BeginTextCommandSetBlipName("STRING")
-				AddTextComponentString("~b~Rastreador: ~g~"..GetDisplayNameFromVehicleModel(GetEntityModel(nveh)))
+				AddTextComponentString("~b~Rastreador: ~g~"..vehname)
 				EndTextCommandSetBlipName(vehblips[vehname])
 			elseif pos and gps[vehname] ~= nil then
 				if DoesBlipExist(vehblips[vehname]) then
