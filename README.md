@@ -1,3 +1,13 @@
+# REPOSITÓRIO ARQUIVADO
+**O servidor agora está sendo desenvolvido com código-fonte fechado, este repositório foi arquivado e permancerá disponível apenas como histórico.**
+
+
+
+================================================
+
+
+
+
 [![Discord](https://img.shields.io/discord/591914197219016707.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/BAZ5aCU)
 
 # Servidor para GTA V do Brazuca's utilizando o mod FiveM.
